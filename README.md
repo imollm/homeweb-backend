@@ -60,7 +60,12 @@
     ```sh
       php artisan migrate --seed
     ```
-    
+
+6. Generar tokens keys.
+    ```sh
+      php artisan passport:install
+    ```
+
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
 2. Importem *l'API schema* que tenim al projecte `HomeWeb.postman_collection.json`
