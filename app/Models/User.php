@@ -89,4 +89,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Property::class);
     }
+
+    /**
+     * Tells if the user have admin role
+     *
+     * @return bool
+     */
+    public function isAdministrator(): bool
+    {
+        return $this->role->first()->name === 'admin';
+    }
 }
