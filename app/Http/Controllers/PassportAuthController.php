@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -18,19 +19,37 @@ class PassportAuthController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|min:4',
-            'email' => 'required|email',
+            'email' => 'required|unique:users|email',
             'password' => 'required|min:8',
+            'phone' => 'required|unique:users|min:9',
+            'address' => 'required|max:255',
+            'fiscal_id' => 'required|unique:users|max:25',
+            'role_id' => 'required|numeric'
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'fiscal_id' => $request->input('fiscal_id'),
+            'role_id' => $request->input('role_id'),
         ]);
 
         $token = $user->createToken('LaravelAuthApp')->accessToken;
 
-        return response()->json(['token' => $token], 200);
+        $roles = User::find($user->id)->role;
+
+        return response()->json([
+            'dataUser' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'accessToken' => $token,
+                'roles' => $roles,
+            ]
+        ], 200);
     }
 
     /**
@@ -41,13 +60,23 @@ class PassportAuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $data = [
-            'email' => $request->email,
-            'password' => $request->password
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
         ];
 
         if (auth()->attempt($data)) {
             $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
-            return response()->json(['token' => $token], 200);
+            $user = auth()->user();
+            $roles = User::find(auth()->id())->role;
+            return response()->json([
+                'dataUser' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'accessToken' => $token,
+                    'roles' => $roles,
+                ]
+            ], 200);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
