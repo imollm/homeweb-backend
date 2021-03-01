@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Property;
 use App\Policies\PropertyPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,12 +16,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-       //'App\Property::class' => 'App\Policies\PropertyPolicy::class',
         Property::class => PropertyPolicy::class,
     ];
 
     /**
-     * Register any authentication / authorization services.
+     * Register any application authentication / authorization services.
      *
      * @return void
      */
