@@ -65,6 +65,7 @@
     ```sh
       php artisan passport:install
     ```
+   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
 
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
