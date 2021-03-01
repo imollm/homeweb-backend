@@ -14,17 +14,41 @@ use Illuminate\Validation\ValidationException;
 class PropertyController extends Controller
 {
     /**
-     * Index return all models of auth user in database
+     * Return all models stored in database.
+     * Role Admin, Employee return all properties.
+     * Role Owner return own properties.
+     * Role Customer return interested properties.
      *
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        $properties = auth()->user()->properties;
+        $role = auth()->user()->role->first()->name;
+        $message = 'The properties that you can view';
+        $success = true;
+        $properties = '';
 
+        switch ($role) {
+            case 'admin':
+            case 'employee':
+                // All properties
+                $properties = Property::all();
+                break;
+            case 'owner':
+                // Own properties
+                $properties = auth()->user()->properties;
+                break;
+            case 'customer':
+                // Interested properties
+            default:
+                $success = false;
+                $message = 'No properties found for you';
+        }
         return response()->json([
-            'success' => true,
-            'data' => $properties
+            'success' => $success,
+            'data' => $properties,
+            'message' => $message,
+            'role' => $role,
         ]);
     }
 
@@ -60,6 +84,8 @@ class PropertyController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        auth()->user()->authorizeRoles(['admin', 'owner', 'employee']);
+
         $this->validate($request, [
             'reference' => 'required|string|unique:properties|max:255',
             'plot_meters' => 'required|numeric',
@@ -143,6 +169,38 @@ class PropertyController extends Controller
                 'success' => false,
                 'message' => 'Post can not be deleted'
             ], 500);
+        }
+    }
+
+    /**
+     * To get owner
+     *
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function owner(string $id): JsonResponse
+    {
+        $property = Property::find($id);
+
+        if (!$property) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Property can not be retrieve',
+            ]);
+        } else {
+            $owner = $property->owner();
+
+            if (!$owner) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Owner can not be retrieve',
+                ]);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'data' => $owner,
+                ]);
+            }
         }
     }
 }
