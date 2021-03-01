@@ -1,13 +1,96 @@
 {
 	"info": {
-		"_postman_id": "a65a1b76-5b1e-4786-bc82-d8ccccdef85b",
+		"_postman_id": "174af84e-6775-46ba-9f25-183281a8f7bd",
 		"name": "HomeWeb",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Properties",
-			"item": []
+			"item": [
+				{
+					"name": "CREATE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reference",
+									"value": "1234",
+									"description": "Required, unique, max length 255",
+									"type": "text"
+								},
+								{
+									"key": "plot_meters",
+									"value": "100",
+									"description": "Required, numeric",
+									"type": "text"
+								},
+								{
+									"key": "built_meters",
+									"value": "80",
+									"description": "Required, numeric",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "C/ ...",
+									"description": "Required, max length 255",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "4.90990",
+									"description": "Required, numeric",
+									"type": "text"
+								},
+								{
+									"key": "latitude",
+									"value": "50.444",
+									"description": "Required, numeric",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Some text",
+									"description": "Not required",
+									"type": "text"
+								},
+								{
+									"key": "energetic_certification",
+									"value": "obtained",
+									"description": "Enum field ['obtained', 'in process', 'pending']",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/properties/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Users",
@@ -17,13 +100,112 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Ivan",
+									"description": "Name is required, min length 4",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ivan@ivan.com",
+									"description": "Email is required, is unique",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "Password is required, min length 8",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "555555500",
+									"description": "Phone is required, unique, min length 9",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "St Postman",
+									"description": "Address is required, max length 255",
+									"type": "text"
+								},
+								{
+									"key": "fiscal_id",
+									"value": "44444444",
+									"description": "Fiscal ID required, unique, max length 25",
+									"type": "text"
+								},
+								{
+									"key": "role_id",
+									"value": "1",
+									"description": "Role ID required, numeric",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "owner@homeweb.com",
+									"description": "Email is required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "Password is required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
 					},
 					"response": []
 				}
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{apiToken}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -47,7 +229,11 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost/TFG_UOC/homeweb-backend/api"
+			"value": "http://localhost/homeweb-backend/public/api"
+		},
+		{
+			"key": "apiToken",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGFkNzg5NTc0MzhlNGVmMmFlODliMzc0Mzc1ZDM1Yjk3ZDBlYjI2ODBjYmZjYzdlNTYwYzQxNTQ0M2IzNGM5YTJmMmJiZGQ4M2Q5Yjg4OWUiLCJpYXQiOiIxNjE0NjMzMTU1LjUxMjEzNyIsIm5iZiI6IjE2MTQ2MzMxNTUuNTEyMTQ0IiwiZXhwIjoiMTY0NjE2OTE1NS41MDUxOTUiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.ouMTuru2PSk_0Weu_zQaDwr4XD8F4suaMyfr52mlAHXi8NizFBRBBxAK708s_EmF-p9fmW693SegzmYNiyjQU1RZ9sor9qh6DPkLFgCILHWWOGqTYqQmwlTpbdnHTHstyK123P99UPEevMeZfrqG01u_mgvIdX3W3PjgbmOHyNae6e3UHVD56HqZfbkHNz9u1X3W-_CGPvKouEd3LDn-oGAHDKH3u0mY31hLoq1ENxJKembTGHXxrJBnebug-9tMzKZSOFAyc9sgpl33-iv5dYx4geE02hs4On6JrlJZL8HJhVE-tfnTLXHRL4SSk12AZXe9B2U-5ww-rgm5A70av8W6D4m4oCH6PWbGqUitQ4M1KEbFj6jzHBknCzeFcDGpH8VjLVf2gZyW8A6DKIx__T9zAExF4DkPXCP4mOCuAqnboORqpC2YQX8PnK_C_c0en8-4WvM7S855JOgStuZC5djn5fJbq2vQVhN_RvBYB1HPK2ZIzhiKpyZpYR1YfqmcLC9YnUqvjCSYmxc_MT6e4_JuLSBxmsg3sGcK4GP1Mmu4YwgGEzymnAj6ArnEgax7tz-t3fzUiuRN3hCgXpX8fRMTPU90NSDkoJZHMW9iXZotYvbc81mIgVwKNLl59lf3_1Cy82LFKgZF2N25lPwZ7BaQR8lA-Cy2W_rcv1AwcOY"
 		}
 	]
 }
