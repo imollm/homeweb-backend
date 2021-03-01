@@ -23,7 +23,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [PropertyController::class, 'store'])->name('create');
         Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
-        Route::get('/all', [PropertyController::class, 'index'])->name('index');
+        Route::get('/all', [PropertyController::class, 'all'])->name('all');
     });
     Route::prefix('roles')->name('roles.')->group(function () {
         Route::get('/{id}', [RoleController::class, 'userRole'])->where('id', '[0-9]+')->name('user');
