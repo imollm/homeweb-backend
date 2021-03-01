@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "174af84e-6775-46ba-9f25-183281a8f7bd",
+		"_postman_id": "6410f51b-f580-4b71-b2f9-494da244df86",
 		"name": "HomeWeb",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -28,51 +28,45 @@
 							"mode": "formdata",
 							"formdata": [
 								{
+									"key": "user_id",
+									"value": "3",
+									"description": "Owner of property",
+									"type": "text"
+								},
+								{
 									"key": "reference",
-									"value": "1234",
-									"description": "Required, unique, max length 255",
+									"value": "12345678",
+									"description": "Reference is required",
 									"type": "text"
 								},
 								{
 									"key": "plot_meters",
 									"value": "100",
-									"description": "Required, numeric",
-									"type": "text"
-								},
-								{
-									"key": "built_meters",
-									"value": "80",
-									"description": "Required, numeric",
+									"description": "Plot meters is required",
 									"type": "text"
 								},
 								{
 									"key": "address",
-									"value": "C/ ...",
-									"description": "Required, max length 255",
+									"value": "C/ Postman, 55",
+									"description": "Address is required",
 									"type": "text"
 								},
 								{
 									"key": "longitude",
-									"value": "4.90990",
-									"description": "Required, numeric",
+									"value": "40.004844",
+									"description": "Longitude is required",
 									"type": "text"
 								},
 								{
 									"key": "latitude",
-									"value": "50.444",
-									"description": "Required, numeric",
+									"value": "3.801141",
+									"description": "Latitude is required",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "Some text",
-									"description": "Not required",
-									"type": "text"
-								},
-								{
-									"key": "energetic_certification",
-									"value": "obtained",
-									"description": "Enum field ['obtained', 'in process', 'pending']",
+									"value": "Lorem ipsum",
+									"description": "Description isn't required",
 									"type": "text"
 								}
 							]
@@ -89,6 +83,104 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "SHOW",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiZjVkNTEyYmQwOGZlNmNlMWI5ZjQ5ZjE5NGM1MWIxZGM5Y2NjNmU1NjYwOTU1MWE3ZjEzNTUzOTU4OTM1YWY3MDE0NjMxZDBlNzkwYjA2Y2EiLCJpYXQiOiIxNjE0MzM3MDQxLjgwMDUyNSIsIm5iZiI6IjE2MTQzMzcwNDEuODAwNTM1IiwiZXhwIjoiMTY0NTg3MzA0MS43ODg3OTAiLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.EN96kbg2d6mZf1T4svfA-bwKhs_qnFmX5SHEBFWC4Oc8glZ9pWjFwx7bFJtBoZKW8kRvF0oJUOAwcfkN-WsM639joxwsq3W6k_qTwLn0HvD0Ii4LeM99B8xCG_ezouU6RGaeM-FEB515t_wVf9z3WA5Up_rZ73AimYfrng5mmZJi0DtVenPRZOwQoKD8_h6ZTWW2uVtm5Yn7t8BmP-IPPiLFgowDfsKRU--iucGuLOwyq5vhgMwWMyhGT2F_CUudO6vyZ33JNOlZEXMAss2irHqjzuNtEh-Dcv5nT-WcNTyg9VQAtGsoIYRCuzboqFwOMdFWEqUXKnycy6ZmEzWCY22bDy0OhMARBv46OpoDaPI_m5pQ1rst3RFlHtbiXJDZ_Rk1g1eG2dHHjOdwPxxLI1vr7kjNOWEgipHXT1vKaBXHaaVzvrSVB67ka-e5ul9_Kn1XXDIAJbrsMf1EfY-FUVQXbiLRFN0RlPNbD3lHPbb9BoXkszmkkjPL5Dd4oZPweTM9GogLijApXl-64YKh5HASkXNEgjfUI3WBmp5KQIcO39Cd8UuX58LXzatKeY6li1j2sRAl_PlQngXzC7EVf-Wse503DqfK89ucAka8fUejHWWt51Ata_Dvp3KJi62JKWbdYrDcgrV4l4PCqJpU7D5RMbk0eFzLcXcVmQjop_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/properties/6/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"6",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OWNER",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiZjVkNTEyYmQwOGZlNmNlMWI5ZjQ5ZjE5NGM1MWIxZGM5Y2NjNmU1NjYwOTU1MWE3ZjEzNTUzOTU4OTM1YWY3MDE0NjMxZDBlNzkwYjA2Y2EiLCJpYXQiOiIxNjE0MzM3MDQxLjgwMDUyNSIsIm5iZiI6IjE2MTQzMzcwNDEuODAwNTM1IiwiZXhwIjoiMTY0NTg3MzA0MS43ODg3OTAiLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.EN96kbg2d6mZf1T4svfA-bwKhs_qnFmX5SHEBFWC4Oc8glZ9pWjFwx7bFJtBoZKW8kRvF0oJUOAwcfkN-WsM639joxwsq3W6k_qTwLn0HvD0Ii4LeM99B8xCG_ezouU6RGaeM-FEB515t_wVf9z3WA5Up_rZ73AimYfrng5mmZJi0DtVenPRZOwQoKD8_h6ZTWW2uVtm5Yn7t8BmP-IPPiLFgowDfsKRU--iucGuLOwyq5vhgMwWMyhGT2F_CUudO6vyZ33JNOlZEXMAss2irHqjzuNtEh-Dcv5nT-WcNTyg9VQAtGsoIYRCuzboqFwOMdFWEqUXKnycy6ZmEzWCY22bDy0OhMARBv46OpoDaPI_m5pQ1rst3RFlHtbiXJDZ_Rk1g1eG2dHHjOdwPxxLI1vr7kjNOWEgipHXT1vKaBXHaaVzvrSVB67ka-e5ul9_Kn1XXDIAJbrsMf1EfY-FUVQXbiLRFN0RlPNbD3lHPbb9BoXkszmkkjPL5Dd4oZPweTM9GogLijApXl-64YKh5HASkXNEgjfUI3WBmp5KQIcO39Cd8UuX58LXzatKeY6li1j2sRAl_PlQngXzC7EVf-Wse503DqfK89ucAka8fUejHWWt51Ata_Dvp3KJi62JKWbdYrDcgrV4l4PCqJpU7D5RMbk0eFzLcXcVmQjop_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/properties/6/owner",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"6",
+								"owner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALL",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/properties/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"all"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -96,74 +188,178 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "REGISTER",
+					"name": "PROPERTIES",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
+						"auth": {
+							"type": "bearer",
+							"bearer": [
 								{
-									"key": "name",
-									"value": "Ivan",
-									"description": "Name is required, min length 4",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "ivan@ivan.com",
-									"description": "Email is required, is unique",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required, min length 8",
-									"type": "text"
-								},
-								{
-									"key": "phone",
-									"value": "555555500",
-									"description": "Phone is required, unique, min length 9",
-									"type": "text"
-								},
-								{
-									"key": "address",
-									"value": "St Postman",
-									"description": "Address is required, max length 255",
-									"type": "text"
-								},
-								{
-									"key": "fiscal_id",
-									"value": "44444444",
-									"description": "Fiscal ID required, unique, max length 25",
-									"type": "text"
-								},
-								{
-									"key": "role_id",
-									"value": "1",
-									"description": "Role ID required, numeric",
-									"type": "text"
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiNjc1ZGUxYTAyOTYxYzMzYjE2OWUxNGNjOWM2NTlhNmU1Y2MxYTNjYzJlNTk2YzFmNzUyODljZGNlYTRlOGRkNTMxMzYxNWU4NWRmYzZkZTYiLCJpYXQiOiIxNjE0MzM2MDMxLjgxNzIxNiIsIm5iZiI6IjE2MTQzMzYwMzEuODE3MjI2IiwiZXhwIjoiMTY0NTg3MjAzMS44MTAzMDIiLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.M-e9HajLWJ430PaZf_bEfTlaIGGrcmFFjQ7bPz3jBSsJvPhcz2CeKjLn-9S8eQKRSCbv3RoWN6Qaa8zC9NxnVe03onx-_R6rNLETUY8Bf1gFdjzvvwIZZRC62vhbEgb6YXXfUN3qOcmuXrh0ykejRW51_vAFC7CybbB9f8bZ3bADjfHD3tGlsYguqWZUI_Nug2wnTKzWo8xNtQj2TqnNeQnAT-AcCmuhkBq2b__iRK7O9Pqe-TEygmQoQZkVpbgByH-yUXpTMSUHihaqZzFVWSuY3Rm897L7ZBd6W8X_zNR7yKVDyt8MDy74yEmCQuusWWICfJkABDb3x1emPtolEAaZawapvlZh20mZMNSvuSJWtBF3tAVBVJMX1sGq3bBkOJgBvswUny8KFknzeH7FiMiembQVt-IxWN_OhddrfeSIeEbFl_DalZMZ9Ql7pp3o5qik6xncxKJ76JBsL8k2OBGhf2XugWJFia8cTBdSnUy0a-U9PLIoS1Gm_reEValWaxj3XEsZgKBeNAS7ry7_RKMc4vdv0-qMwPu_lCNAYyoROqBkGcYUWgJi817wRJUKDMvdY5Q6tW3efgCW9SkK6L0wKa_e7z0mkJ4_aN8TWHwc28W3PDGaoCAB3glVDY-e8ZFamTGdPlwg6rA3qCMRjlhRn5edNE2YNxfwU3FCGno",
+									"type": "string"
 								}
 							]
 						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{baseUrl}}/register",
+							"raw": "{{baseUrl}}/properties/all",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"register"
+								"properties",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "MY ROLE",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/roles/myRole",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roles",
+								"myRole"
 							]
 						}
 					},
 					"response": []
 				},
 				{
+					"name": "USER ROLE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/roles/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roles",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALL",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/roles/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roles",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": []
+		},
+		{
+			"name": "Tours",
+			"item": []
+		},
+		{
+			"name": "Countries",
+			"item": []
+		},
+		{
+			"name": "Sales",
+			"item": []
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
 					"name": "LOGIN",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -188,6 +384,163 @@
 							],
 							"path": [
 								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "ADMIN LOGIN",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "admin@homeweb.com",
+											"description": "Email is required",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"description": "Password is required",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "OWNER LOGIN",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "owner@homeweb.com",
+											"description": "Email is required",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"description": "Password is required",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "REGISTER",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Ivan",
+									"description": "Name is required, min 4 characters",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ivan@ivan.com",
+									"description": "Email is required and unique",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "Password is required, min 8 characters",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "555555555",
+									"description": "Phone is required, min 9 characters",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "St Postman",
+									"description": "Address is required, max 255 characters",
+									"type": "text"
+								},
+								{
+									"key": "fiscal_id",
+									"value": "12345678R",
+									"description": "Fiscal ID is required, unique and max 25 characters",
+									"type": "text"
+								},
+								{
+									"key": "role_id",
+									"value": "3",
+									"description": "Role is required, role that user will have on system [1: admin, 2: owner, 3: customer, 4: employee]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -229,11 +582,11 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost/homeweb-backend/public/api"
+			"value": "http://localhost/TFG_UOC/homeweb-backend/public/api"
 		},
 		{
 			"key": "apiToken",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGFkNzg5NTc0MzhlNGVmMmFlODliMzc0Mzc1ZDM1Yjk3ZDBlYjI2ODBjYmZjYzdlNTYwYzQxNTQ0M2IzNGM5YTJmMmJiZGQ4M2Q5Yjg4OWUiLCJpYXQiOiIxNjE0NjMzMTU1LjUxMjEzNyIsIm5iZiI6IjE2MTQ2MzMxNTUuNTEyMTQ0IiwiZXhwIjoiMTY0NjE2OTE1NS41MDUxOTUiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.ouMTuru2PSk_0Weu_zQaDwr4XD8F4suaMyfr52mlAHXi8NizFBRBBxAK708s_EmF-p9fmW693SegzmYNiyjQU1RZ9sor9qh6DPkLFgCILHWWOGqTYqQmwlTpbdnHTHstyK123P99UPEevMeZfrqG01u_mgvIdX3W3PjgbmOHyNae6e3UHVD56HqZfbkHNz9u1X3W-_CGPvKouEd3LDn-oGAHDKH3u0mY31hLoq1ENxJKembTGHXxrJBnebug-9tMzKZSOFAyc9sgpl33-iv5dYx4geE02hs4On6JrlJZL8HJhVE-tfnTLXHRL4SSk12AZXe9B2U-5ww-rgm5A70av8W6D4m4oCH6PWbGqUitQ4M1KEbFj6jzHBknCzeFcDGpH8VjLVf2gZyW8A6DKIx__T9zAExF4DkPXCP4mOCuAqnboORqpC2YQX8PnK_C_c0en8-4WvM7S855JOgStuZC5djn5fJbq2vQVhN_RvBYB1HPK2ZIzhiKpyZpYR1YfqmcLC9YnUqvjCSYmxc_MT6e4_JuLSBxmsg3sGcK4GP1Mmu4YwgGEzymnAj6ArnEgax7tz-t3fzUiuRN3hCgXpX8fRMTPU90NSDkoJZHMW9iXZotYvbc81mIgVwKNLl59lf3_1Cy82LFKgZF2N25lPwZ7BaQR8lA-Cy2W_rcv1AwcOY"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZjBlMzY5YjBmNTMyZGIyZWZmNWZlMTI2NjExN2I5OTZiNDBjZGJkNjQwYmM2Mjg3MDQyMjkyNTNkYjE5MmIwMmIzZWRhNzgyYjQ1MzA3ZmYiLCJpYXQiOiIxNjE0NjI5NTYwLjc1ODQzOCIsIm5iZiI6IjE2MTQ2Mjk1NjAuNzU4NDQ0IiwiZXhwIjoiMTY0NjE2NTU2MC43NTE3NDUiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.Dnj3gVgfUI4cTBGvwBLFy0RADfbj2Z_e3br6IeNt5LjK8pOZJ23mUgo2YCGG2d2EadQO2EF_LY2AnFPaD_eF1ELGOq3wUapL_j2KGjMl0pN2_r_tqYAa6VxDI0v3MwT4PIWYS4bIHvVkEF6G6-1zpV5QPBmWxaozC5UzfDO2_OcRFyJ7CrswUHBHjIny9okv8iTJIi0t0I80VGVlZS9l0tKf42jJU63cGAc_E2nWoxrjubQOTkj-mJebHmujnKch2MG4cI51sej4I6rWi6XM1s7HiP9xqdtbwyc5OvZ6Ceor5lQSbqKQy1bj7IPZLsLwiFC0YrNeEeXotfHw6aHhgddskmC0nYWy2TERcD8Rj2jsqXyDM76mRzf884FkGW4Bq7-9fwVITWjWJKSqj_0T8RzmVqTY-PIEYCykwQVZ3s6z_zjPtKv9i7bS9o-_ifudeaKID2AjUNwmUaqeueffz12iZfhA61-JxyHF5szIv5AiaGl5zwnczyfjrOLB_YySKqflqRNf8ed0zS2OvZG9Zs3nZcas8Za7nuaddMSzfHam-HFwdhJpey4sYsW99mSKmVJvD_zsdGS0cPJXJTvPqG-SYkFgbfn2NGqiYYFo0F1E1Y3RHyRff0h91h49ihk3J7qawEWbC1kJhRRmdX7hnZFzke0GkhguFYljnowSw40"
 		}
 	]
 }
