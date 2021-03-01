@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class PropertyPolicy
 {
@@ -50,11 +51,13 @@ class PropertyPolicy
      * Determine whether the user can create models.
      *
      * @param User $user
-     * @return mixed
+     * @param Property $property
+     * @return bool
      */
-    public function create(User $user)
+    public function create(User $user, Property $property): bool
     {
-        //
+        //return $user->role->name === 'owner' || 'employee';
+        return true;
     }
 
     /**

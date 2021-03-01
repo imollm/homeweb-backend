@@ -7,7 +7,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -76,32 +75,48 @@ class PropertyController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->validate($request, [
-            'reference' => 'required|string|unique:properties|max:255',
-            'plot_meters' => 'required|numeric',
-            'address' => 'required|string|max:255',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
-            'description' => 'string|max:255'
-        ]);
-
         $property = new Property();
-        $property->reference = $request->input('reference');
-        $property->plot_meters = $request->input('plot_meters');
-        $property->address = $request->input('address');
-        $property->location = json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT);
-        $property->description = $request->input('description');
 
-        if (auth()->user()->properties()->save($property))
-            return response()->json([
-                'success' => true,
-                'data' => $property->toArray()
+        if (Auth::user()->can('create', $property)) {
+
+            $this->validate($request, [
+                'reference' => 'required|string|unique:properties|max:255',
+                'plot_meters' => 'required|numeric',
+                'built_meters' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'longitude' => 'required|numeric',
+                'latitude' => 'required|numeric',
+                'description' => 'string|max:255',
+                'energetic_certification' => 'required',
             ]);
-        else
+
+            $property->reference = $request->input('reference');
+            $property->plot_meters = $request->input('plot_meters');
+            $property->built_meters = $request->input('built_meters');
+            $property->address = $request->input('address');
+            $property->location = json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT);
+            $property->description = $request->input('description');
+            $property->energetic_certification = $request->input('energetic_certification');
+
+            if (auth()->user()->properties()->save($property))
+                return response()->json([
+                    'success' => true,
+                    'data' => $property->toArray(),
+                    'message' => 'Property was added correctly',
+                ]);
+            else
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Property not added',
+                ], 500);
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Post not added'
-            ], 500);
+                'message' => 'Not Authorized',
+                'role' => $user->role->name,
+                'response' => $authorized,
+            ], 403);
+        }
     }
 
     /**
