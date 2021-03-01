@@ -61,12 +61,19 @@
       php artisan migrate --seed
     ```
 
-6. Generar tokens keys.
+6. Generar claus d'encriptació de l'aplicació
+   ```sh
+      php artisan key:generate
+    ```
+
+7. Generar tokens keys.
     ```sh
       php artisan passport:install
     ```
    Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
 
+
+   
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
 2. Importem *l'API schema* que tenim al projecte `HomeWeb.postman_collection.json`
