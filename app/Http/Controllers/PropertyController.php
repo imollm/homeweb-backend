@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -15,41 +18,30 @@ class PropertyController extends Controller
 {
     /**
      * Return all models stored in database.
-     * Role Admin, Employee return all properties.
-     * Role Owner return own properties.
-     * Role Customer return interested properties.
      *
      * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function index(): JsonResponse
+    public function all(): JsonResponse
     {
-        $role = auth()->user()->role->first()->name;
-        $message = 'The properties that you can view';
-        $success = true;
-        $properties = '';
+        $user = Auth::user();
 
-        switch ($role) {
-            case 'admin':
-            case 'employee':
-                // All properties
-                $properties = Property::all();
-                break;
-            case 'owner':
-                // Own properties
-                $properties = auth()->user()->properties;
-                break;
-            case 'customer':
-                // Interested properties
-            default:
-                $success = false;
-                $message = 'No properties found for you';
+        if ($user->can('viewAny', $user)) {
+
+            $properties = Property::all();
+
+            return response()->json([
+                'success' => true,
+                'data' => $properties,
+                'message' => 'List of all properties',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not allowed',
+                'user' => $user,
+            ]);
         }
-        return response()->json([
-            'success' => $success,
-            'data' => $properties,
-            'message' => $message,
-            'role' => $role,
-        ]);
     }
 
     /**
@@ -84,8 +76,6 @@ class PropertyController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        auth()->user()->authorizeRoles(['admin', 'owner', 'employee']);
-
         $this->validate($request, [
             'reference' => 'required|string|unique:properties|max:255',
             'plot_meters' => 'required|numeric',

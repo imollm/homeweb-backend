@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Property;
+use App\Policies\PropertyPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,7 +15,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Models\Model' => 'App\Policies\ModelPolicy',
+       //'App\Property::class' => 'App\Policies\PropertyPolicy::class',
+        Property::class => PropertyPolicy::class,
     ];
 
     /**
