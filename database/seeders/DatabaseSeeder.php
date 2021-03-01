@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $ps = new PropertySeeder();
-        $ps->run();
+        $this->call(RoleSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(PropertySeeder::class);
     }
 }
