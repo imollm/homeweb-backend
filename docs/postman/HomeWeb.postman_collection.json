@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6410f51b-f580-4b71-b2f9-494da244df86",
+		"_postman_id": "af8ed7ae-1391-49ae-a422-ea942352f830",
 		"name": "HomeWeb",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -360,7 +360,40 @@
 		},
 		{
 			"name": "Categories",
-			"item": []
+			"item": [
+				{
+					"name": "ALL",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Tours",
@@ -724,7 +757,7 @@
 		},
 		{
 			"key": "apiTokenAdmin",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYTM0OGQxMzlmNjczYzAzOTI1Mjk5NzRkYTY2OTg0ZGIxMDFlNGY3YzAxN2I1YjM3MTI1YmJiNzc2ZDBhZjNhMzFlMTk3YjMyODhlNDM1ZTUiLCJpYXQiOiIxNjE0NjQ1NjE2LjM3NzU4MiIsIm5iZiI6IjE2MTQ2NDU2MTYuMzc3NTkyIiwiZXhwIjoiMTY0NjE4MTYxNi4zNzE0MTIiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.IuWGNqzLdJjGjtjbUV_HcCTYvlxy4MkjbUBhzPYtLjhmOhq0uX98dgCCQhUwssjf-BXDFYYjqItJWVLtpvne85SkDuJ4ccaKhoIJqUlrLFxYlCSKMB7WDU7VoXYMaFNmP9Gi-KdVwKJUtDfFTZEsVd5pS2dhcLKoy8GWzW2WvdqeEmc39AiiX3vIDHVAd89UBdPQ2ha301-TWK_N_d7G0rAD589NTJ7_sx1-_wTvfkGbGCSgf_Ga13NG2KWyQbURcsT-o_K9MU_OvXFII8R_F0bCNV3YQxx79do0m8Z0Wx75p8Ac_fg1JELktDR40h1q-aQ0eMrrLQ-vihWDplZguliuZ6Kexd9AZyG5IcCiZheE5CwTpZoj4cd3zkrxWQbE9voh7nnZJVZj2TyydVWPL97fAmVpLDT6aU2arKu_0HZbSYAyC71VWIXFzWWtfQpudd8KJGC1UYfVFzp-OmUCfhvzxwow-QYs3JpDqA4pNpzV4iWv-0_-co5iej4Eiz1Bb8WNOcW6XjxOXap_zxDdhSQcBY643ILoi9jbk5rFohrTiyVxFYdmPNledWuCkOUpTnjUR5qfNNoPFZ6WmFENqWZrS0zYRKUn8Sl_r4fXcEafFOvErkR1lsE6yPu_PSOlc4lHv7BXz4UXkx5v5NmtGEgG82muTF_8PVXjwoKwKuc"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYThlZDMxNmU1MTYxNmMxNDJiZWMzNTk5OWQxN2QwOTMwZDVlNmVkYjA2ODQ4NzkyMjE1NzUzMGJiMmUxYTI2MjIzMjUxYTAwMjNhOTA3MTkiLCJpYXQiOiIxNjE0NzI2ODkxLjEyMzA1OSIsIm5iZiI6IjE2MTQ3MjY4OTEuMTIzMDY4IiwiZXhwIjoiMTY0NjI2Mjg5MS4wMTc0NTUiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.rW6P-rp00wwB9GLTKCwOLOFWKGj9feJHo7zjxvJVDorvhefbhJljL3iTyEoC5Ak2t-oXwWvNhi9kv5EresO4z9Rgpw2iOvpOXSYvyPN7kunQaqRaRlyByJ35Qq-2i3573xhMXoe-DEp_TCk0dJDwigqzY9qgkWu242lf5jvZOvS8FcAmjWStHXVjD6MZGNXoU927hM0J95dOyzZih-U8_eCxW3P3dSMeEEI5ERfWHWfVFRfxLU_0DWi91JDMjUXe3xEDUcmV2p5-Sw9oEZ4ZONo-M9yEVsa5T7ZbXwJgmGOcc_Z_ToRUl1yMW0iu3s6vsm-mPRa76kD3kF7YVG3U-NUPe588nxT0o886rHLkwJXLnyEFdRdi-XXQ8flUZfccYmx1rhAr1j-l-fM7Q4ZN3jroibkjX6dn7AsTLR6vM5MnZgoRS5e0hbPgW813xa2Lnp9knijEDmqamwF8Aqmnpo-hHeKDYn8_AZQfRuS-y-ZtArTh5P_4hvAbNTwnuj5emi8EzbtsS9gBFAhbrpUTk43SM1msQKz5QGcQKCgWguSWyr73k80TaaB5Qu9B-yHMMOpsJ9YVLdU5HHifbqxg-2mz7Tc1TJBsXaM98qhpiqbvrccSv-5kfZ0MebScYbRRG6uORm3r8pEWhBf1eDjVH2liL0DLTvBFWv4i5C53wmY"
 		},
 		{
 			"key": "apiTokenEmployee",
