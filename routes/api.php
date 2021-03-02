@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoleController;
@@ -18,7 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 
+// Unauthenticated routes
+Route::get('/categories/all', [CategoryController::class, 'all'])->name('all');
+
 Route::middleware('auth:api')->group(function () {
+    // Properties auth routes
     Route::prefix('properties')->name('properties.')->group(function () {
         Route::post('/create', [PropertyController::class, 'create'])->name('create');
         Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');

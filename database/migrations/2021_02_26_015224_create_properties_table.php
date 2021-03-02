@@ -16,6 +16,7 @@ class CreatePropertiesTable extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Foreign key Owner
+            $table->unsignedBigInteger('category_id');
             $table->string('reference')->unique();
             $table->float('plot_meters');
             $table->float('built_meters');
@@ -29,6 +30,7 @@ class CreatePropertiesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

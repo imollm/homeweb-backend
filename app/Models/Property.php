@@ -50,4 +50,14 @@ class Property extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    /**
+     * Return the category of this property
+     *
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

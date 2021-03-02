@@ -22,6 +22,7 @@ class PropertySeeder extends Seeder
         for($i = 0; $i < 5; $i++) {
             DB::table('properties')->insert([
                 'user_id' => 3,
+                'category_id' => $i + 1,
                 'reference' => Str::random(6),
                 'plot_meters' => $i * 100,
                 'built_meters' => $i * 90,
