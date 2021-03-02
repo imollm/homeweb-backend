@@ -20,8 +20,10 @@ Route::post('login', [PassportAuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::prefix('properties')->name('properties.')->group(function () {
-        Route::post('/create', [PropertyController::class, 'store'])->name('create');
+        Route::post('/create', [PropertyController::class, 'create'])->name('create');
         Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
+        Route::put('/{id}/update', [PropertyController::class, 'update'])->where('id', '[0-9]+')->name('update');
+        Route::get('/{id}/setActive/{status}', [PropertyController::class, 'setActive'])->where(['id' => '[0-9]+', 'status' => '[0-1]{1}'])->name('setActive');
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
         Route::get('/all', [PropertyController::class, 'all'])->name('all');
     });
