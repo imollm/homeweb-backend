@@ -6,105 +6,96 @@ use App\Models\Property;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Pure;
 
+/**
+ * Class PropertyPolicy
+ * @package App\Policies
+ */
 class PropertyPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Perform pre-authorization checks.
-     *
      * @param User $user
      * @return bool
      */
-    public function before(User $user): bool
+    public function all(User $user): bool
     {
-        if ($user->isAdministrator()) {
-            return true;
-        }
+        $authorizedRoles = ['admin', 'customer', 'employee'];
+
+        return in_array($user->role->name, $authorizedRoles);
     }
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param User $user
      * @return bool
      */
-    public function viewAny(User $user): bool
+    public function create(): bool
     {
-        return $user->role->name == 'owner';
+        return Auth::user()->role->name == 'employee' || 'owner';
     }
 
     /**
-     * Determine whether the user can view the model.
-     *
-     * @param User $user
-     * @param  \App\Models\Property  $property
-     * @return mixed
-     */
-    public function view(User $user, Property $property)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     *
      * @param User $user
      * @param Property $property
      * @return bool
      */
-    public function create(User $user, Property $property): bool
+    public function show(User $user, Property $property): bool
     {
-        //return $user->role->name === 'owner' || 'employee';
-        return true;
+        $authorizedRoles = ['admin', 'customer', 'employee'];
+
+        if (in_array($user->role->name, $authorizedRoles)) {
+            return true;
+        }
+        elseif ($user->id === $property->user_id) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
-     * Determine whether the user can update the model.
-     *
      * @param User $user
-     * @param  \App\Models\Property  $property
-     * @return mixed
+     * @param Property $property
+     * @return bool
      */
-    public function update(User $user, Property $property)
+    public function update(User $user, Property $property): bool
     {
-        //
+        $authorizedRoles =      ['admin', 'employee'];
+        $userRole =             $user->role->name;
+
+        if (in_array($userRole, $authorizedRoles)) {
+            return true;
+        }
+        elseif ($user->id === $property->user_id && $user->role->name === 'owner') {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
-     * Determine whether the user can delete the model.
-     *
      * @param User $user
-     * @param  \App\Models\Property  $property
-     * @return mixed
+     * @param Property $property
+     * @return bool
      */
-    public function delete(User $user, Property $property)
+    public function setActive(User $user, Property $property): bool
     {
-        //
+        $authorizedRoles =  ['admin', 'employee'];
+        $userRole =         $user->role->name;
+
+        if (in_array($userRole, $authorizedRoles)) {
+            return true;
+        }
+        elseif ($userRole === 'owner' && $user->id === $property->user_id) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param User $user
-     * @param  \App\Models\Property  $property
-     * @return mixed
-     */
-    public function restore(User $user, Property $property)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param User $user
-     * @param  \App\Models\Property  $property
-     * @return mixed
-     */
-    public function forceDelete(User $user, Property $property)
-    {
-        //
-    }
 }

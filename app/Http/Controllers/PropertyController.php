@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -19,13 +19,10 @@ class PropertyController extends Controller
      * Return all models stored in database.
      *
      * @return JsonResponse
-     * @throws AuthorizationException
      */
     public function all(): JsonResponse
     {
-        $user = Auth::user();
-
-        if ($user->can('viewAny', $user)) {
+        if (Auth::user()->can('all', Property::class)) {
 
             $properties = Property::all();
 
@@ -35,35 +32,38 @@ class PropertyController extends Controller
                 'message' => 'List of all properties',
             ]);
         } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Not allowed',
-                'user' => $user,
-            ]);
+            return $this->unauthorizedUser();
         }
     }
 
     /**
-     * Show a property of auth user
+     * Show a property by id
      *
      * @param string $id
      * @return JsonResponse
      */
     public function show(string $id): JsonResponse
     {
-        $property = auth()->user()->properties()->find($id);
+        $property = Property::find($id);
 
         if (!$property) {
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found'
-            ], 400);
+            ], 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => $property->toArray()
-        ], 400);
+        if (Auth::user()->can('show', $property)) {
+
+            return response()->json([
+                'success' => true,
+                'data' => $property,
+                'message' => 'The property was request'
+            ]);
+
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 
     /**
@@ -73,11 +73,11 @@ class PropertyController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        $property = new Property();
+        if (Auth::user()->can('create', Property::class)) {
 
-        if (Auth::user()->can('create', $property)) {
+            $property = new Property();
 
             $this->validate($request, [
                 'reference' => 'required|string|unique:properties|max:255',
@@ -87,7 +87,7 @@ class PropertyController extends Controller
                 'longitude' => 'required|numeric',
                 'latitude' => 'required|numeric',
                 'description' => 'string|max:255',
-                'energetic_certification' => 'required',
+                'energetic_certification' => ['required', Rule::in(['obtained', 'in progress', 'pending'])],
             ]);
 
             $property->reference = $request->input('reference');
@@ -110,12 +110,7 @@ class PropertyController extends Controller
                     'message' => 'Property not added',
                 ], 500);
         } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Not Authorized',
-                'role' => $user->role->name,
-                'response' => $authorized,
-            ], 403);
+            return $this->unauthorizedUser();
         }
     }
 
@@ -125,29 +120,88 @@ class PropertyController extends Controller
      * @param Request $request
      * @param $id
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function update(Request $request, string $id): JsonResponse
     {
-        $property = auth()->user()->properties()->find($id);
+        $property = Property::find($id);
 
         if (!$property) {
             return response()->json([
                 'success' => false,
-                'message' => 'Post not found'
-            ], 400);
+                'message' => 'Property not found'
+            ], 404);
         }
 
-        $updated = $property->fill($request->all())->save();
+        if (Auth::user()->can('update', $property)) {
 
-        if ($updated)
-            return response()->json([
-                'success' => true
+            $this->validate($request, [
+                'plot_meters' => 'required|numeric',
+                'built_meters' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'longitude' => 'required|numeric',
+                'latitude' => 'required|numeric',
+                'description' => 'string|max:255',
+                'energetic_certification' => ['required', Rule::in(['obtained', 'in progress', 'pending'])],
             ]);
-        else
+
+            $updated = Property::find($id)->update(
+                [
+                    'plot_meters' => $request->input('plot_meters'),
+                    'built_meters' => $request->input('built_meters'),
+                    'address' => $request->input('address'),
+                    'location' => json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT),
+                    'description' => $request->input('description'),
+                    'energetic_certification' => $request->input('energetic_certification'),
+                ]
+            );
+
+            if ($updated)
+                return response()->json([
+                    'success' => true,
+                    'data' => Property::find($id),
+                    'message' => 'Property updated successfully',
+                ], 201);
+            else
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Property can not be updated'
+                ], 500);
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
+
+    /**
+     * Set active field to display property on public
+     *
+     * @param string $id
+     * @param string $status
+     * @return JsonResponse
+     */
+    public function setActive(string $id, string $status): JsonResponse
+    {
+        $property = Property::find($id);
+
+        if(!$property)
             return response()->json([
                 'success' => false,
-                'message' => 'Post can not be updated'
-            ], 500);
+                'message' => 'Property not found',
+            ], 404);
+
+        if (Auth::user()->can('setActive', $property)) {
+
+            $property->active = (bool)$status;
+            $property->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => '',
+            ], 204);
+
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 
     /**
