@@ -81,16 +81,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Returns all the properties that a client is interested in
-     *
-     * @return BelongsToMany
-     */
-    public function interests(): BelongsToMany
-    {
-        return $this->belongsToMany(Property::class);
-    }
-
-    /**
      * Tells if the user have admin role
      *
      * @return bool
