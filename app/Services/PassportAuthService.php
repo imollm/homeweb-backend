@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
  * Class PassportAuthService
  * @package App\Services
  */
-class PassportAuthService
+class PassportAuthService implements PassportAuthServiceI
 {
     /**
      * Validate if request data is valid
@@ -34,6 +34,7 @@ class PassportAuthService
     }
 
     /**
+     * Register new user on database
      *
      * @param Request $request
      * @return User
@@ -56,6 +57,8 @@ class PassportAuthService
     }
 
     /**
+     * Login a user with her credentials
+     *
      * @param array $credentials
      * @return Authenticatable|null
      */
