@@ -34,9 +34,19 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
         Route::get('/all', [PropertyController::class, 'all'])->name('all');
     });
+    // Roles auth routes
     Route::prefix('roles')->name('roles.')->group(function () {
         Route::get('/{id}', [RoleController::class, 'userRole'])->where('id', '[0-9]+')->name('user');
         Route::get('/myRole', [RoleController::class, 'myRole'])->name('mine');
         Route::get('/all', [RoleController::class, 'all'])->name('all');
+    });
+    // Categories auth routes
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::post('/create', [CategoryController::class, 'create'])->name('create');
+    });
+    // User auth routes
+    Route::prefix('/auth')->name('auth.private')->group(function () {
+        Route::get('logout', [PassportAuthController::class, 'logout'])->name('logout');
+        Route::get('user', [PassportAuthController::class, 'user'])->name('user');
     });
 });
