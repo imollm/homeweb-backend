@@ -16,8 +16,10 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('register', [PassportAuthController::class, 'register']);
-Route::post('login', [PassportAuthController::class, 'login']);
+Route::prefix('/auth')->name('auth.public.')->group(function () {
+    Route::post('/register', [PassportAuthController::class, 'register']);
+    Route::post('/login', [PassportAuthController::class, 'login']);
+});
 
 // Unauthenticated routes
 Route::get('/categories/all', [CategoryController::class, 'all'])->name('all');
