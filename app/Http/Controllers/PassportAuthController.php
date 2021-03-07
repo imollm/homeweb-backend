@@ -1,84 +1,115 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Role;
+
+use App\Services\PassportAuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class PassportAuthController
+ * @package App\Http\Controllers
+ */
 class PassportAuthController extends Controller
 {
     /**
+     * @var PassportAuthService
+     */
+    private PassportAuthService $passportAuthService;
+
+    /**
+     * PassportAuthController constructor.
+     *
+     * @param PassportAuthService $passportAuthService
+     */
+    public function __construct(PassportAuthService $passportAuthService)
+    {
+        $this->passportAuthService = $passportAuthService;
+    }
+
+    /**
      * Registration
+     *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
      */
     public function register(Request $request): JsonResponse
     {
-        $this->validate($request, [
-            'name' => 'required|min:4',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|min:8',
-            'phone' => 'required|unique:users|min:9',
-            'address' => 'required|max:255',
-            'fiscal_id' => 'required|unique:users|max:25',
-            'role_id' => 'required|numeric'
-        ]);
+        $this->passportAuthService->validateNewUserData($request);
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'fiscal_id' => $request->input('fiscal_id'),
-            'role_id' => $request->input('role_id'),
-        ]);
-
-        $token = $user->createToken('LaravelAuthApp')->accessToken;
-
-        $roles = User::find($user->id)->role;
+        $user = $this->passportAuthService->registerNewUser($request);
 
         return response()->json([
             'dataUser' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'accessToken' => $token,
-                'roles' => $roles,
+                'accessToken' => $user->token,
+                'role' => $user->role->name,
             ]
-        ], 200);
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Login
+     *
      * @param Request $request
      * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
-        $data = [
+        $credentials = [
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ];
 
-        if (auth()->attempt($data)) {
-            $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
-            $user = auth()->user();
-            $roles = User::find(auth()->id())->role;
+        $user = $this->passportAuthService->login($credentials);
+
+        if ($user && is_object($user)) {
             return response()->json([
                 'dataUser' => [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'accessToken' => $token,
-                    'roles' => $roles,
+                    'accessToken' => $user->token,
+                    'role' => $user->role,
                 ]
-            ], 200);
+            ], Response::HTTP_OK);
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return $this->unauthorizedUser();
         }
+    }
+
+    /**
+     * Logout
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse {
+
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully logged out'
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get user object as JSON
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function user(Request $request): JsonResponse {
+
+        return response()->json([
+            'success' => true,
+            'data' => $request->user(),
+            'message' => 'Auth user'
+        ]);
     }
 }
