@@ -21,7 +21,7 @@ class Property extends Model
      * @var string[]
      */
     protected $fillable = [
-        'reference', 'plot_meters', 'build_meters', 'address', 'location', 'description', 'energetic_certification', 'active'
+        'category_id', 'title', 'reference', 'plot_meters', 'build_meters', 'address', 'location', 'description', 'energetic_certification', 'active'
     ];
 
     /**

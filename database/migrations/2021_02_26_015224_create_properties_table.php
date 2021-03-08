@@ -17,6 +17,7 @@ class CreatePropertiesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // Foreign key Owner
             $table->unsignedBigInteger('category_id');
+            $table->string('title');
             $table->string('reference')->unique();
             $table->float('plot_meters');
             $table->float('built_meters');
