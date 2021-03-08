@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "af8ed7ae-1391-49ae-a422-ea942352f830",
 		"name": "HomeWeb",
+		"description": "API REST OF TFG WEB DEVELOPMENT - IVAN MOLL MOLL\nUNIVERSITY UOC\nYEAR 2020/2021",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -26,7 +27,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"category_id\": 1,\n    \"user_id\": 3,\n    \"title\": \"Title of property\",\n    \"reference\": \"123456\",\n    \"plot_meters\": 100,\n    \"built_meters\":90,\n    \"address\": \"Lorem ipsum\",\n    \"longitude\": 100,\n    \"latitude\":100,\n    \"description\": \"Lorem ipsum\",\n    \"energetic_certification\": \"obtained\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +82,8 @@
 								"11",
 								"update"
 							]
-						}
+						},
+						"description": "- Update "
 					},
 					"response": []
 				},
@@ -156,7 +158,7 @@
 					"response": []
 				},
 				{
-					"name": "ALL",
+					"name": "LIST ALL",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -214,8 +216,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "DELETE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/properties/1/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"1",
+								"delete"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"description": "Properties endpoints, some endpoints haven't token auth.\n\n- An administrator can create, read, update, and delete all types of properties\n- An employee can create, read, and update any property, but cannot delete them\n- A customer will only be able to read properties\n- An owner will be able to create and update their properties, will be able to read any, but will not be able to delete any property, nor theirs. "
 		},
 		{
 			"name": "Users",
@@ -392,6 +425,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "CREATE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Adosat",
+									"description": "Name is required",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -427,28 +500,21 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "admin@homeweb.com",
-									"description": "Email is required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@homeweb.com\",\n    \"password\": 12345678\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/login",
+							"raw": "{{baseUrl}}/auth/login",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
@@ -472,28 +538,21 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "employee@homeweb.com",
-									"description": "Email is required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"employee@homeweb.com\",\n    \"password\": 12345678\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/login",
+							"raw": "{{baseUrl}}/auth/login",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
@@ -517,28 +576,21 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "customer@homeweb.com",
-									"description": "Email is required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"customer@homeweb.com\",\n    \"password\": 12345678\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/login",
+							"raw": "{{baseUrl}}/auth/login",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
@@ -562,28 +614,21 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "owner@homeweb.com",
-									"description": "Email is required",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"owner@homeweb.com\",\n    \"password\": 12345678\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/login",
+							"raw": "{{baseUrl}}/auth/login",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
@@ -624,11 +669,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/login",
+							"raw": "{{baseUrl}}/auth/login",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
@@ -652,66 +698,93 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Ivan",
-									"description": "Name is required, min 4 characters",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "ivan@ivan.com",
-									"description": "Email is required and unique",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "12345678",
-									"description": "Password is required, min 8 characters",
-									"type": "text"
-								},
-								{
-									"key": "phone",
-									"value": "555555555",
-									"description": "Phone is required, min 9 characters",
-									"type": "text"
-								},
-								{
-									"key": "address",
-									"value": "St Postman",
-									"description": "Address is required, max 255 characters",
-									"type": "text"
-								},
-								{
-									"key": "fiscal_id",
-									"value": "12345678R",
-									"description": "Fiscal ID is required, unique and max 25 characters",
-									"type": "text"
-								},
-								{
-									"key": "role_id",
-									"value": "2",
-									"description": "Role is required, role that user will have on system [1: admin, 2: owner, 3: customer, 4: employee]",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Ivan\",\n    \"email\":\"ivan@ivan.com\",\n    \"password\":\"12345678\",\n    \"phone\":\"555555555\",\n    \"address\":\"St Postman\",\n    \"fiscal_id\":\"12345678R\",\n    \"role\":\"owner\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/register",
+							"raw": "{{baseUrl}}/auth/register",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
+								"auth",
 								"register"
 							],
 							"query": [
 								{
 									"key": "name",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
+							]
+						},
+						"description": "- Name is required, min 4 characters\n- Email is required and unique\n- Password is required, min 8 characters\n- Phone is required, min 9 characters\n- Address is required, max 255 characters\n- Fiscal ID is required, unique and max 25 characters\n- Role is required, role that user will have on system [2: owner, 3: customer, 4: employee]"
+					},
+					"response": []
+				},
+				{
+					"name": "LOGOUT",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"user"
 							]
 						}
 					},
@@ -757,7 +830,7 @@
 		},
 		{
 			"key": "apiTokenAdmin",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYThlZDMxNmU1MTYxNmMxNDJiZWMzNTk5OWQxN2QwOTMwZDVlNmVkYjA2ODQ4NzkyMjE1NzUzMGJiMmUxYTI2MjIzMjUxYTAwMjNhOTA3MTkiLCJpYXQiOiIxNjE0NzI2ODkxLjEyMzA1OSIsIm5iZiI6IjE2MTQ3MjY4OTEuMTIzMDY4IiwiZXhwIjoiMTY0NjI2Mjg5MS4wMTc0NTUiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.rW6P-rp00wwB9GLTKCwOLOFWKGj9feJHo7zjxvJVDorvhefbhJljL3iTyEoC5Ak2t-oXwWvNhi9kv5EresO4z9Rgpw2iOvpOXSYvyPN7kunQaqRaRlyByJ35Qq-2i3573xhMXoe-DEp_TCk0dJDwigqzY9qgkWu242lf5jvZOvS8FcAmjWStHXVjD6MZGNXoU927hM0J95dOyzZih-U8_eCxW3P3dSMeEEI5ERfWHWfVFRfxLU_0DWi91JDMjUXe3xEDUcmV2p5-Sw9oEZ4ZONo-M9yEVsa5T7ZbXwJgmGOcc_Z_ToRUl1yMW0iu3s6vsm-mPRa76kD3kF7YVG3U-NUPe588nxT0o886rHLkwJXLnyEFdRdi-XXQ8flUZfccYmx1rhAr1j-l-fM7Q4ZN3jroibkjX6dn7AsTLR6vM5MnZgoRS5e0hbPgW813xa2Lnp9knijEDmqamwF8Aqmnpo-hHeKDYn8_AZQfRuS-y-ZtArTh5P_4hvAbNTwnuj5emi8EzbtsS9gBFAhbrpUTk43SM1msQKz5QGcQKCgWguSWyr73k80TaaB5Qu9B-yHMMOpsJ9YVLdU5HHifbqxg-2mz7Tc1TJBsXaM98qhpiqbvrccSv-5kfZ0MebScYbRRG6uORm3r8pEWhBf1eDjVH2liL0DLTvBFWv4i5C53wmY"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjY0NWI3MWU1MTRiYzBiZmI0MThmMjM3ZDUwMTAzNTJkYjEzMTUyYThhNDFmYjY2NzUyY2M0YjJjOTEyODA1ZjEwNDQwODkxMmZiYzVmOTAiLCJpYXQiOiIxNjE1MTQ1NDk1LjI2MTg0NyIsIm5iZiI6IjE2MTUxNDU0OTUuMjYxODUxIiwiZXhwIjoiMTY0NjY4MTQ5NS4yNTcwMzciLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.JgMxCZRY_7kFtPT8vS5RjFIPqKXHIZvWIH46s3_-rkrOESpdO-UsG7DFsF7t_H3rOW0YDKMZN1jxcBZG15Xkv6FQTqSlsmhLbg0Ir2JUo2IzyGdj8m5F0S6GmNwOuNVXVLgIMHoUWH0eq2fKRfpo5SLCG19sFExdwOEXJbG9dxzMLzQZYRlZOJ45peUNJPXr6Sk2VpMuLs_STlY9ZLa6xTWdFinVQzbykbNJCfzRryXnr0EP5pU_B6cCtyJ9-96qUSeUABWIrilpqwdtG9YkPJffa5PP7IS_n0FL7KNU2QCJ2WwrC-9FiPLr_Yt4HGxO7hnN2TM7qSI6tIa0lXbF_CJFMtO0EQpFgs-S4m0c1TpG_q5zAi1phrPTFR8yG7suO7LQl5hSpHCkLtL2NF5jdIBF2MkMHW3MJdgj3-63JTPy1YCAybLmI2Hum_NJz0uJZKgBijcLpqFXmW7fgORMzdA1vLpbTzvgHNqPa2wYsZDSq-Rvb2tfUlB-V3-PemHsoz8SmHBQHN69Vp_n-F296OZFsBbwYhWXEeahGP3vd1XIRY02EKdvoILpwpfKTKmrdC6cBwncE_aHV4uonj0rBfNzDdHihx542ckMv8KjkJSpTou_VfTMY8rjpoNkhqNxdylGNPIDb6j074M--pTGptSHRbvFzGS2OJrbyNoqglA"
 		},
 		{
 			"key": "apiTokenEmployee",
@@ -765,11 +838,11 @@
 		},
 		{
 			"key": "apiTokenCustomer",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjk3OGMzMDkwOTQyMzNiYjMzOTdiNjgzNzFlYzhmNzA0Mzc2MTE4MmIyYmIzMGFmZjg1MmRhYThiMjYxNzJmMjBkOGVhYTg5NzNiNmUwMTYiLCJpYXQiOiIxNjE0NjQ1ODMxLjczMTQwMCIsIm5iZiI6IjE2MTQ2NDU4MzEuNzMxNDA2IiwiZXhwIjoiMTY0NjE4MTgzMS43MjY2MzIiLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.nRspxjpiXeN2cH-5uCq23cH9VUgZ_HywFMQlJ3H9eT7rzo1qkyIY7V8a46-qCDE-TPZkeV_Ml3R6TR7Cqb_KR2bV9I_91--ZlJpGOIqlalw1ct0_3BqEiNhrlPWW6YJ3oorRMbkq6vTwEt5mFzqKSB38y_Mf7_jEXXbp-xK7zPo-yCf0RlQ1HAxIX63fPzEsuqL0XIq9giFOEMLQxPdyMB1FXEK2QEMGOz0iMmH6BRtBKSEq_3XVteF-fhJ7qpBwBsdb8_Xo7xirgkUfE-V10-nWcbnAn0q8u_AhaMLeVG62rDhRLvxvOSdR5gj4mnzyiDJ0exkQmj-m41J_fZTYJ1pX8Yw1SMHczs-YNjiSxd7skyknSi_gbs6Qw0hZ1ZM5kEOpQ-B-1ZdBCHrimdSV5SYaggFuwecVYvQ6rWQK12K_WqwO9SkAzz0W5V9BiZTxRJhRQWLr85PaOs0ZN9tmaqaaM6H0zv3Gm3K1VdlhWDbf4izbeCw7EMRRfQE7wL978aHFXDrVPApydIiCiGfz6u2eElQaiRd57yh_0l7k9N-tiQtKvMwbWfIYRsFOdko52MR_Uhl8CTIdpSsAwCNEWaDeLo8qSJfyHOcoo6kMGATjXemwb3Zt-Ibpo3mSzYYq3JX_QtrCbRsHmQva-WgqVyOGPoeoAVrf-0dEJHBr2_s"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNDNkZGFmZjliM2U3MmYzY2ExYjE1NDlhNGZhOTAyMmY5NzJmZWE3YjZiMTA4NTlkNmEwNTQxOTg0YTU3NjliM2QwMjViZjNhYTI2ZjFkM2IiLCJpYXQiOiIxNjE1MTQyMzQ2LjM0ODcyMiIsIm5iZiI6IjE2MTUxNDIzNDYuMzQ4NzI4IiwiZXhwIjoiMTY0NjY3ODM0Ni4yNTkzMDUiLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.iNr5pOUM8N7LNUFvw_sqg3OWgWbMyfx2wrBRiO1N4G_0OnKk9oN83FaiV1fQpWekh4pr7j4j2oQ8T1KS1hwurR5UXz_w21AHmqhy9i73wpK14UyVxgxo-8o7IWB25G9o8nUQVylTXm6PazwQWkCU-hIAqAxuamanP_PMopYfh78yJG5t0rZ68jSlHJaA02nU2FL6hHK7b9SALov2HbcaqgOYGWFALnpzV-VR2SWCqitYS711O8ZV2bkv2toPsw2UixRfa4G3_JeJxq1x6xUWlcpwppKsINR20ByqhnHapWd3zuSgSCkG_RdPS_oa9PIb_E70E_DpPrbA5ZGJ8cnl3iqTJXgw9tX8m4rrb1haZjAHtrid8oFyCLfFemOpu6r7eycScVUxqwXdMa44FTi5BDECBbYjND6NbXgbdYdjq81lwywaiWS0Ol4Nfc7INEIz-1vetqsE2uM02-7plL4IDcF6iIvMsvnqR0j9KEBVqzZqPJOZrd5tTNT6IQONHGoS3_L5U1leXwH3GKv6VWathsrC948STCHQZ14osgYNJVpBGjA34T1pyBQH7zU6nzG2JrrgSQ9gy8LeuhuK9bBoOLX3FVAjZKMIuQCezNVi2X3Bb5mWr4HLaaAr066rO1f5XTCZyHCIwzzTrfIqBqvd3K-swyKQlmHuCeD9QIhcbiM"
 		},
 		{
 			"key": "apiTokenOwner",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOTBkYzZiZWI0MjEwNzk4ZTRiMGRkYWQ2ZGYwYjZiYjhjOTVlOTIwZThiNzhkNDhiZDU0NDM1MzQ3MjQ3NTJjODMyNWVjNzdhYjRiZGZmZWEiLCJpYXQiOiIxNjE0NjUyNzUxLjg1NDc2MyIsIm5iZiI6IjE2MTQ2NTI3NTEuODU0NzY4IiwiZXhwIjoiMTY0NjE4ODc1MS44NDQ4NTQiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.fwe5RtsJv1EEyVRFovuZ4jRc3F42OpdGxIEiRu229AX1ZKZ7aAyG4qqc5W9dNtY9Z4QiXjW-skveOFremO0Me-aJD8Kqmc4yuvpdDu3wb0SxOLdUBstsY6w3oVfBSWwtxa6g4sxcHHBOzgkXL3tX755pnDtH4n1-H_3iI7N0o41w04Q0fVQDYMwRuzIuSdJFK_aaqdfI5VX8gsCzIQRjwp18tQ4BpVKytkLk76wOM-C0BcWTqGOD5AJyyOP4Oyx4BuLTaB8aKCaGV_OW_ctoddow4lpjb5L_vtsepeN5XQLWJ1hI3OunuJpQGcxWXkdhaHpaXvtFYIx-_0wSHmIjZJk8-tJirScKOOkqdno4vOrjVLCg-l_Op7Wr3ZnokJS_OqeFbV3Y8AjhEnt0V1KwQ9ROreEaw-xm1LUPoFz_bpbE4RF1bNn0ovZWP9rdXA6ArgXRhW7Cgj44iEo-hM0Zuiuy6k1Z_aHPRX4mrRojZ7Xew8HTACmZW8VHp8lfWCqmVtjdAwPykKgOEkJv6JtufPH8f8SspMRtTZ_6U2yhhvpAhiqJgTp1An9oe3XrRkSYR7ScOvtKz_X6Ruwh3u-4VmkfUjN5kshB76tmI5_su1poOcnZ9BuMxlKRRJg_TwFEEAOJYLKsvn_GS0v3HfwQInByGlZ1GCBcyZ17dwKJ7oQ"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzFiMzljY2Q3ZjJiMjMyODU2ZTQ3ZmVkYzBkYmYzM2U0ODg2YjM4Yzk0YTA5NmIzNWU1N2RiZWFiZDg4NDAwNjBiZjcyZGQ3NzlhMmNkNmYiLCJpYXQiOiIxNjE0OTY0MTI0LjgwNDgwMCIsIm5iZiI6IjE2MTQ5NjQxMjQuODA0ODA2IiwiZXhwIjoiMTY0NjUwMDEyNC43OTk5OTkiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.2TXy12dnkvHbRGAquRwv7Wcr_HeV_rJOLBXu8tiH8xVeMIW-L487SxrpYDxvjpzDz-NR8CYMbKol6oLbVK-yQ_56W7igCgx7UFYugJXaDrv2u0_MFU8ilIxnad2aKEcTLNRliTiGGS1-ZsfBorEph8yguiMaSxC_tIo9vYgjpl3d9YkVT_s7N60P8r-HIOB8KcqNwHWtYivfwugugGmAkopthoGqy3L1ZUTDmQBCNQ5HzY3alUrcT7V-3fkrezSSnJfjR45UNce_Ami7PRYl_WWJrau95Yyo6pyvWgSSaqX6IE-M3B6sZvSrv86JysT9lmtr9fOCRnEjMG9SCQE_g2otFyjlJzFpNGFQpWE-DMDjpeMkURXBmSqSp7dHpMT6nQAAG2uIO8T0uYoDwk1avztpBznFf4pBW60FXf2rnI8-E30Azil6gR0rWvBADYh6jL5x8ypd-V2fh_6N6URnbcJf7JMBmqfoBYz0MsqkUqEvpVrx2TOcE7n9p6Ze_RdG0S98vB6hvl6FarFFR4nzT8M2i0ddImWkA3R5Dz4Fx1vfiUlPvc5enL_q5btsnvfU4O0SBNybgUP4X_viDjC-7VEEcroxNur4aX9AiGyneK8tAn_kTvPxMblNxroZxl_Dz1qpdWCqNDQtYkzRPH9kSdJPh-Y8wrSdstVucA_ywmI"
 		},
 		{
 			"key": "apiTokenIvanOwner",
