@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -22,9 +19,9 @@ class AuthTest extends TestCase
         $email = Config::get('api.apiAdminEmail');
         $password = Config::get('api.apiAdminPassword');
 
-        $response = $this->json('POST', $baseUrl, [
-           'email' => $email,
-           'password' => $password
+        $response = $this->json('POST', $baseUrl . '/', [
+            'email' => $email,
+            'password' => $password
         ]);
 
         $response
@@ -48,8 +45,8 @@ class AuthTest extends TestCase
     public function test_login_customer()
     {
         $baseUrl = Config::get('app.url') . '/api/auth/login';
-        $email = Config::get('api.apiEmailCustomer');
-        $password = Config::get('api.apiPasswordCustomer');
+        $email = Config::get('api.apiCustomerEmail');
+        $password = Config::get('api.apiCustomerPassword');
 
         $response = $this->json('POST', $baseUrl . '/', [
             'email' => $email,
@@ -57,7 +54,7 @@ class AuthTest extends TestCase
         ]);
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'dataUser' => [
                     'id' => 1,
@@ -76,8 +73,8 @@ class AuthTest extends TestCase
      */
     public function test_login_employee()
     {
-        $baseUrl = Config::get('app.url') . '/api/auth/login';
-        $email = Config::get('api.apiEmployeeEmail');
+        $baseUrl =  Config::get('app.url') . '/api/auth/login';
+        $email =    Config::get('api.apiEmployeeEmail');
         $password = Config::get('api.apiEmployeePassword');
 
         $response = $this->json('POST', $baseUrl . '/', [
@@ -86,7 +83,7 @@ class AuthTest extends TestCase
         ]);
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'dataUser' => [
                     'id' => 4,
@@ -105,8 +102,8 @@ class AuthTest extends TestCase
      */
     public function test_login_owner()
     {
-        $baseUrl = Config::get('app.url') . '/api/auth/login';
-        $email = Config::get('api.apiOwnerEmail');
+        $baseUrl =  Config::get('app.url') . '/api/auth/login';
+        $email =    Config::get('api.apiOwnerEmail');
         $password = Config::get('api.apiOwnerPassword');
 
         $response = $this->json('POST', $baseUrl . '/', [
@@ -115,7 +112,7 @@ class AuthTest extends TestCase
         ]);
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'dataUser' => [
                     'id' => 3,
@@ -134,12 +131,37 @@ class AuthTest extends TestCase
      */
     public function test_logout()
     {
-        $urlLogout = Config::get('app.url') . '/api/auth/logout';
+        $loginUrl =     Config::get('app.url') . '/api/auth/login';
+        $urlLogout =    Config::get('app.url') . '/api/auth/logout';
+        $email =        Config::get('api.apiOwnerEmail');
+        $password =     Config::get('api.apiOwnerPassword');
 
-        $response = $this->json('GET', $urlLogout, [Auth::user()]);
+        $response = $this->postJson( $loginUrl . '/', [
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        $token = $response['dataUser']['accessToken'];
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertExactJson([
+                'dataUser' => [
+                    'id' => 3,
+                    'name' => 'Owner',
+                    'email' => 'owner@homeweb.com',
+                    'accessToken' => $token,
+                    'role' => 'owner',
+                ]
+            ]);
+
+        $response = $this
+            ->withHeader('Authorization', 'Bearer '. $token)
+            ->withHeader('Accept', 'application/json')
+            ->getJson($urlLogout);
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
                 'success' => true,
                 'message' => 'Successfully logged out'
@@ -153,35 +175,36 @@ class AuthTest extends TestCase
      */
     public function test_auth_user()
     {
-        $baseUrl =      Config::get('app.url');
-        $loginUrl =     $baseUrl . '/auth/login';
-        $authUserUrl =  $baseUrl . '/auth/user';
-        $email =        Config::get('api.apiAdminEmail');
-        $password =     Config::get('api.apiAdminPassword');
+        $loginUrl =     Config::get('app.url') . '/api/auth/login';
+        $authUserUrl =  Config::get('app.url') . '/api/auth/user';
+        $email = Config::get('api.apiAdminEmail');
+        $password = Config::get('api.apiAdminPassword');
 
-        $loginResponse = $this->json('POST', $loginUrl, [
+        $loginResponse = $this->json('POST', $loginUrl . '/', [
             'email' => $email,
             'password' => $password
         ]);
 
+        $token = $loginResponse['dataUser']['accessToken'];
+
         $loginResponse
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
-                'id' => 2,
-                'name' => 'Admin',
-                'email' => 'admin@homeweb.com',
-                'accessToken' => $loginResponse['dataUser']['accessToken'],
-                'role' => 'admin',
+                'dataUser' => [
+                    'id' => 2,
+                    'name' => 'Admin',
+                    'email' => 'admin@homeweb.com',
+                    'accessToken' => $token,
+                    'role' => 'admin',
+                ]
             ]);
 
-        $authUserResponse = $this->json('GET', $authUserUrl, []);
+        $authUserResponse = $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($authUserUrl);
 
         $authUserResponse
             ->assertStatus(Response::HTTP_OK)
-            ->assertExactJson([
-                'success' => true,
-                'data' => Auth::user(),
-                'message' => 'Auth user'
-            ]);
+            ->assertJson(['success' => true, 'message' => 'Auth user']);
     }
 }
