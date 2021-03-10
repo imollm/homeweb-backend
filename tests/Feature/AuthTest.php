@@ -96,6 +96,38 @@ class AuthTest extends TestCase
     }
 
     /**
+     * Test Employee role login
+     *
+     * @return void
+     */
+    public function test_login_owner1()
+    {
+        $baseUrl =  Config::get('app.url') . '/api/auth/login';
+        $email =    Config::get('api.apiOwner1Email');
+        $password = Config::get('api.apiOwner1Password');
+
+        $response = $this->json('POST', $baseUrl, [
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        $response->dumpSession();
+        $response->dump();
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'dataUser' => [
+                    'id' => 5,
+                    'name' => 'Owner1',
+                    'email' => 'owner1@homeweb.com',
+                    'accessToken' => $response['dataUser']['accessToken'],
+                    'role' => 'owner',
+                ]
+            ]);
+    }
+
+    /**
      * Test Owner role login
      *
      * @return void
@@ -136,16 +168,18 @@ class AuthTest extends TestCase
         $email =        Config::get('api.apiOwnerEmail');
         $password =     Config::get('api.apiOwnerPassword');
 
-        $response = $this->postJson( $loginUrl . '/', [
+        $responseLogin = $this->postJson($loginUrl, [
             'email' => $email,
             'password' => $password
         ]);
 
-        $token = $response['dataUser']['accessToken'];
+        $this->assertAuthenticated();
 
-        $response
+        $token = $responseLogin['dataUser']['accessToken'];
+
+        $responseLogin
             ->assertStatus(Response::HTTP_OK)
-            ->assertExactJson([
+            ->assertJson([
                 'dataUser' => [
                     'id' => 3,
                     'name' => 'Owner',
@@ -155,17 +189,12 @@ class AuthTest extends TestCase
                 ]
             ]);
 
-        $response = $this
+        $responseLogout = $this
             ->withHeader('Authorization', 'Bearer '. $token)
-            ->withHeader('Accept', 'application/json')
             ->getJson($urlLogout);
 
-        $response
-            ->assertStatus(Response::HTTP_OK)
-            ->assertExactJson([
-                'success' => true,
-                'message' => 'Successfully logged out'
-            ]);
+        $responseLogout
+            ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
