@@ -41,18 +41,13 @@ class PropertyController extends Controller
      */
     public function all(): JsonResponse
     {
-        if (Auth::user()->can('all', Property::class)) {
+        $properties = Property::all();
 
-            $properties = Property::all();
-
-            return response()->json([
-                'success' => true,
-                'data' => $properties,
-                'message' => 'List of all properties',
-            ], Response::HTTP_OK);
-        } else {
-            return $this->unauthorizedUser();
-        }
+        return response()->json([
+            'success' => true,
+            'data' => $properties,
+            'message' => 'List of all properties',
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -72,17 +67,30 @@ class PropertyController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        if (Auth::user()->can('show', $property)) {
+        return response()->json([
+            'success' => true,
+            'data' => $property,
+            'message' => 'The property was request'
+        ], Response::HTTP_OK);
 
-            return response()->json([
-                'success' => true,
-                'data' => $property,
-                'message' => 'The property was request'
-            ], Response::HTTP_OK);
+    }
 
-        } else {
-            return $this->unauthorizedUser();
-        }
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function showByFilter(Request $request): JsonResponse
+    {
+        $this->propertyService->validateFilterPostData($request);
+
+         list($ref, $price, $location, $category) = $request->all();
+
+         return response()->json([
+             'success' => true,
+             'message' => 'Property with ref ' . $ref,
+         ], Response::HTTP_OK);
+
     }
 
     /**
@@ -164,26 +172,31 @@ class PropertyController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function delete($id): JsonResponse
     {
-        $post = auth()->user()->properties()->find($id);
-
-        if (!$post) {
+        $property = Property::find($id);
+        if (!$property) {
             return response()->json([
                 'success' => false,
-                'message' => 'Post not found'
+                'message' => 'Property not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
-        if ($post->delete()) {
-            return response()->json([
-                'success' => true
-            ], Response::HTTP_OK);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Post can not be deleted'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if (Auth::user()->can('delete')) {
+
+            if ($property->delete()) {
+
+                return response()->json([
+                    'success' => true
+                ], Response::HTTP_OK);
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Post can not be deleted'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
