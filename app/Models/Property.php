@@ -23,6 +23,7 @@ class Property extends Model
     protected $fillable = [
         'category_id',
         'user_id',
+        'city_id',
         'title',
         'reference',
         'plot_meters',
@@ -62,5 +63,15 @@ class Property extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Return the city of this property
+     *
+     * @return BelongsTo
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 }
