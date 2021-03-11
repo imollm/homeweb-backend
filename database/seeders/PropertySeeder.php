@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\City;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -23,6 +24,7 @@ class PropertySeeder extends Seeder
             DB::table('properties')->insert([
                 'user_id' => 3,
                 'category_id' => $i + 1,
+                'city_id' => City::inRandomOrder()->first()->id,
                 'title' => Str::random(10),
                 'reference' => strtolower(Str::random(6)),
                 'plot_meters' => $i * 100,
