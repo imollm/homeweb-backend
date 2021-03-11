@@ -21,7 +21,20 @@ class Property extends Model
      * @var string[]
      */
     protected $fillable = [
-        'category_id', 'title', 'reference', 'plot_meters', 'build_meters', 'address', 'location', 'description', 'energetic_certification', 'active'
+        'category_id',
+        'user_id',
+        'title',
+        'reference',
+        'plot_meters',
+        'built_meters',
+        'address',
+        'longitude',
+        'latitude',
+        'description',
+        'energetic_certification',
+        'sold',
+        'active',
+        'price',
     ];
 
     /**
@@ -39,16 +52,6 @@ class Property extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Return all customers interested on a property
-     *
-     * @return BelongsToMany
-     */
-    public function interested(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class);
     }
 
     /**
