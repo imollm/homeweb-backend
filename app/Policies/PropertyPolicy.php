@@ -5,9 +5,6 @@ namespace App\Policies;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Auth;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class PropertyPolicy
@@ -23,17 +20,22 @@ class PropertyPolicy
      */
     public function all(User $user): bool
     {
-        $authorizedRoles = ['admin', 'customer', 'employee'];
+        $authorizedRoles =  ['admin', 'customer', 'employee'];
+        $userRole =         $user->role->name;
 
-        return in_array($user->role->name, $authorizedRoles);
+        return in_array($userRole, $authorizedRoles);
     }
 
     /**
+     * @param User $user
      * @return bool
      */
-    public function create(): bool
+    public function create(User $user): bool
     {
-        return Auth::user()->role->name == 'employee' || 'owner';
+        $authorizedRoles =  ['admin', 'employee', 'owner'];
+        $userRole =         $user->role->name;
+
+        return in_array($userRole, $authorizedRoles);
     }
 
     /**
@@ -48,7 +50,7 @@ class PropertyPolicy
         if (in_array($user->role->name, $authorizedRoles)) {
             return true;
         }
-        elseif ($user->id === $property->user_id) {
+        elseif ($user->id === $property->user_id && $user->role->name === 'owner') { // If is owner
             return true;
         }
         else {
