@@ -2,20 +2,52 @@
 
 namespace App\Policies;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CategoryPolicy
+/**
+ * Class CategoryPolicy
+ * @package App\Policies
+ */
+class CategoryPolicy extends Policy
 {
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
-     *
-     * @return void
+     * @param User $user
+     * @return bool
      */
-    public function __construct()
+    public function create(User $user): bool
     {
-        //
+        return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee']);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function show(User $user): bool
+    {
+        return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee', 'customer', 'owner']);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function update(User $user): bool
+    {
+        return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee']);
+    }
+
+    /**
+     * @param User $user
+     * @param Category $category
+     * @return bool
+     */
+    public function delete(User $user): bool
+    {
+        return $this->isAuthorizedToDoThisAction($user->role->name, ['admin']);
     }
 }
