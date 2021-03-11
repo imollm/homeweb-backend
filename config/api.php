@@ -14,5 +14,7 @@ return [
     'apiEmployeeEmail' => env('API_EMPLOYEE_EMAIL'),
     'apiEmployeePassword' => env('API_EMPLOYEE_PASSWORD'),
     'apiOwnerEmail' => env('API_OWNER_EMAIL'),
-    'apiOwnerPassword' => env('API_OWNER_PASSWORD')
+    'apiOwnerPassword' => env('API_OWNER_PASSWORD'),
+    'apiOwner1Email' => env('API_OWNER1_EMAIL'),
+    'apiOwner1Password' => env('API_OWNER1_PASSWORD')
 ];
