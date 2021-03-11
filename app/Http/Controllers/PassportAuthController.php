@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\PassportAuthService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -86,16 +87,14 @@ class PassportAuthController extends Controller
      * Logout
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return Application|ResponseFactory|\Illuminate\Http\Response
      */
-    public function logout(Request $request): JsonResponse {
+    public function logout(Request $request): Application|ResponseFactory|\Illuminate\Http\Response
+    {
 
         $request->user()->token()->revoke();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Successfully logged out'
-        ], Response::HTTP_OK);
+        return response('',Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -110,6 +109,6 @@ class PassportAuthController extends Controller
             'success' => true,
             'data' => $request->user(),
             'message' => 'Auth user'
-        ]);
+        ], Response::HTTP_OK);
     }
 }
