@@ -84,13 +84,18 @@ class PropertyController extends Controller
     {
         $this->propertyService->validateFilterPostData($request);
 
-         list($ref, $price, $location, $category) = $request->all();
+        $ref = $request->input('reference');
+        $price = $request->input('price');
+        $location = $request->input('location');
+        $category = $request->input('category');
 
-         return response()->json([
-             'success' => true,
-             'message' => 'Property with ref ' . $ref,
-         ], Response::HTTP_OK);
+        $result = $this->propertyService->getPropertiesByFilters($ref, $price, $location, $category);
 
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+            'message' => 'Properties request'
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -154,8 +159,7 @@ class PropertyController extends Controller
                     'data' => Property::find($id),
                     'message' => 'Property updated successfully',
                 ], Response::HTTP_OK);
-            }
-            else {
+            } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Property can not be updated'
@@ -211,7 +215,7 @@ class PropertyController extends Controller
     {
         $property = Property::find($id);
 
-        if(!$property)
+        if (!$property)
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found',

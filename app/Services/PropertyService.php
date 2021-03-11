@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Models\Property;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -128,24 +129,40 @@ class PropertyService implements PropertyServiceI
     public function validateFilterPostData(Request $request)
     {
         Validator::make($request->all(), [
-            'reference' => 'nullable|string|max:255',
-            'price' => 'nullable|string',
+            'reference' => 'nullable|max:255',
+            'price' => 'nullable',
             'location' => 'nullable',
-            'category' => 'nullable|number',
+            'category' => 'nullable',
         ])->validate();
     }
 
     /**
-     * @param string $ref
-     * @param string $price
-     * @param string $location
-     * @param string $category
-     * @return array|null
+     * @param string|null $ref
+     * @param string|null $lowPrice
+     * @param float|null $upperPrice
+     * @param string|null $location
+     * @param string|null $category
+     * @return Property|null
      */
-    public function getPropertiesByFilters(string $ref, string $price, string $location, string $category): array | null
+    public function getPropertiesByFilters(string $ref = null, string $lowPrice = null, float $upperPrice = null, string $location = null, string $category = null): Collection | null
     {
-        return Property::where('reference', '=', $ref)
-                        ->orWhere('price', 'BETWEEN', $price)
-                        ->orWhere('location');
+        $result = new Collection();
+
+        if ($ref) {
+            return Property::where('reference', $ref)->get();
+        }
+        if () {
+
+        }
+//        return Property::where('reference', $ref)
+//                        ->whereBetween('price', $price)
+//                        ->where('city_id', $location)
+//                        ->where('category_id')
+//                        ->get();
+    }
+
+    private function getPrices(): array
+    {
+
     }
 }
