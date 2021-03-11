@@ -19,14 +19,16 @@ class CreatePropertiesTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->string('reference')->unique();
-            $table->float('plot_meters');
-            $table->float('built_meters');
-            $table->string('address');
-            $table->json('location');
+            $table->float('plot_meters')->default(0);
+            $table->float('built_meters')->default(0);
+            $table->string('address')->nullable();
+            $table->float('longitude')->nullable();
+            $table->float('latitude')->nullable();
             $table->longText('description')->nullable();
-            $table->enum('energetic_certification', ['obtained', 'in process', 'pending']);
+            $table->enum('energetic_certification', ['obtained', 'in process', 'pending'])->nullable();
             $table->boolean('sold')->default(false);
             $table->boolean('active')->default(true);
+            $table->float('price')->default(0);
 
             $table->timestamps();
 
