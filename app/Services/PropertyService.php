@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use League\CommonMark\Util\ArrayCollection;
 
 /**
  * Class PropertyService
@@ -30,26 +31,8 @@ class PropertyService implements PropertyServiceI
                 'category_id' => 'required|numeric',
                 'user_id' => 'numeric|nullable',
                 'title' => 'required|string|max:255',
-                'reference' => 'required|unique:properties|max:255',
+                'reference' => 'required|string|unique:properties|max:255',
             ])->validate();
-
-//        $property = new Property();
-//
-//        $property->user_id = $request->input('user_id');
-//        $property->category_id = $request->input('category_id');
-//        $property->title = $request->input('title');
-//        $property->reference = $request->input('reference');
-//        $property->plot_meters = $request->input('plot_meters');
-//        $property->built_meters = $request->input('built_meters');
-//        $property->address = $request->input('address');
-//        $property->location = json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT);
-//        $property->description = $request->input('description');
-//        $property->energetic_certification = $request->input('energetic_certification');
-//        $property->price = $request->input('price');
-//        $property->active = $request->input('active');
-//        $property->sold = $request->input('sold');
-//
-//        return $property;
     }
 
     /**
@@ -129,8 +112,40 @@ class PropertyService implements PropertyServiceI
         }
     }
 
+    /**
+     * @param string $userId
+     * @return bool
+     */
     private function haveThisUserOwnerRole(string $userId): bool
     {
         return User::find($userId)->role->name === 'owner';
+    }
+
+    /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    public function validateFilterPostData(Request $request)
+    {
+        Validator::make($request->all(), [
+            'reference' => 'nullable|string|max:255',
+            'price' => 'nullable|string',
+            'location' => 'nullable',
+            'category' => 'nullable|number',
+        ])->validate();
+    }
+
+    /**
+     * @param string $ref
+     * @param string $price
+     * @param string $location
+     * @param string $category
+     * @return array|null
+     */
+    public function getPropertiesByFilters(string $ref, string $price, string $location, string $category): array | null
+    {
+        return Property::where('reference', '=', $ref)
+                        ->orWhere('price', 'BETWEEN', $price)
+                        ->orWhere('location');
     }
 }
