@@ -24,7 +24,7 @@ class PropertySeeder extends Seeder
                 'user_id' => 3,
                 'category_id' => $i + 1,
                 'title' => Str::random(10),
-                'reference' => Str::random(6),
+                'reference' => strtolower(Str::random(6)),
                 'plot_meters' => $i * 100,
                 'built_meters' => $i * 90,
                 'address' => Str::random(20),
