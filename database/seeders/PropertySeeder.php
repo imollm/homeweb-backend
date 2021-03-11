@@ -36,6 +36,7 @@ class PropertySeeder extends Seeder
                 'energetic_certification' => Arr::random($energetic_certification_values),
                 'sold' => false,
                 'active' => true,
+                'price' => 100000 * ($i+1),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
