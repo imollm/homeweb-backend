@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CategoryController
@@ -13,40 +15,63 @@ use Illuminate\Support\Facades\Auth;
  */
 class CategoryController extends Controller
 {
+    /**
+     * @var CategoryService
+     */
+    private CategoryService $categoryService;
+
+    /**
+     * CategoryController constructor.
+     *
+     * @param CategoryService $categoryService
+     */
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
+    /**
+     * Create a new category
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function create(Request $request): JsonResponse
     {
-        $this->validate($request, [
-            'name' => 'required|string|max:255',
-        ]);
-
-        $categoryName = strtolower($request->input('name'));
-
-        $categoryExists = Category::where('name', '=', $categoryName)->first();
-
-        if ($categoryExists) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Category exists',
-            ]);
-        }
-
         if (Auth::user()->can('create', Category::class)) {
 
-            $category = new Category();
-            $category->name = $categoryName;
+            $categoryName = $request->input('name');
 
-            if ($category->save()) {
+            $this->categoryService->validatePostCategoryData($request);
+
+            if ($this->categoryService->categoryExists($categoryName)) {
+
                 return response()->json([
-                    'success' => true,
-                    'data' => $category,
-                    'message' => 'Category was added correctly',
-                    'exists' => $categoryExists
-                ]);
+                    'success' => false,
+                    'message' => 'Category exists',
+                ], Response::HTTP_CONFLICT);
+
+            } else {
+
+                $category = new Category();
+                $category->name = $categoryName;
+
+                if ($category->save()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Category added correctly',
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Category not added',
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
             }
         } else {
             return $this->unauthorizedUser();
         }
-
     }
 
     /**
@@ -63,5 +88,117 @@ class CategoryController extends Controller
             'data' => $categories,
             'message' => 'All categories'
         ]);
+    }
+
+    /**
+     * Show a category by id
+     *
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function show(string $id): JsonResponse
+    {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        if (Auth::user()->can('show', $category)) {
+
+            return response()->json([
+                'success' => true,
+                'data' => $category,
+                'message' => 'The category was request'
+            ], Response::HTTP_OK);
+
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
+
+    /**
+     * Update a category
+     *
+     * @param Request $request
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function update(Request $request, string $id): JsonResponse
+    {
+        if (Auth::user()->can('update', Category::class)) {
+
+            $categoryName = $request->input('name');
+
+            if ($this->categoryService->categoryExists($categoryName)) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Category exists',
+                ], Response::HTTP_CONFLICT);
+
+            } else {
+
+                if (Category::updateOrCreate($request->all())) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Category modified correctly',
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Category not modified',
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            }
+
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
+
+    /**
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function delete(string $id): JsonResponse
+    {
+        $category = Category::find($id);
+        $categoryName = $category->name;
+
+        if (!$this->categoryService->categoryExists($categoryName)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This category not exists',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        if (Auth::user()->can('delete', Category::class)) {
+
+            if (!$this->categoryService->hasThisCategoryProperties($category)) {
+                if ($this->categoryService->deleteCategory($category)) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Category deleted successfully',
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Category not deleted',
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Category has properties',
+                ], Response::HTTP_CONFLICT);
+            }
+
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 }
