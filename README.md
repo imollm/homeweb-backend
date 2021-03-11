@@ -71,13 +71,18 @@
       php artisan key:generate
    ```
 
-   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6 i 7.
+   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
 
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
 2. Importem *l'API schema* que tenim al projecte `HomeWeb.postman_collection.json`
 3. 
 
+### Test amb PHPUnit
+Abans de realitzar tests per carregar les credencials dels usuaris dins .env i api.php picar
+   ```sh
+      php artisan config:cache
+   ```
 
 ### Llicència
 
