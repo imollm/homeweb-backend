@@ -16,23 +16,42 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+/*-----------------------------------------------------------------------------------*/
+/*-------------------------------------PUBLIC ROUTES---------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 Route::prefix('/auth')->name('auth.public.')->group(function () {
     Route::post('/register', [PassportAuthController::class, 'register']);
     Route::post('/login', [PassportAuthController::class, 'login']);
 });
 
 // Unauthenticated routes
-Route::get('/categories/all', [CategoryController::class, 'all'])->name('all');
+Route::prefix('properties')->name('properties.')->group(function () {
+    Route::get('/all', [PropertyController::class, 'all'])->name('all');
+    Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::post('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
+});
+
+Route::prefix('categories')->name('categories.')->group(function () {
+    Route::get('/all', [CategoryController::class, 'all'])->name('all');
+});
+/*-----------------------------------------------------------------------------------*/
+/*---------------------------------END PUBLIC ROUTES---------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+
+
+/*-----------------------------------------------------------------------------------*/
+/*-------------------------------------AUTH ROUTES-----------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 
 Route::middleware('auth:api')->group(function () {
     // Properties auth routes
     Route::prefix('properties')->name('properties.')->group(function () {
         Route::post('/create', [PropertyController::class, 'create'])->name('create');
-        Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::put('/{id}/update', [PropertyController::class, 'update'])->where('id', '[0-9]+')->name('update');
         Route::get('/{id}/setActive/{status}', [PropertyController::class, 'setActive'])->where(['id' => '[0-9]+', 'status' => '[0-1]{1}'])->name('setActive');
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
-        Route::get('/all', [PropertyController::class, 'all'])->name('all');
     });
     // Roles auth routes
     Route::prefix('roles')->name('roles.')->group(function () {
@@ -43,6 +62,9 @@ Route::middleware('auth:api')->group(function () {
     // Categories auth routes
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::post('/create', [CategoryController::class, 'create'])->name('create');
+        Route::put('/{id}/update', [CategoryController::class, 'update'])->where('id', '[0-9]+')->name('update');
+        Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
+        Route::delete('/{id}/delete', [CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
     });
     // User auth routes
     Route::prefix('/auth')->name('auth.private')->group(function () {
@@ -50,3 +72,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('user', [PassportAuthController::class, 'user'])->name('user');
     });
 });
+/*-----------------------------------------------------------------------------------*/
+/*---------------------------------END AUTH ROUTES-----------------------------------*/
+/*-----------------------------------------------------------------------------------*/
