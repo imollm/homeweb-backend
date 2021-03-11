@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\User;
+use App\Services\PropertyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use function PHPUnit\Framework\isNull;
 
 /**
  * Class PropertyController
@@ -15,6 +19,21 @@ use Illuminate\Validation\ValidationException;
  */
 class PropertyController extends Controller
 {
+    /**
+     * @var PropertyService
+     */
+    private PropertyService $propertyService;
+
+    /**
+     * PropertyController constructor.
+     *
+     * @param PropertyService $propertyService
+     */
+    public function __construct(PropertyService $propertyService)
+    {
+        $this->propertyService = $propertyService;
+    }
+
     /**
      * Return all models stored in database.
      *
@@ -30,7 +49,7 @@ class PropertyController extends Controller
                 'success' => true,
                 'data' => $properties,
                 'message' => 'List of all properties',
-            ]);
+            ], Response::HTTP_OK);
         } else {
             return $this->unauthorizedUser();
         }
@@ -50,7 +69,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         if (Auth::user()->can('show', $property)) {
@@ -59,7 +78,7 @@ class PropertyController extends Controller
                 'success' => true,
                 'data' => $property,
                 'message' => 'The property was request'
-            ]);
+            ], Response::HTTP_OK);
 
         } else {
             return $this->unauthorizedUser();
@@ -67,7 +86,9 @@ class PropertyController extends Controller
     }
 
     /**
-     * Create a property model into database
+     * Create a property model into database.
+     * If admin or employee create this property, add owner with request owner id.
+     * Otherwise, check if the owner have that role, if not return error response.
      *
      * @param Request $request
      * @return JsonResponse
@@ -77,98 +98,92 @@ class PropertyController extends Controller
     {
         if (Auth::user()->can('create', Property::class)) {
 
-            $property = new Property();
+            $this->propertyService->validatePostPropertyData($request);
 
-            $this->validate($request, [
-                'reference' => 'required|string|unique:properties|max:255',
-                'plot_meters' => 'required|numeric',
-                'built_meters' => 'required|numeric',
-                'address' => 'required|string|max:255',
-                'longitude' => 'required|numeric',
-                'latitude' => 'required|numeric',
-                'description' => 'string|max:255',
-                'energetic_certification' => ['required', Rule::in(['obtained', 'in progress', 'pending'])],
-            ]);
-
-            $property->reference = $request->input('reference');
-            $property->plot_meters = $request->input('plot_meters');
-            $property->built_meters = $request->input('built_meters');
-            $property->address = $request->input('address');
-            $property->location = json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT);
-            $property->description = $request->input('description');
-            $property->energetic_certification = $request->input('energetic_certification');
-
-            if (auth()->user()->properties()->save($property))
+            if ($this->propertyService->createOrUpdateProperty($request, 'create')) {
                 return response()->json([
                     'success' => true,
-                    'data' => $property->toArray(),
-                    'message' => 'Property was added correctly',
-                ]);
-            else
+                    'message' => 'Property added correctly',
+                ], Response::HTTP_CREATED);
+            } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Property not added',
-                ], 500);
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
         } else {
             return $this->unauthorizedUser();
         }
     }
 
     /**
-     * Update auth user property
+     * Update property
      *
      * @param Request $request
      * @param $id
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        $property = Property::find($id);
+        $propertyExists = Property::find($id);
 
-        if (!$property) {
+        if (!$propertyExists) {
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        if (Auth::user()->can('update', $property)) {
+        if (Auth::user()->can('update', $propertyExists)) {
 
-            $this->validate($request, [
-                'plot_meters' => 'required|numeric',
-                'built_meters' => 'required|numeric',
-                'address' => 'required|string|max:255',
-                'longitude' => 'required|numeric',
-                'latitude' => 'required|numeric',
-                'description' => 'string|max:255',
-                'energetic_certification' => ['required', Rule::in(['obtained', 'in progress', 'pending'])],
-            ]);
+            $this->propertyService->validatePostPropertyData($request);
 
-            $updated = Property::find($id)->update(
-                [
-                    'plot_meters' => $request->input('plot_meters'),
-                    'built_meters' => $request->input('built_meters'),
-                    'address' => $request->input('address'),
-                    'location' => json_encode(["longitude" => (float)$request->input('longitude'), "latitude" => (float)$request->input('latitude')], JSON_FORCE_OBJECT),
-                    'description' => $request->input('description'),
-                    'energetic_certification' => $request->input('energetic_certification'),
-                ]
-            );
-
-            if ($updated)
+            if ($this->propertyService->createOrUpdateProperty($request, 'update', $id)) {
                 return response()->json([
                     'success' => true,
                     'data' => Property::find($id),
                     'message' => 'Property updated successfully',
-                ], 201);
-            else
+                ], Response::HTTP_OK);
+            }
+            else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Property can not be updated'
-                ], 500);
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         } else {
             return $this->unauthorizedUser();
+        }
+    }
+
+    /**
+     * Delete a property by id
+     *
+     * @param $id
+     * @return JsonResponse
+     */
+    public function destroy($id): JsonResponse
+    {
+        $post = auth()->user()->properties()->find($id);
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        if ($post->delete()) {
+            return response()->json([
+                'success' => true
+            ], Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post can not be deleted'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -187,7 +202,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
 
         if (Auth::user()->can('setActive', $property)) {
 
@@ -196,38 +211,10 @@ class PropertyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => '',
-            ], 204);
+            ], Response::HTTP_NO_CONTENT);
 
         } else {
             return $this->unauthorizedUser();
-        }
-    }
-
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id): JsonResponse
-    {
-        $post = auth()->user()->properties()->find($id);
-
-        if (!$post) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Post not found'
-            ], 400);
-        }
-
-        if ($post->delete()) {
-            return response()->json([
-                'success' => true
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Post can not be deleted'
-            ], 500);
         }
     }
 
@@ -245,7 +232,7 @@ class PropertyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Property can not be retrieve',
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         } else {
             $owner = $property->owner();
 
@@ -253,12 +240,12 @@ class PropertyController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Owner can not be retrieve',
-                ]);
+                ], Response::HTTP_NOT_FOUND);
             } else {
                 return response()->json([
                     'success' => true,
                     'data' => $owner,
-                ]);
+                ], Response::HTTP_OK);
             }
         }
     }
