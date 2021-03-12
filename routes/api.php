@@ -39,6 +39,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
 
 Route::prefix('countries')->name('countries.')->group(function () {
     Route::get('/index', [CountryController::class, 'index'])->name('index');
+    Route::get('/{id}/show', [CountryController::class, 'show'])->where('id', '[0-9]+')->name('show');
 });
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
@@ -74,6 +75,10 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('/auth')->name('auth.private')->group(function () {
         Route::get('logout', [PassportAuthController::class, 'logout'])->name('logout');
         Route::get('user', [PassportAuthController::class, 'user'])->name('user');
+    });
+
+    Route::prefix('countries')->name('countries.')->group(function () {
+        Route::post('/store', [CountryController::class, 'store'])->name('store');
     });
 });
 /*-----------------------------------------------------------------------------------*/

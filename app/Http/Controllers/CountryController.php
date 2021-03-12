@@ -6,6 +6,8 @@ use App\Models\Country;
 use App\Services\CountryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\Constraint\Count;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,21 +52,54 @@ class CountryController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
+        if (Auth::user()->can('store', Country::class)) {
 
+            $this->countryService->validatePostData($request);
+
+            if ($this->countryService->create($request)) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Country already exists'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            } else {
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Country created'
+                ], Response::HTTP_CREATED);
+            }
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Country $country
+     * @param string $id
      * @return JsonResponse
      */
-    public function show(Country $country)
+    public function show(string $id): JsonResponse
     {
-        //
+        $country = Country::find($id);
+
+        if (!$country) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Country not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $country->toArray(),
+            'message' => 'Country found'
+        ], Response::HTTP_OK);
     }
 
     /**
