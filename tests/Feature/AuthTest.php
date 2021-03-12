@@ -115,9 +115,6 @@ class AuthTest extends TestCase
             'password' => $password
         ]);
 
-        $response->dumpSession();
-        $response->dump();
-
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([

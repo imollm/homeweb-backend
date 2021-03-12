@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoleController;
@@ -34,6 +35,10 @@ Route::prefix('properties')->name('properties.')->group(function () {
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/all', [CategoryController::class, 'all'])->name('all');
     Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
+});
+
+Route::prefix('countries')->name('countries.')->group(function () {
+    Route::get('/index', [CountryController::class, 'index'])->name('index');
 });
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/

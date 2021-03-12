@@ -7,6 +7,7 @@ use App\Services\CountryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\Count;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CountryController
@@ -33,9 +34,15 @@ class CountryController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $countries = Country::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $countries,
+            'message' => 'List of all countries',
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -44,9 +51,9 @@ class CountryController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+
     }
 
     /**

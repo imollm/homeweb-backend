@@ -427,6 +427,47 @@
 			]
 		},
 		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "INDEX",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/countries/index",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"index"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities",
+			"item": []
+		},
+		{
 			"name": "Users",
 			"item": [
 				{
@@ -569,10 +610,6 @@
 		},
 		{
 			"name": "Tours",
-			"item": []
-		},
-		{
-			"name": "Countries",
 			"item": []
 		},
 		{
@@ -890,10 +927,6 @@
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Cities",
-			"item": []
 		}
 	],
 	"auth": {

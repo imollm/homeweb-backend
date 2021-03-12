@@ -4,19 +4,22 @@ namespace Tests\Feature\tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Config;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class CountryShowTests extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    public function test_country_request_all()
     {
-        $response = $this->get('/');
+        $uri = Config::get('app.url') . '/api/countries/index';
 
-        $response->assertStatus(200);
+        $this->getJson($uri)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'data' => array(),
+                'message' => 'List of all countries',
+            ]);
     }
 }
