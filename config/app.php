@@ -178,6 +178,7 @@ return [
         App\Providers\PassportAuthServiceProvider::class,
         App\Providers\PropertyServiceProvider::class,
         App\Providers\CategoryServiceProvider::class,
+        App\Providers\CountryServiceProvider::class,
 
     ],
 
