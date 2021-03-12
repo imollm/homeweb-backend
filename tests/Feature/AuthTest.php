@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
+/**
+ * Class AuthTest
+ * @package Tests\Feature
+ */
 class AuthTest extends TestCase
 {
     /**
@@ -235,5 +239,43 @@ class AuthTest extends TestCase
         $authUserResponse
             ->assertStatus(Response::HTTP_OK)
             ->assertJson(['success' => true, 'message' => 'Auth user']);
+    }
+
+    public function test_login_admin_with_wrong_email()
+    {
+        $baseUrl = Config::get('app.url') . '/api/auth/login';
+        $wrongEmail = 'wrong@email.com';
+        $password = Config::get('api.apiAdminPassword');
+
+        $response = $this->json('POST', $baseUrl . '/', [
+            'email' => $wrongEmail,
+            'password' => $password
+        ]);
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertExactJson([
+                'success' => false,
+                'message' => 'Unauthorized User'
+            ]);
+    }
+
+    public function test_login_admin_with_wrong_password()
+    {
+        $baseUrl = Config::get('app.url') . '/api/auth/login';
+        $email = Config::get('api.apiAdminEmail');
+        $wrongPassword = 'Wrong Password';
+
+        $response = $this->json('POST', $baseUrl . '/', [
+            'email' => $email,
+            'password' => $wrongPassword
+        ]);
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertExactJson([
+                'success' => false,
+                'message' => 'Unauthorized User'
+            ]);
     }
 }
