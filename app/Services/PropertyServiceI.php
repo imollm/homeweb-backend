@@ -12,5 +12,5 @@ interface PropertyServiceI
     public function validatePostPropertyData(Request $request);
     public function createOrUpdateProperty(Request $request, string $action, string $propertyId = ''): bool;
     public function validateFilterPostData(Request $request);
-    public function getPropertiesByFilters(string $ref = null, string $lowPrice = null, float $upperPrice = null, string $location = null, string $category = null): Collection | null;
+    public function getPropertiesByFilters(Request $request): Collection | null;
 }

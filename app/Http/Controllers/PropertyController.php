@@ -84,18 +84,18 @@ class PropertyController extends Controller
     {
         $this->propertyService->validateFilterPostData($request);
 
-        $ref = $request->input('reference');
-        $price = $request->input('price');
-        $location = $request->input('location');
-        $category = $request->input('category');
+        $result = $this->propertyService->getPropertiesByFilters($request);
 
-        $result = $this->propertyService->getPropertiesByFilters($ref, $price, $location, $category);
-
-        return response()->json([
-            'success' => true,
-            'data' => $result,
-            'message' => 'Properties request'
-        ], Response::HTTP_OK);
+        if ($result->count() > 0) {
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+                'message' => 'Properties request',
+                'filters' => $request->all()
+            ], Response::HTTP_OK);
+        } else {
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        }
     }
 
     /**

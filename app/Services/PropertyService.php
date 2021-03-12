@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\Property;
+use App\Models\RangePrice;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -137,32 +138,40 @@ class PropertyService implements PropertyServiceI
     }
 
     /**
-     * @param string|null $ref
-     * @param string|null $lowPrice
-     * @param float|null $upperPrice
-     * @param string|null $location
-     * @param string|null $category
+     * @param Request $request
      * @return Property|null
      */
-    public function getPropertiesByFilters(string $ref = null, string $lowPrice = null, float $upperPrice = null, string $location = null, string $category = null): Collection | null
+    public function getPropertiesByFilters(Request $request): Collection | null
     {
-        $result = new Collection();
+        $conditions = [
+            'reference' => $request->has('reference') ? $request->input('reference') : '',
+            'price' => $request->has('price') ? $request->input('price') : '',
+            'city_id' => $request->has('city_id') ? $request->input('city_id') : '',
+            'category_id' => $request->has('category_id') ? $request->input('category_id') : '',
+        ];
 
-        if ($ref) {
-            return Property::where('reference', $ref)->get();
+        $query = Property::select();
+
+        foreach ($conditions as $condition => $value) {
+
+            if (!is_null($value)) {
+
+                if ($condition === 'price') {
+
+                    $query->where(function ($q) use ($value) {
+
+                        $bigPrice = RangePrice::where('id', $value)->first()->big_price;
+                        $smallPrice = RangePrice::where('id', $value)->first()->small_price;
+
+                        $q->whereBetween('price', [$smallPrice, $bigPrice]);
+
+                    });
+
+                } else {
+                    $query->where($condition, $value);
+                }
+            }
         }
-        if () {
-
-        }
-//        return Property::where('reference', $ref)
-//                        ->whereBetween('price', $price)
-//                        ->where('city_id', $location)
-//                        ->where('category_id')
-//                        ->get();
-    }
-
-    private function getPrices(): array
-    {
-
+        return $query->get();
     }
 }
