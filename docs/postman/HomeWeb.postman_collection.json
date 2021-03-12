@@ -27,7 +27,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"category_id\": 1,\n    \"user_id\": 3,\n    \"title\": \"Title of property\",\n    \"reference\": \"123456\",\n    \"plot_meters\": 100,\n    \"built_meters\":90,\n    \"address\": \"Lorem ipsum\",\n    \"longitude\": 100,\n    \"latitude\":100,\n    \"description\": \"Lorem ipsum\",\n    \"energetic_certification\": \"obtained\"\n}",
+							"raw": "{\n    \"user_id\": \"\",\n    \"category_id\": 2,\n    \"city_id\": 1,\n    \"title\": \"TPcdaQrM4yd\",\n    \"reference\": \"pcaeeddddE8Z\",\n    \"plot_meters\": 1000,\n    \"built_meters\": 300,\n    \"address\": \"nLkIj2mQOdtZiaKCZZmm6\",\n    \"longitude\": 100,\n    \"latitude\": 200,\n    \"description\": \"orI3dsrdA9J5qaezo5h3QJR9lciG8lWozt82tNP3dAGbw6Q9pzg9Nb736GrBmFwNJRYk16iNlrv2ueXaU4pH1caYtqpawiwEbNj9E\",\n    \"energetic_certification\": \"obtained\",\n    \"sold\": false,\n    \"active\": true,\n    \"price\": 1000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -65,7 +65,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 11,\n    \"plot_meters\": 0,\n    \"built_meters\": 0,\n    \"address\": \"eqpWWXqaKZg1BTklLSpNdddddd234234234234\",\n    \"longitude\": 40.0333,\n    \"latitude\": 5.33333,\n    \"description\": \"Lorem ipsum\",\n    \"energetic_certification\": \"pending\"\n}",
+							"raw": "{\n    \"user_id\": 3,\n    \"category_id\": 4,\n    \"city_id\": 1,\n    \"title\": \"TPcdaQrM4yd\",\n    \"reference\": \"12341234\",\n    \"plot_meters\": 50,\n    \"built_meters\": 20,\n    \"address\": \"nLkIj2mQOdtZiaKCZZmm6\",\n    \"longitude\": \"100\",\n    \"latitude\": \"200\",\n    \"description\": \"orI3dsrdA9J5qaezo5h3QJR9lciG8lWozt82tNP3dAGbw6Q9pzg9Nb736GrBmFwNJRYk16iNlrv2ueXaU4pH1caYtqpawiwEbNj9E\",\n    \"energetic_certification\": \"obtained\",\n    \"sold\": false,\n    \"active\": true,\n    \"price\": 1000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -73,13 +73,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/properties/11/update",
+							"raw": "{{baseUrl}}/properties/3/update",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"properties",
-								"11",
+								"3",
 								"update"
 							]
 						},
@@ -88,7 +88,7 @@
 					"response": []
 				},
 				{
-					"name": "SHOW",
+					"name": "SHOW BY ID",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -104,14 +104,44 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/properties/11/show",
+							"raw": "{{baseUrl}}/properties/1/show",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"properties",
-								"11",
+								"1",
 								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SHOW BY FILTER",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\": \"qxmd31\",\n    \"price\": 2,\n    \"city_id\": 1,\n    \"category_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/properties/showByFilter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"properties",
+								"showByFilter"
 							]
 						}
 					},
@@ -251,6 +281,152 @@
 			"description": "Properties endpoints, some endpoints haven't token auth.\n\n- An administrator can create, read, update, and delete all types of properties\n- An employee can create, read, and update any property, but cannot delete them\n- A customer will only be able to read properties\n- An owner will be able to create and update their properties, will be able to read any, but will not be able to delete any property, nor theirs. "
 		},
 		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "ALL",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New category\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SHOW BY ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/1/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"1",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/1/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"1",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New category\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/1/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"1",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Users",
 			"item": [
 				{
@@ -384,83 +560,6 @@
 							"path": [
 								"roles",
 								"all"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Categories",
-			"item": [
-				{
-					"name": "ALL",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/categories/all",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"categories",
-								"all"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "CREATE",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Adosat",
-									"description": "Name is required",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseUrl}}/categories/create",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"categories",
-								"create"
 							]
 						}
 					},
@@ -791,6 +890,10 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Cities",
+			"item": []
 		}
 	],
 	"auth": {
@@ -798,7 +901,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{apiTokenAdmin}}",
+				"value": "{{apiTokeAdmin}}",
 				"type": "string"
 			}
 		]
@@ -830,11 +933,11 @@
 		},
 		{
 			"key": "apiTokenAdmin",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjY0NWI3MWU1MTRiYzBiZmI0MThmMjM3ZDUwMTAzNTJkYjEzMTUyYThhNDFmYjY2NzUyY2M0YjJjOTEyODA1ZjEwNDQwODkxMmZiYzVmOTAiLCJpYXQiOiIxNjE1MTQ1NDk1LjI2MTg0NyIsIm5iZiI6IjE2MTUxNDU0OTUuMjYxODUxIiwiZXhwIjoiMTY0NjY4MTQ5NS4yNTcwMzciLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.JgMxCZRY_7kFtPT8vS5RjFIPqKXHIZvWIH46s3_-rkrOESpdO-UsG7DFsF7t_H3rOW0YDKMZN1jxcBZG15Xkv6FQTqSlsmhLbg0Ir2JUo2IzyGdj8m5F0S6GmNwOuNVXVLgIMHoUWH0eq2fKRfpo5SLCG19sFExdwOEXJbG9dxzMLzQZYRlZOJ45peUNJPXr6Sk2VpMuLs_STlY9ZLa6xTWdFinVQzbykbNJCfzRryXnr0EP5pU_B6cCtyJ9-96qUSeUABWIrilpqwdtG9YkPJffa5PP7IS_n0FL7KNU2QCJ2WwrC-9FiPLr_Yt4HGxO7hnN2TM7qSI6tIa0lXbF_CJFMtO0EQpFgs-S4m0c1TpG_q5zAi1phrPTFR8yG7suO7LQl5hSpHCkLtL2NF5jdIBF2MkMHW3MJdgj3-63JTPy1YCAybLmI2Hum_NJz0uJZKgBijcLpqFXmW7fgORMzdA1vLpbTzvgHNqPa2wYsZDSq-Rvb2tfUlB-V3-PemHsoz8SmHBQHN69Vp_n-F296OZFsBbwYhWXEeahGP3vd1XIRY02EKdvoILpwpfKTKmrdC6cBwncE_aHV4uonj0rBfNzDdHihx542ckMv8KjkJSpTou_VfTMY8rjpoNkhqNxdylGNPIDb6j074M--pTGptSHRbvFzGS2OJrbyNoqglA"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZTkyZmEzYTczNDJhYTJlZjA2MTlkNTE3MDI5MGZiNGRiOWM0OTI2NjBkMTg5OTRiNDkwOTYxNGI2NTFhYWNlODQyNGE0MjU3MTFmMTQ2MmYiLCJpYXQiOiIxNjE1NDI1MTk3Ljc4NTI5NCIsIm5iZiI6IjE2MTU0MjUxOTcuNzg1MzA2IiwiZXhwIjoiMTY0Njk2MTE5Ny43ODExODIiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.kTm_tIp76QwCUf2g6WsUZIuCFdVW8vKecQsm4wc4SfFOr0Iu8C3U1mD6R3Wo4TJlUWXEUtKxX6WQd3gkVdjdNhgEKh2QDStMpWmFzX0QfHhs6MxSQfSaMkiPomhqSKCaLIGt9ezXbRnWeD_uXhZDi1eTP7CNPKPAnsF6JiK1wZuebCAZh7fSN7UsZnmsR2YBJBnPzx-2QH7mBiRrcH5AbjUHZycIMXJxUv0DtIGsAlCxDTdbdN1uBxbCxm1R5o0HXyrdT2mBe4ezHQ7cswrFoD8YOBtOfCKlhnGVfBxUA5qw6V-5gaVVbKQ-KRzLJBGd8FTtcJN-GhHE7LNcBgXBhIlxlKyyU8IBg8OZmTKKYpfvpQL9PpNH2W9XzZn6OVhFQH-TTZcBgeQNoCr3D0PSCq-VMbFQFEYN9mmzUt8xtELvWrYbg6NShygYOAG2zFCe2v5OhHQGsioxU3X4Fk5Ec7KZF1zu0eoxZVhp7Rt0PHcFbIHOvMULv76EH0yart2cdESlenyv0Kl9akjhStOUBHtLFspbnYW_QwBUvKeVXKea9CqRfUdIi-x1-aHTIf6VmdOSzyrGP12jygl7DY-Q_Bcr3a1cqR1OD3-hcrowo59YhJmAHqnwXiVsYcp1W1hIun9RFsc0sy2-CDmsIdjNKFqAccQCkNrCYJArtSmAw38"
 		},
 		{
 			"key": "apiTokenEmployee",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTQ4ODIzNmU0OThlNGMxZjZiNDUzYmE4MDkwZWFmY2M4ZTIyMTIxYjk0YWZlOGFkMzZlOTc4ODk1NWZhM2Y0MTFhN2ZkMDI1OTA5NjQ0YzAiLCJpYXQiOiIxNjE0NjQ2MDI1LjMwNzg5NiIsIm5iZiI6IjE2MTQ2NDYwMjUuMzA3OTAyIiwiZXhwIjoiMTY0NjE4MjAyNS4zMDM0MjYiLCJzdWIiOiI0Iiwic2NvcGVzIjpbXX0.wuVNHowrCWixNTF-IpxuFf6IDWwh7YwT3FGCzSsNUnMQLhjg1WCarFqcH96ZMp3JSOhjABMov2cTg2XGypGt6kW4iTmJJuMOla8udJjF-C9tVn8rU-hHJXcMk5-eLB4oi0YdBQ976AONTgEGva7bCNIOWqPAc7vmThIH0gYwGOIwH-wNL6X6E__i-8Kxi1AZuiKCf9NXW1TTcr67LON8DkFoNrSHcKPIbAdrOrl3EmyJmtFlfco70MrCyE_kc5JkMnYqwrQQfOFTxokcn0Ulj04J8RTyRersDkF3tmkP-euS-X7ofjOJhDxWcsauzI2ursSiXuWBFVhc1KiDR2-YqRcEFMooQ2x-NNK4y40edvq5nUbOyym2rIW2owuszx5jYimx1u2ZwzWwLWbg2Xpw6nm1Gi0n6Rbfw50E-xFiMIQjsoLqjpvaWtdPYQgUCJVnRY3emUgsNuvg15kg7VqUiiIZz2m3uNuVDo60II4W9gkpXQYeoLYbGoFQKNLiknCzOvkKvTxC-RmEsvYDEuLvZbIDecSe2BlQrIjjHSeYWpeg3iojPe64U7yKCUGFaBy4q5ZJDTLiOwYLtwOxZWScn-QiPrA8QbcpqWtEVNhquxWxsa8Qv4uHtrguXibhzbp2HCJE_wTLh_9eBTB2RXXdEtHzXgQFxuNwIhkCpZ2OhZ0"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTZlNTQ5Yzg4YjE4NDZiZmM0OWU2ZmQ2MTZkZjJkNGRlNGU4YjFjYWVmNWFjYzc0MWFjNmQ5NDNhOGI1YjQxMTUyZmQwMTc2YjllZTQ2NGIiLCJpYXQiOiIxNjE1MzQzNTgwLjYyMTA5OCIsIm5iZiI6IjE2MTUzNDM1ODAuNjIxMTAzIiwiZXhwIjoiMTY0Njg3OTU4MC42MTQ1OTUiLCJzdWIiOiI0Iiwic2NvcGVzIjpbXX0.PbM8m34_qRJzcNRcC5U3SCPAhXMCc1KrUGoTgNFE5tzWkBYmwVYcn8hYPx66Y-_Bwfmf8JFAeCptT_Ij24HMDVyqVomfchKVp2iPgRvCZLNc_uUT2Czy0rTHRMq-BD8xPwYu8ubiQiYd_7QMjqfV1Cel4QATuelI4wVZt1OWpuaiG80CF_Nl1COkZDfpaciHP0iq0sVuePD5DZkIX9e5X4Z_HZd0pzPUNIxIdg-ZVDQiGPHjkCR9lM-YIQc-d1qrvqUj48Gen8VrMR1WsjMFEAOPMrVxdJkhA9cqfSkgRyGzos8WFpICEMViDVnV5P6KHoOLdda_eVg7WS5IN38aNQFtqjDN5g9Ze23W3QdWqn6giKiY2HV6oJJ7LdBenfcAkMslOxwnYSe7F8GVe5vDjp19J7HXTao-OxI22vfHk94eJoYZgwDR_aJ2bdjmLLivgVWzENtKJRrIy3aHBDzH21_HYiRhqF_95hawxxhldeXEbBF9IzyrQne11qCnWa8pBNt17FFSGn91cHWaF5e22_Lt3Yd8bA52XM_P43OHpXJsMFss5l2pLBN6SrXfJ36sRGlZjs5j7-UWOvAXyxVYfi4tatspdQ4nQ-U3vgUG33WP2rtxb2aU61uQS7tRF4dWwIh5zInh46ECjMdHhWskUDnWbrm1Rg_hYo0NmGgfWJo"
 		},
 		{
 			"key": "apiTokenCustomer",
@@ -842,7 +945,7 @@
 		},
 		{
 			"key": "apiTokenOwner",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzFiMzljY2Q3ZjJiMjMyODU2ZTQ3ZmVkYzBkYmYzM2U0ODg2YjM4Yzk0YTA5NmIzNWU1N2RiZWFiZDg4NDAwNjBiZjcyZGQ3NzlhMmNkNmYiLCJpYXQiOiIxNjE0OTY0MTI0LjgwNDgwMCIsIm5iZiI6IjE2MTQ5NjQxMjQuODA0ODA2IiwiZXhwIjoiMTY0NjUwMDEyNC43OTk5OTkiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.2TXy12dnkvHbRGAquRwv7Wcr_HeV_rJOLBXu8tiH8xVeMIW-L487SxrpYDxvjpzDz-NR8CYMbKol6oLbVK-yQ_56W7igCgx7UFYugJXaDrv2u0_MFU8ilIxnad2aKEcTLNRliTiGGS1-ZsfBorEph8yguiMaSxC_tIo9vYgjpl3d9YkVT_s7N60P8r-HIOB8KcqNwHWtYivfwugugGmAkopthoGqy3L1ZUTDmQBCNQ5HzY3alUrcT7V-3fkrezSSnJfjR45UNce_Ami7PRYl_WWJrau95Yyo6pyvWgSSaqX6IE-M3B6sZvSrv86JysT9lmtr9fOCRnEjMG9SCQE_g2otFyjlJzFpNGFQpWE-DMDjpeMkURXBmSqSp7dHpMT6nQAAG2uIO8T0uYoDwk1avztpBznFf4pBW60FXf2rnI8-E30Azil6gR0rWvBADYh6jL5x8ypd-V2fh_6N6URnbcJf7JMBmqfoBYz0MsqkUqEvpVrx2TOcE7n9p6Ze_RdG0S98vB6hvl6FarFFR4nzT8M2i0ddImWkA3R5Dz4Fx1vfiUlPvc5enL_q5btsnvfU4O0SBNybgUP4X_viDjC-7VEEcroxNur4aX9AiGyneK8tAn_kTvPxMblNxroZxl_Dz1qpdWCqNDQtYkzRPH9kSdJPh-Y8wrSdstVucA_ywmI"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNDFmMzA3ZGI3NDc4Njk4MTI3NTRlMzQwZjA1NGYzZGRkYzkyNzY4MDA2MGE3MmVhZDhjYzcwZWFjZWMxMTgxYmYxMDg4NmM1Yjg0MjlmMjYiLCJpYXQiOiIxNjE1NDIzMzU3LjU2NTc5MSIsIm5iZiI6IjE2MTU0MjMzNTcuNTY1Nzk1IiwiZXhwIjoiMTY0Njk1OTM1Ny41NTk5MjIiLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.ejZec-zy0B53JGoXbUYXdDA9M4eBixaH4U07vHJ7YtgK7MQSxAms8QugKz1AjmAySZTCXoLCGwnM6dTQnjgYX4yXcRjTpdbWcSeT4Ulkh7IeTYTm0pac-MyhJlDhXoOBeR-kIb_HU-wiPbx-JnkfP5bOegfdc184Huo9IZGnfVpCygPa5m24kKW2om_eMr-SspRYy3hryiOjTZ-L8s3AHweougpWm6yNmTNHLVCDYaX5d1lsv3PyeXhIOPwRKJtCxDKxqah_Lm0grohEimqaXC7FYICgUB28uddiLQlsTsokL_nR82sdeGwQe4LA-HBDngJglmLngd2xYP1MPpz1YsZjeq1h0nuVJrz4Hsay19xWFQeqZxkM_LhjzpsmAibLg9t7Tg5-0O-C-Xr3FAIDqhE5g8lRFXX3DRPfAM96ZzsGI801SjbaPQqPcsfsKYGCuQ0wsX0zmiH5q1K4X4c8opVT4yAqBOIL8ziNA5V4E50BEiHxygjzUH0L4MtKYhFnz0v7Hs7fMpgjIvCc5xgbrz-pbx6HTDQI-DJYTWxxQD3B61xqb7tY3wT4fQ6s07-TgkYI1UuHDtTzO822EXQm7xrzek1Upc0FOaDkw0WjjYDBtgzZrBsAmvCsDq1AF1t73SpDqsY_a3tUCQI3kxDBEqbuFbjDtxsOBI6IgBHGTTY"
 		},
 		{
 			"key": "apiTokenIvanOwner",
