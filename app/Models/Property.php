@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Property
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Property extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTimestamps;
 
     /**
      * Auto fillable fields of this model
@@ -37,13 +37,6 @@ class Property extends Model
         'active',
         'price',
     ];
-
-    /**
-     * Auto fill timestamps
-     *
-     * @var bool
-     */
-    public $timestamps = true;
 
     /**
      * Return owner of this property

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class Category extends Pivot
 {
+    use HasTimestamps;
+
     /**
      * @var string[]
      */
@@ -23,11 +26,6 @@ class Category extends Pivot
      * @var string
      */
     public $table = 'categories';
-
-    /**
-     * @var bool
-     */
-    public $timestamps = true;
 
     /**
      * Return all properties that have this category
