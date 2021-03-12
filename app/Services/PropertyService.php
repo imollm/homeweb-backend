@@ -105,11 +105,19 @@ class PropertyService implements PropertyServiceI
 
             return Property::find($propertyId)->update($request->all()) ? true : false;
 
-        } elseif ($action === 'create' &&
-            $this->haveThisUserOwnerRole($request->input('user_id'))) {
+        } elseif ($action === 'create') {
 
-            return Property::create($request->all()) ? true : false;
+            $ownerId = $request->input('user_id');
 
+            if (is_numeric($ownerId)) {
+                if ($this->haveThisUserOwnerRole($ownerId)) {
+                    return Property::create($request->all()) ? true : false;
+                } else {
+                    return false;
+                }
+            } else {
+                return Property::create($request->all()) ? true : false;
+            }
         } else {
             return false;
         }

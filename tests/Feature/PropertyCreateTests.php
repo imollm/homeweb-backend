@@ -202,6 +202,40 @@ class PropertyCreateTests extends TestCase
             ]);
     }
 
+    public function test_create_new_property_admin_role_without_owner_id()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $uri = Config::get('app.url') . '/api/properties/create';
+
+        $payload = [
+            'category_id' => 1,
+            'user_id' => '',
+            'city_id' => 1,
+            'title' => Str::title(10),
+            'reference' => Str::random(12),
+            'plot_meters' => 100,
+            'built_meters' => 90,
+            'address' => Str::random(20),
+            'longitude' => 10.00,
+            'latitude' => 20.00,
+            'description' => Str::random(30),
+            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
+            'sold' => false,
+            'active' => true,
+            'price' => 190.000,
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Property added correctly',
+            ]);
+    }
+
     public function test_create_new_property_employee_role_with_correct_owner_id()
     {
         $token = $this->getRoleTokenAuth('employee');
