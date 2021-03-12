@@ -73,13 +73,29 @@
 
    Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
 
+
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
 2. Importem *l'API schema* que tenim al projecte `HomeWeb.postman_collection.json`
 3. 
 
 ### Test amb PHPUnit
-Abans de realitzar tests per carregar les credencials dels usuaris dins .env i api.php picar
+Abans de realitzar tests per carregar les credencials dels usuaris dins .env i api.php
+<ul>
+<li style="list-style: none"><span style="color: orange">API_ADMIN_EMAIL</span><span style="color: white">=</span><span style="color: green">admin@homeweb.com</span></li>
+<li style="list-style: none"><span style="color: orange">API_ADMIN_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
+<li style="list-style: none"><span style="color: orange">API_CUSTOMER_EMAIL</span><span style="color: white">=</span><span style="color: green">customer@homeweb.com</span></li>
+<li style="list-style: none"><span style="color: orange">API_CUSTOMER_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
+<li style="list-style: none"><span style="color: orange">API_EMPLOYEE_EMAIL</span><span style="color: white">=</span><span style="color: green">employee@homeweb.com</span></li>
+<li style="list-style: none"><span style="color: orange">API_EMPLOYEE_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
+<li style="list-style: none"><span style="color: orange">API_OWNER_EMAIL</span><span style="color: white">=</span><span style="color: green">owner@homeweb.com</span></li>
+<li style="list-style: none"><span style="color: orange">API_OWNER_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
+<li style="list-style: none"><span style="color: orange">API_OWNER1_EMAIL</span><span style="color: white">=</span><span style="color: green">owner1@homeweb.com</span></li>
+<li style="list-style: none"><span style="color: orange">API_OWNER1_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
+</ul>
+
+Executar la comanda
+
    ```sh
       php artisan config:cache
    ```
