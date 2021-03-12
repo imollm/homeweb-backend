@@ -101,4 +101,5 @@ class CategoryUpdateTests extends TestCase
                 'message' => 'Unauthorized User',
             ]);
     }
+
 }

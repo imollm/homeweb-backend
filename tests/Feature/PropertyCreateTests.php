@@ -21,26 +21,9 @@ class PropertyCreateTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/create';
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => '', // Now this field comes empty
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
-
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)
+            ->postJson($uri)
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
@@ -60,6 +43,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => $ownerUser,
+            'city_id' => 1,
             'title' => 1000, // This field is required and must be a STRING not INTEGER
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -91,6 +75,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => '',
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => $referenceAlreadyExists, // Reference is unique in DB, now post the same reference in a new property
             'plot_meters' => 100,
@@ -120,6 +105,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => '', // Now this field comes empty
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -134,12 +120,9 @@ class PropertyCreateTests extends TestCase
             'price' => 190.000,
         ];
 
-        $response = $this
+        $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload);
-
-        $response
-            ->assertStatus(Response::HTTP_CREATED)
+            ->postJson($uri, $payload)->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
                 'message' => 'Property added correctly'
@@ -158,6 +141,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => $ownerUser,
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -172,13 +156,9 @@ class PropertyCreateTests extends TestCase
             'price' => 190.000,
         ];
 
-        $response = $this
+        $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload);
-
-        $response->dump();
-
-        $response
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
@@ -197,6 +177,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => $notOwnerUser, // This is the question, this id is not owner
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -211,11 +192,9 @@ class PropertyCreateTests extends TestCase
             'price' => 190.000,
         ];
 
-        $response = $this
+        $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload);
-
-        $response
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
             ->assertJson([
                 'success' => false,
@@ -235,6 +214,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => $ownerUser,
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -249,11 +229,9 @@ class PropertyCreateTests extends TestCase
             'price' => 190.000,
         ];
 
-        $response = $this
+        $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload);
-
-        $response
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
@@ -272,6 +250,7 @@ class PropertyCreateTests extends TestCase
         $payload = [
             'category_id' => 1,
             'user_id' => $notOwnerUser, // This is the question, this id is not owner
+            'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
             'plot_meters' => 100,
@@ -286,11 +265,9 @@ class PropertyCreateTests extends TestCase
             'price' => 190.000,
         ];
 
-        $response = $this
+        $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload);
-
-        $response
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
             ->assertJson([
                 'success' => false,

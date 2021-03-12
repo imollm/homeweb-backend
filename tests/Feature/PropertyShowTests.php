@@ -69,8 +69,8 @@ class PropertyShowTests extends TestCase
         $payload = [
             'reference' => $randomPropertyReference,
             'price' => '',
-            'location' => '',
-            'category' => ''
+            'city_id' => '',
+            'category_id' => ''
         ];
 
         $this
@@ -78,7 +78,9 @@ class PropertyShowTests extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
-                'message' => 'Properties request'
+                'data' => array(),
+                'message' => 'Properties request',
+                'filters' => array()
             ]);
     }
 
@@ -105,7 +107,7 @@ class PropertyShowTests extends TestCase
             ]);
     }
 
-    public function test_show_property_by_filter_location()
+    public function test_show_property_by_filter_city()
     {
         $cityId = Property::inRandomOrder()->first()->city_id;
 
@@ -143,7 +145,7 @@ class PropertyShowTests extends TestCase
         ];
 
         $this
-            ->postJson($uri, $payload)->dump()
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
