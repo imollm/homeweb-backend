@@ -7,6 +7,7 @@ use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -35,6 +36,7 @@ class CategoryController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
     {
@@ -87,7 +89,7 @@ class CategoryController extends Controller
             'success' => true,
             'data' => $categories,
             'message' => 'All categories'
-        ]);
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -105,19 +107,14 @@ class CategoryController extends Controller
                 'success' => false,
                 'message' => 'Category not found'
             ], Response::HTTP_NOT_FOUND);
-        }
-
-        if (Auth::user()->can('show', $category)) {
-
+        } else {
             return response()->json([
                 'success' => true,
                 'data' => $category,
                 'message' => 'The category was request'
             ], Response::HTTP_OK);
-
-        } else {
-            return $this->unauthorizedUser();
         }
+
     }
 
     /**
@@ -176,7 +173,7 @@ class CategoryController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        if (Auth::user()->can('delete', Category::class)) {
+        if (Auth::user()->can('delete', $category)) {
 
             if (!$this->categoryService->hasThisCategoryProperties($category)) {
                 if ($this->categoryService->deleteCategory($category)) {

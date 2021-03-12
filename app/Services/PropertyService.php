@@ -88,6 +88,7 @@ class PropertyService implements PropertyServiceI
 
             return Auth::user()->properties()->save($property) ? true : false;
         }
+        return false;
     }
 
     /**
@@ -166,7 +167,6 @@ class PropertyService implements PropertyServiceI
                         $q->whereBetween('price', [$smallPrice, $bigPrice]);
 
                     });
-
                 } else {
                     $query->where($condition, $value);
                 }

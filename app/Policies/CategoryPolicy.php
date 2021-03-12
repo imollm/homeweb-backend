@@ -27,15 +27,6 @@ class CategoryPolicy extends Policy
      * @param User $user
      * @return bool
      */
-    public function show(User $user): bool
-    {
-        return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee', 'customer', 'owner']);
-    }
-
-    /**
-     * @param User $user
-     * @return bool
-     */
     public function update(User $user): bool
     {
         return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee']);
@@ -46,7 +37,7 @@ class CategoryPolicy extends Policy
      * @param Category $category
      * @return bool
      */
-    public function delete(User $user): bool
+    public function delete(User $user, Category $category): bool
     {
         return $this->isAuthorizedToDoThisAction($user->role->name, ['admin']);
     }

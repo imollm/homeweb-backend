@@ -215,20 +215,29 @@ class PropertyController extends Controller
     {
         $property = Property::find($id);
 
-        if (!$property)
+        if (!$property) {
             return response()->json([
                 'success' => false,
                 'message' => 'Property not found',
             ], Response::HTTP_NOT_FOUND);
+        }
 
         if (Auth::user()->can('setActive', $property)) {
 
             $property->active = (bool)$status;
-            $property->save();
 
-            return response()->json([
-                'success' => true,
-            ], Response::HTTP_NO_CONTENT);
+            if ($property->save()) {
+
+                return response()->json([], Response::HTTP_NO_CONTENT);
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error when active/desactive property ' . $id
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
 
         } else {
             return $this->unauthorizedUser();

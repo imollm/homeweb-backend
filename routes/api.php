@@ -25,7 +25,6 @@ Route::prefix('/auth')->name('auth.public.')->group(function () {
     Route::post('/login', [PassportAuthController::class, 'login']);
 });
 
-// Unauthenticated routes
 Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/all', [PropertyController::class, 'all'])->name('all');
     Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
@@ -34,6 +33,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
 
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/all', [CategoryController::class, 'all'])->name('all');
+    Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
 });
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
@@ -63,7 +63,6 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::post('/create', [CategoryController::class, 'create'])->name('create');
         Route::put('/{id}/update', [CategoryController::class, 'update'])->where('id', '[0-9]+')->name('update');
-        Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::delete('/{id}/delete', [CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
     });
     // User auth routes
