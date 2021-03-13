@@ -63,15 +63,16 @@ class CountryController extends Controller
             if ($this->countryService->create($request)) {
 
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Country already exists'
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
-            } else {
-
-                return response()->json([
                     'success' => true,
                     'message' => 'Country created'
                 ], Response::HTTP_CREATED);
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Country already exists'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
             return $this->unauthorizedUser();

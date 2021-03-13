@@ -70,13 +70,17 @@ class CountryCreateTests extends TestCase
 
         $payload = [
             'code' => 'ABC',
-            'name' => $nameAlreadyExists
+            'name' => 'Espanya'
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)->dump()
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Country already exists'
+            ]);
     }
 
     public function test_country_store_ok_role_admin_authorized()
@@ -92,7 +96,7 @@ class CountryCreateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)->dump()
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,

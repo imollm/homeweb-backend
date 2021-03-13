@@ -50,9 +50,12 @@ class CountryService implements ICountryService
 
     private function thisCountryExists(string $code, string $name): bool
     {
-        return !is_null(Country::select('*')
-                                ->where('code', '=', strtoupper($code))
-                                ->orWhere('name', '=', strtolower($name))
-        );
+        $result = Country::select('*')
+            ->where('code', '=', strtoupper($code))
+            ->orWhere('name', '=', strtolower($name))
+            ->get()
+            ->first();
+
+        return !is_null($result);
     }
 }
