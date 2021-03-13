@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\tests\Feature;
 
+use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
@@ -40,6 +41,42 @@ class CountryCreateTests extends TestCase
             ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
+    }
+
+    public function test_country_store_code_already_exists_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+        $codeAlreadyExists = Country::inRandomOrder()->first()->code;
+
+        $uri = Config::get('app.url') . '/api/countries/store';
+
+        $payload = [
+            'code' => $codeAlreadyExists,
+            'name' => 'Some country name'
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function test_country_store_name_already_exists_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+        $nameAlreadyExists = Country::inRandomOrder()->first()->name;
+
+        $uri = Config::get('app.url') . '/api/countries/store';
+
+        $payload = [
+            'code' => 'ABC',
+            'name' => $nameAlreadyExists
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)->dump()
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_country_store_ok_role_admin_authorized()

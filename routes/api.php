@@ -79,6 +79,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('countries')->name('countries.')->group(function () {
         Route::post('/store', [CountryController::class, 'store'])->name('store');
+        Route::put('/update', [CountryController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [CountryController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });
 });
 /*-----------------------------------------------------------------------------------*/

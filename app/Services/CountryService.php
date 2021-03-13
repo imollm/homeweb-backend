@@ -40,8 +40,8 @@ class CountryService implements ICountryService
         } else {
 
             $country = Country::create([
-                'code' => $code,
-                'name' => $name
+                'code' => strtoupper($code),
+                'name' => strtolower($name)
             ]);
 
             return is_numeric($country->id);
@@ -50,6 +50,9 @@ class CountryService implements ICountryService
 
     private function thisCountryExists(string $code, string $name): bool
     {
-        return !is_null(Country::select('*')->where('code', '=', $code)->orWhere('name', '=', $name));
+        return !is_null(Country::select('*')
+                                ->where('code', '=', strtoupper($code))
+                                ->orWhere('name', '=', strtolower($name))
+        );
     }
 }
