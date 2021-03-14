@@ -1,25 +1,22 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Property;
 
 use App\Models\Property;
 use App\Models\RangePrice;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use League\CommonMark\Util\ArrayCollection;
 
 /**
  * Class PropertyService
  * @package App\Services
  */
-class PropertyService implements PropertyServiceI
+class PropertyService implements IPropertyService
 {
     /**
      * Validate request data and return new property with this data
@@ -82,7 +79,7 @@ class PropertyService implements PropertyServiceI
         $property = new Property($request->all());
         if ($action === 'update') {
 
-            return Auth::user()->properties()->updateOrCreate($request->all()) ? true : false;
+            return Auth::user()->properties()->update($request->all()) ? true : false;
 
         } elseif ($action === 'create') {
 

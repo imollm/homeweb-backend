@@ -74,7 +74,7 @@ class PropertyShowTests extends TestCase
         ];
 
         $this
-            ->postJson($uri, $payload)->dump()
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,

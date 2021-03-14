@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Category;
 
 
 use App\Models\Category;
@@ -28,14 +28,12 @@ class CategoryService implements CategoryServiceI
     }
 
     /**
-     * @param string $name
+     * @param string $id
      * @return Category|null
      */
-    public function categoryExists(string $name): Category | null
+    public function categoryExists(string $id): Category | null
     {
-        $category = Category::where('name', '=', $name)->get();
-
-        return count($category->collect()) > 0 ? $category->first() : null;
+        return Category::find($id);
     }
 
     /**

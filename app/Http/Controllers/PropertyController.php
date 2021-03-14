@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use App\Models\User;
-use App\Services\PropertyService;
+use App\Services\Property\PropertyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use function PHPUnit\Framework\isNull;
 
 /**
  * Class PropertyController

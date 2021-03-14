@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\PropertyService;
+use App\Services\Property\PropertyService;
 use Illuminate\Support\ServiceProvider;
 
 class PropertyServiceProvider extends ServiceProvider

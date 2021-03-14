@@ -187,7 +187,7 @@ class PropertyUpdateTests extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->putJson($uri, $payload);
 
-        $response->assertStatus(Response::HTTP_OK)
+        $response->assertStatus(Response::HTTP_OK)->dump()
             ->assertJson([
                 'success' => true,
                 'message' => 'Property updated successfully',

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Property;
 
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-interface PropertyServiceI
+interface IPropertyService
 {
     public function validatePostPropertyData(Request $request);
     public function createOrUpdateProperty(Request $request, string $action, string $propertyId = ''): bool;
