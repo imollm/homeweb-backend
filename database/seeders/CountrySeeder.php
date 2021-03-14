@@ -21,5 +21,11 @@ class CountrySeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        DB::table('countries')->insert([
+            'code' => 'ITA',
+            'name' => 'Italia',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }

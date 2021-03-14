@@ -39,23 +39,12 @@ class CountryPolicy extends Policy
 
     /**
      * @param User $user
-     * @param Country $country
      * @return bool
      */
-    public function destroy(User $user, Country $country): bool
+    public function destroy(User $user): bool
     {
         $authRoles = ['admin'];
 
-        $isAuthThisRole = $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
-
-        $country = DB::table('countries')
-                        ->leftJoin('cities', 'countries.id', '=', 'cities.country_id')
-                        ->whereNull('cities.country_id')
-                        ->where('countries.id', '=', $country->id)
-                        ->get();
-
-        $hasThisCountryAnyRelationWithCity = $country->count() === 0;
-
-        return $isAuthThisRole && $hasThisCountryAnyRelationWithCity;
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
 }

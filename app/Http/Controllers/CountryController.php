@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Services\CountryService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,22 +108,71 @@ class CountryController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Country $country
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request): JsonResponse
     {
-        //
+        if (Auth::user()->can('update', Country::class)) {
+
+            $this->countryService->validatePostData($request);
+
+            if ($this->countryService->update($request)) {
+                return response()->json([], Response::HTTP_NO_CONTENT);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error PUT data'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Country $country
+     * @param string $id
      * @return JsonResponse
+     * @throws Exception
      */
-    public function destroy(Country $country)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        if (Auth::user()->can('destroy', Country::class)) {
+
+            if ($country = $this->countryService->existsThisCountry($id)) {
+
+                if (!$this->countryService->hasThisCountryAnyCityRelated($country)) {
+
+                    if ($this->countryService->delete($country)) {
+
+                        return response()->json([], Response::HTTP_NO_CONTENT);
+
+                    } else {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'The country can not be deleted'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'The country have cities related'
+                    ], Response::HTTP_CONFLICT);
+                }
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The country can not be found'
+                ], Response::HTTP_NOT_FOUND);
+
+            }
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 }

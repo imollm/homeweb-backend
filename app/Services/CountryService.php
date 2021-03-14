@@ -5,7 +5,9 @@ namespace App\Services;
 
 
 use App\Models\Country;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -23,39 +25,77 @@ class CountryService implements ICountryService
     public function validatePostData(Request $request)
     {
         Validator::make($request->all(), [
-            'code' => 'required|unique:countries|max:3',
-            'name' => 'required|max:255'
+            'code' => 'required|string|max:3',
+            'name' => 'required|string|max:255'
         ])->validate();
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function create(Request $request): bool
     {
         $code = $request->input('code');
         $name = $request->input('name');
 
-        if ($this->thisCountryExists($code, $name)) {
+        if (!is_null(Country::where('code', '=', $code)->get()->first())) {
 
             return false;
 
         } else {
 
-            $country = Country::create([
+            Country::create([
                 'code' => strtoupper($code),
                 'name' => strtolower($name)
             ]);
 
-            return is_numeric($country->id);
+            return true;
+
         }
     }
 
-    private function thisCountryExists(string $code, string $name): bool
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function update(Request $request): bool
     {
-        $result = Country::select('*')
-            ->where('code', '=', strtoupper($code))
-            ->orWhere('name', '=', strtolower($name))
-            ->get()
-            ->first();
+        if ($country = Country::where('code', '=', $request->input('code'))->get()->first()) {
 
-        return !is_null($result);
+            $country->update(['name' => $request->input('name')]);
+            return true;
+
+        } else {
+            $this->create($request);
+        }
+    }
+
+    /**
+     * @param Country $country
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(Country $country): bool
+    {
+        return $country->delete();
+    }
+
+    /**
+     * @param string $id
+     * @return Country|null
+     */
+    public function existsThisCountry(string $id): Country | null
+    {
+        return Country::find($id);
+    }
+
+    /**
+     * @param Country $country
+     * @return bool
+     */
+    public function hasThisCountryAnyCityRelated(Country $country): bool
+    {
+        return count($country->cities) > 0;
     }
 }
