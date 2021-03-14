@@ -12,52 +12,6 @@ use Tests\TestCase;
 
 class CategoryUpdateTests extends TestCase
 {
-    public function test_update_category_admin_role_authorized()
-    {
-        $token = $this->getRoleTokenAuth('admin');
-
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
-
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
-
-        $payload = [
-            'name' => Str::random(10),
-        ];
-
-        $this
-            ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Category modified correctly',
-            ]);
-        $this->assertDatabaseHas('categories', $payload);
-    }
-
-    public function test_update_category_employee_role_authorized()
-    {
-        $token = $this->getRoleTokenAuth('employee');
-
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
-
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
-
-        $payload = [
-            'name' => Str::random(10),
-        ];
-
-        $this
-            ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Category modified correctly',
-            ]);
-        $this->assertDatabaseHas('categories', $payload);
-    }
-
     public function test_update_category_customer_role_not_authorized()
     {
         $token = $this->getRoleTokenAuth('customer');
@@ -100,6 +54,70 @@ class CategoryUpdateTests extends TestCase
                 'success' => false,
                 'message' => 'Unauthorized User',
             ]);
+    }
+
+    public function test_update_category_invalid_post_data_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $randomCategoryId = Category::inRandomOrder()->first()->id;
+
+        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+
+        $payload = [
+            'name' => '',
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function test_update_category_ok_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $randomCategoryId = Category::inRandomOrder()->first()->id;
+
+        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+
+        $payload = [
+            'name' => Str::random(10),
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Category modified correctly',
+            ]);
+        $this->assertDatabaseHas('categories', $payload);
+    }
+
+    public function test_update_category_ok_employee_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('employee');
+
+        $randomCategoryId = Category::inRandomOrder()->first()->id;
+
+        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+
+        $payload = [
+            'name' => Str::random(10),
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Category modified correctly',
+            ]);
+        $this->assertDatabaseHas('categories', $payload);
     }
 
 }

@@ -12,32 +12,43 @@ use Tests\TestCase;
 
 class CategoryDeleteTests extends TestCase
 {
-    public function test_delete_category_admin_role_authorized_category_not_have_relations_with_properties()
+    public function test_delete_category_customer_role_unauthorized()
     {
-        $token = $this->getRoleTokenAuth('admin');
+        $token = $this->getRoleTokenAuth('customer');
 
-        $result = DB::table('categories')
-            ->select('categories.id')
-            ->leftJoin('properties', 'categories.id', '=', 'properties.category_id')
-            ->whereNull('properties.category_id')
-            ->first()
-            ->id;
+        $randCategoryId = Category::inRandomOrder()->first()->id;
 
-        $randomCategoryIdWithoutProperties = $result;
-
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryIdWithoutProperties.'/delete';
+        $uri = Config::get('app.url') . '/api/categories/'.$randCategoryId.'/delete';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson($uri)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
-                'success' => true,
-                'message' => 'Category deleted successfully',
+                'success' => false,
+                'message' => 'Unauthorized User',
             ]);
     }
 
-    public function test_delete_category_admin_role_authorized_category_have_relations_with_properties()
+    public function test_delete_category_category_not_found_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $categoryIdNotExists = Category::max('id') + 1;
+
+        $uri = Config::get('app.url') . '/api/categories/'.$categoryIdNotExists.'/delete';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson($uri)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJson([
+                'success' => false,
+                'message' => 'This category not found',
+            ]);
+    }
+
+    public function test_delete_category_have_relations_with_properties_admin_role_authorized()
     {
         $token = $this->getRoleTokenAuth('admin');
 
@@ -59,21 +70,27 @@ class CategoryDeleteTests extends TestCase
             ]);
     }
 
-    public function test_delete_category_role_unauthorized()
+    public function test_delete_category_ok_admin_role_authorized()
     {
-        $token = $this->getRoleTokenAuth('customer');
+        $token = $this->getRoleTokenAuth('admin');
 
-        $randCategoryId = Category::inRandomOrder()->first()->id;
+        $randomCategoryIdWithOutProperties =
+            DB::table('categories')
+                ->select('categories.id')
+                ->leftJoin('properties', 'categories.id', '=', 'properties.category_id')
+                ->whereNull('properties.category_id')
+                ->first()
+                ->id;
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randCategoryId.'/delete';
+        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryIdWithOutProperties.'/delete';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson($uri)
-            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'success' => false,
-                'message' => 'Unauthorized User',
+                'success' => true,
+                'message' => 'Category deleted successfully',
             ]);
     }
 

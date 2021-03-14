@@ -28,14 +28,14 @@ class CategoryService implements CategoryServiceI
     }
 
     /**
-     * @param string $categoryName
-     * @return bool
+     * @param string $name
+     * @return Category|null
      */
-    public function categoryExists(string $categoryName): bool
+    public function categoryExists(string $name): Category | null
     {
-        return Category::where('name', '=', strtolower($categoryName))
-                ->get()
-                ->count() > 0;
+        $category = Category::where('name', '=', $name)->get();
+
+        return count($category->collect()) > 0 ? $category->first() : null;
     }
 
     /**
@@ -61,8 +61,8 @@ class CategoryService implements CategoryServiceI
      * @param Category $category
      * @return bool
      */
-    public function deleteCategory(Category $category): bool
+    public function delete(Category $category): bool
     {
-        return $category->forceDelete() ? true : false;
+        return $category->delete();
     }
 }

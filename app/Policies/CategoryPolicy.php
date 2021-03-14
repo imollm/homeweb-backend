@@ -34,10 +34,9 @@ class CategoryPolicy extends Policy
 
     /**
      * @param User $user
-     * @param Category $category
      * @return bool
      */
-    public function delete(User $user, Category $category): bool
+    public function delete(User $user): bool
     {
         return $this->isAuthorizedToDoThisAction($user->role->name, ['admin']);
     }

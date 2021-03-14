@@ -14,9 +14,9 @@ use Tests\TestCase;
 
 class CategoryCreateTests extends TestCase
 {
-    public function test_create_category_admin_role_authorized()
+    public function test_create_category_customer_role_unauthorized()
     {
-        $token = $this->getRoleTokenAuth('admin');
+        $token = $this->getRoleTokenAuth('customer');
 
         $uri = Config::get('app.url') . '/api/categories/create';
 
@@ -27,46 +27,30 @@ class CategoryCreateTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
-                'success' => true,
-                'message' => 'Category added correctly',
+                'success' => false,
+                'message' => 'Unauthorized User',
             ]);
-        $this->assertDatabaseHas('categories', $payload);
     }
 
-    public function test_create_category_admin_role_authorized_category_already_exists()
+    public function test_create_category_owner_role_unauthorized()
     {
-        $token = $this->getRoleTokenAuth('admin');
+        $token = $this->getRoleTokenAuth('owner');
 
         $uri = Config::get('app.url') . '/api/categories/create';
 
         $payload = [
-            'name' => 'Homessss',
+            'name' => Str::random(10),
         ];
 
-        // First create a new category
-
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Category added correctly',
-            ]);
-
-        $this->assertDatabaseHas('categories', $payload);
-
-        // Then create a new category with the same name
-
-        $this
-            ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CONFLICT)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
-                'message' => 'Category exists',
+                'message' => 'Unauthorized User',
             ]);
     }
 
@@ -84,6 +68,28 @@ class CategoryCreateTests extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function test_create_category_admin_role_authorized_category_already_exists()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $categoryNameAlreadyExists = Category::inRandomOrder()->first()->name;
+
+        $uri = Config::get('app.url') . '/api/categories/create';
+
+        $payload = [
+            'name' => $categoryNameAlreadyExists,
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CONFLICT)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Category exists',
+            ]);
     }
 
     public function test_create_category_employee_role_authorized()
@@ -108,9 +114,9 @@ class CategoryCreateTests extends TestCase
         $this->assertDatabaseHas('categories', $payload);
     }
 
-    public function test_create_category_customer_role_not_authorized()
+    public function test_create_category_ok_admin_role_authorized()
     {
-        $token = $this->getRoleTokenAuth('customer');
+        $token = $this->getRoleTokenAuth('admin');
 
         $uri = Config::get('app.url') . '/api/categories/create';
 
@@ -121,31 +127,12 @@ class CategoryCreateTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
-                'success' => false,
-                'message' => 'Unauthorized User',
+                'success' => true,
+                'message' => 'Category added correctly',
             ]);
-    }
-
-    public function test_create_category_owner_role_not_authorized()
-    {
-        $token = $this->getRoleTokenAuth('owner');
-
-        $uri = Config::get('app.url') . '/api/categories/create';
-
-        $payload = [
-            'name' => Str::random(10),
-        ];
-
-        $this
-            ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_UNAUTHORIZED)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Unauthorized User',
-            ]);
+        $this->assertDatabaseHas('categories', $payload);
     }
 
 }

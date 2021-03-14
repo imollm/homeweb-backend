@@ -46,14 +46,16 @@ class CategoryController extends Controller
 
             $this->categoryService->validatePostCategoryData($request);
 
-            if ($this->categoryService->categoryExists($categoryName)) {
+            if ($category = $this->categoryService->categoryExists($categoryName)) {
 
                 return response()->json([
                     'success' => false,
                     'message' => 'Category exists',
                 ], Response::HTTP_CONFLICT);
 
-            } else {
+            }
+
+            else {
 
                 $category = new Category();
                 $category->name = $categoryName;
@@ -63,7 +65,9 @@ class CategoryController extends Controller
                         'success' => true,
                         'message' => 'Category added correctly',
                     ], Response::HTTP_CREATED);
-                } else {
+                }
+
+                else {
                     return response()->json([
                         'success' => false,
                         'message' => 'Category not added',
@@ -71,6 +75,7 @@ class CategoryController extends Controller
                 }
 
             }
+
         } else {
             return $this->unauthorizedUser();
         }
@@ -123,33 +128,24 @@ class CategoryController extends Controller
      * @param Request $request
      * @param string $id
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function update(Request $request, string $id): JsonResponse
     {
         if (Auth::user()->can('update', Category::class)) {
 
-            $categoryName = $request->input('name');
+            $this->categoryService->validatePostCategoryData($request);
 
-            if ($this->categoryService->categoryExists($categoryName)) {
-
+            if (Category::updateOrCreate($request->all())) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Category modified correctly',
+                ], Response::HTTP_OK);
+            } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Category exists',
-                ], Response::HTTP_CONFLICT);
-
-            } else {
-
-                if (Category::updateOrCreate($request->all())) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Category modified correctly',
-                    ], Response::HTTP_OK);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Category not modified',
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
+                    'message' => 'Category not modified',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
         } else {
@@ -163,35 +159,46 @@ class CategoryController extends Controller
      */
     public function delete(string $id): JsonResponse
     {
-        $category = Category::find($id);
-        $categoryName = $category->name;
+        if (Auth::user()->can('delete', Category::class)) {
 
-        if (!$this->categoryService->categoryExists($categoryName)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This category not exists',
-            ], Response::HTTP_NOT_FOUND);
-        }
+            if ($category = $this->categoryService->categoryExists($id)) {
 
-        if (Auth::user()->can('delete', $category)) {
+                if (!$this->categoryService->hasThisCategoryProperties($category)) {
 
-            if (!$this->categoryService->hasThisCategoryProperties($category)) {
-                if ($this->categoryService->deleteCategory($category)) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Category deleted successfully',
-                    ], Response::HTTP_OK);
+                    if ($this->categoryService->delete($category)) {
+
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Category deleted successfully',
+                        ], Response::HTTP_OK);
+
+                    }
+
+                    else {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Category not deleted',
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                    }
+
                 } else {
+
                     return response()->json([
                         'success' => false,
-                        'message' => 'Category not deleted',
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        'message' => 'Category has properties',
+                    ], Response::HTTP_CONFLICT);
+
                 }
+
             } else {
+
                 return response()->json([
                     'success' => false,
-                    'message' => 'Category has properties',
-                ], Response::HTTP_CONFLICT);
+                    'message' => 'This category not found',
+                ], Response::HTTP_NOT_FOUND);
+
             }
 
         } else {
