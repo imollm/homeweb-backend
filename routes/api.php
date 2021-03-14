@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PropertyController;
@@ -41,6 +42,11 @@ Route::prefix('countries')->name('countries.')->group(function () {
     Route::get('/index', [CountryController::class, 'index'])->name('index');
     Route::get('/{id}/show', [CountryController::class, 'show'])->where('id', '[0-9]+')->name('show');
 });
+
+Route::prefix('cities')->name('cities.')->group(function () {
+    Route::get('/index', [CityController::class, 'index'])->name('index');
+    Route::get('/{id}/show', [CityController::class, 'show'])->where('id', '[0-9]+')->name('show');
+});
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
@@ -76,11 +82,17 @@ Route::middleware('auth:api')->group(function () {
         Route::get('logout', [PassportAuthController::class, 'logout'])->name('logout');
         Route::get('user', [PassportAuthController::class, 'user'])->name('user');
     });
-
+    // Countries auth routes
     Route::prefix('countries')->name('countries.')->group(function () {
         Route::post('/store', [CountryController::class, 'store'])->name('store');
         Route::put('/update', [CountryController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [CountryController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
+    });
+    //Cities auth routes
+    Route::prefix('cities')->name('cities.')->group(function () {
+        Route::post('/store', [CityController::class, 'store'])->name('store');
+        Route::put('/update', [CityController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [CityController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });
 });
 /*-----------------------------------------------------------------------------------*/

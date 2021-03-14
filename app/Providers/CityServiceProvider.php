@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\Country\CountryService;
+use App\Services\City\CityService;
 use Illuminate\Support\ServiceProvider;
 
-class CountryServiceProvider extends ServiceProvider
+class CityServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -24,8 +24,8 @@ class CountryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('App\Providers\CountryServiceProvider', function ($app) {
-            return new CountryService();
+        $this->app->bind('App\Providers\CityServiceProvider', function ($app) {
+            return new CityService();
         });
     }
 }
