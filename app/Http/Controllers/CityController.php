@@ -147,6 +147,14 @@ class CityController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
+        if (Auth::user()->can('delete', City::class)) {
 
+
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 }

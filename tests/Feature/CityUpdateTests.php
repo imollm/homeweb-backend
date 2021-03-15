@@ -84,13 +84,57 @@ class CityUpdateTests extends TestCase
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_city_update_ok_admin_role_authorized()
+    public function test_city_update_ok_change_country_admin_role_authorized()
     {
         $token = $this->getRoleTokenAuth('admin');
 
         $uri = Config::get('app.url') . '/api/cities/update';
 
-        $city = City::find(1);
+        $city = City::where('country_id', 1)->get()->first();
+
+        $payload = [
+            'id' => $city->id,
+            'name' => 'Cities name',
+            'country_id' => 2
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDatabaseHas('cities', $payload);
+    }
+
+    public function test_city_update_ok_change_name_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $uri = Config::get('app.url') . '/api/cities/update';
+
+        $city = City::where('country_id', 1)->get()->first();
+
+        $payload = [
+            'id' => $city->id,
+            'name' => 'Cities name',
+            'country_id' => $city->country_id
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDatabaseHas('cities', $payload);
+    }
+
+    public function test_city_update_ok_change_country_and_name_admin_role_authorized()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $uri = Config::get('app.url') . '/api/cities/update';
+
+        $city = City::where('country_id', 1)->get()->first();
 
         $payload = [
             'id' => $city->id,
