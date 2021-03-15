@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Class PriceHistory
+ * Class PriceHistorySeeder
  * @package App\Models
  */
 class PriceHistory extends Model

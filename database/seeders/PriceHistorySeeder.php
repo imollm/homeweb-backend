@@ -1,0 +1,43 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Property;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+class PriceHistorySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $startDates = [
+            '2021-01-01 21:00:00',
+            '2021-01-01 22:00:00',
+            '2021-01-01 23:00:00'
+        ];
+
+        $howManyPropertiesAre = Property::count();
+
+        $amountAugment = 0;
+
+        for ($i = 0; $i < $howManyPropertiesAre; $i++) {
+            foreach ($startDates as $startDate) {
+                DB::table('price_history')->insert([
+                    'property_id' => ($i + 1),
+                    'start_date' => $startDate,
+                    'amount' => 100000 * $amountAugment,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+                $amountAugment += 0.1;
+            }
+        }
+    }
+}

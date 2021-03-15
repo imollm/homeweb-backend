@@ -21,14 +21,13 @@ class PropertySeeder extends Seeder
         $energetic_certification_values = ['obtained', 'in process', 'pending'];
         $ownersIdsOnSystem =
             DB::table('roles')
-                ->select('users.id')
                 ->join('users', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', 'owner')
-                ->get();
+                ->pluck('users.id')->toArray();
 
         for($i = 0; $i < 5; $i++) {
             DB::table('properties')->insert([
-                'user_id' => 3,
+                'user_id' => Arr::random($ownersIdsOnSystem),
                 'category_id' => $i + 1,
                 'city_id' => City::inRandomOrder()->first()->id,
                 'title' => Str::random(10),

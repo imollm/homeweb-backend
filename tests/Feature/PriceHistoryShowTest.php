@@ -82,7 +82,7 @@ class PriceHistoryShowTest extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->getJson($uri)->dump()
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJson([
                 'success' => false,
@@ -140,22 +140,31 @@ class PriceHistoryShowTest extends TestCase
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $propertyIdExists =
+        $allOwnersWithProperties =
+            DB::table('users')->join('properties', 'users.id', '=', 'properties.user_id')->groupBy('users.id')->pluck('users.id')->toArray();
+
+        $ownerDoAction =
+            DB::table('users')->where('users.email', '=', 'owner@homeweb.com')->pluck('users.id')->first();
+
+        $ownerDoNotAction = array_diff($allOwnersWithProperties, array(($ownerDoAction)));
+
+        $anotherOwnerWithProperties = $ownerDoNotAction[rand(1, sizeof($ownerDoNotAction))];
+
+        $propertyIdIsNotYours =
             DB::table('properties')
                 ->select('properties.*')
-                ->join('price_history', 'properties.id', '=', 'price_history.property_id')
+                ->where('properties.user_id', '<>', $anotherOwnerWithProperties)
                 ->first()->id;
 
-        $uri = Config::get('app.url') . '/api/priceHistory/'.$propertyIdExists.'/show';
+        $uri = Config::get('app.url') . '/api/priceHistory/'.$propertyIdIsNotYours.'/show';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_OK)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
-                'success' => true,
-                'data' => $this->propertyService->getPriceHistoryOfThisProperty($propertyIdExists),
-                'message' => 'Price history of property ' . $propertyIdExists
+                'success' => false,
+                'message' => 'This property is not yours'
             ]);
     }
 }

@@ -84,7 +84,7 @@ class PriceHistoryController extends Controller
 
                 } elseif (
                     $roleAuthUser === 'owner' &&
-                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) === Auth::user()->id
+                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) === auth()->user()->id
                 ) {
 
                     return response()->json([
