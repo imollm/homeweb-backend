@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
  * Class CategoryService
  * @package App\Services
  */
-class CategoryService implements CategoryServiceI
+class CategoryService implements ICategoryService
 {
     /**
      * @param Request $request
@@ -29,11 +29,11 @@ class CategoryService implements CategoryServiceI
 
     /**
      * @param string $id
-     * @return Category|null
+     * @return bool
      */
-    public function categoryExists(string $id): Category | null
+    public function categoryExists(string $name): bool
     {
-        return Category::find($id);
+        return !is_null(Category::where('name', $name)->get()->first());
     }
 
     /**

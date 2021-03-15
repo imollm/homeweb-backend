@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\CategoryService;
+use App\Services\Category\CategoryService;
 use Illuminate\Support\ServiceProvider;
 
 class CategoryServiceProvider extends ServiceProvider

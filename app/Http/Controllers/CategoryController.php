@@ -46,7 +46,7 @@ class CategoryController extends Controller
 
             $this->categoryService->validatePostCategoryData($request);
 
-            if ($category = $this->categoryService->categoryExists($categoryName)) {
+            if ($this->categoryService->categoryExists($categoryName)) {
 
                 return response()->json([
                     'success' => false,
