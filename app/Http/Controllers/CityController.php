@@ -8,11 +8,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class CityController extends Controller
 {
     /**
-     * @var CountryService
+     * @var CityService
      */
     private CityService $cityService;
 
@@ -48,13 +49,47 @@ class CityController extends Controller
 
             $this->cityService->validatePostData($request);
 
-            if ($this->cityService->create($request)) {
+            if ($this->cityService->existsRelatedCountry($request)) {
+
+                if ($this->cityService->existsThisCityWithSameCountry($request)) {
+
+                    if ($this->cityService->create($request)) {
+
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'City created'
+                        ], Response::HTTP_CREATED);
+
+                    } else {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Error when create city'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                    }
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'City already exists with same country'
+                    ], Response::HTTP_CONFLICT);
+
+                }
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Related country not found'
+                ], Response::HTTP_NOT_FOUND);
 
             }
 
         } else {
 
-            $this->unauthorizedUser();
+            return $this->unauthorizedUser();
 
         }
     }
@@ -79,7 +114,28 @@ class CityController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
+        if (Auth::user()->can('update', City::class)) {
 
+            $this->cityService->validatePostData($request);
+
+            if ($this->cityService->update($request)) {
+
+                return response()->json([], Response::HTTP_NO_CONTENT);
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error while update city'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 
     /**

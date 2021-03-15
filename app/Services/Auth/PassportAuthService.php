@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Models\Role;
 use App\Models\User;
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
  * Class PassportAuthService
  * @package App\Services
  */
-class PassportAuthService implements PassportAuthServiceI
+class PassportAuthService implements IPassportAuthService
 {
     /**
      * Validate if request data is valid

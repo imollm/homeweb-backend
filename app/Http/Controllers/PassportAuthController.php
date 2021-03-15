@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PassportAuthService;
+use App\Services\Auth\PassportAuthService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;

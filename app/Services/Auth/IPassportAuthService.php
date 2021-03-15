@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
-interface PassportAuthServiceI
+interface IPassportAuthService
 {
     public function validateNewUserData(Request $request);
 

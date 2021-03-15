@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
-use App\Services\CountryService;
+use App\Services\Country\CountryService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

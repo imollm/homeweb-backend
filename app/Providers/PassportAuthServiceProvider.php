@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\PassportAuthService;
+use App\Services\Auth\PassportAuthService;
 use Illuminate\Support\ServiceProvider;
 
 class PassportAuthServiceProvider extends ServiceProvider

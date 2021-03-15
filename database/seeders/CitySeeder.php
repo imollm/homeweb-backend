@@ -18,7 +18,7 @@ class CitySeeder extends Seeder
 
         foreach ($cities as $city) {
             DB::table('cities')->insert([
-                'name' => $city,
+                'name' => strtolower($city),
                 'country_id' => 1
             ]);
         }
