@@ -179,4 +179,35 @@ class PropertyService implements IPropertyService
         }
         return $query->get();
     }
+
+    /**
+     * Return if property exists or not exists
+     *
+     * @param string $id
+     * @return bool
+     */
+    public function existsThisProperty(string $id): bool
+    {
+        return !is_null(Property::find($id));
+    }
+
+    /**
+     * Return the property owner id
+     *
+     * @param string $id
+     * @return string
+     */
+    public function whichIsTheOwnerIdOfThisProperty(string $id): string
+    {
+        return Property::find($id)->owner->id;
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getPriceHistoryOfThisProperty(string $id): array
+    {
+        return Property::find($id)->priceHistory->toArray();
+    }
 }

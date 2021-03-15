@@ -19,6 +19,12 @@ class PropertySeeder extends Seeder
     public function run()
     {
         $energetic_certification_values = ['obtained', 'in process', 'pending'];
+        $ownersIdsOnSystem =
+            DB::table('roles')
+                ->select('users.id')
+                ->join('users', 'roles.id', '=', 'users.role_id')
+                ->where('roles.name', 'owner')
+                ->get();
 
         for($i = 0; $i < 5; $i++) {
             DB::table('properties')->insert([

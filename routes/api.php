@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\PassportAuthController;
+use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/store', [CityController::class, 'store'])->name('store');
         Route::put('/update', [CityController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [CityController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
+    });
+    // Price History auth routes
+    Route::prefix('priceHistory')->name('priceHistory.')->group(function () {
+        Route::get('/index', [PriceHistoryController::class, 'index'])->name('index');
+        Route::get('/{propertyId}/show', [PriceHistoryController::class, 'show'])->where('propertyId', '[0-9]+')->name('show');
     });
 });
 /*-----------------------------------------------------------------------------------*/

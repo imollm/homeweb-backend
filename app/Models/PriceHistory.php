@@ -5,12 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 // use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Class PriceHistory
+ * @package App\Models
+ */
 class PriceHistory extends Model
 {
     use HasFactory, HasTimestamps;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'property_id',
         'start_date',
@@ -18,11 +27,30 @@ class PriceHistory extends Model
         'end_date'
     ];
 
+    /**
+     * @var string
+     */
     protected $table = 'price_history';
 
+    /**
+     * @var string[]
+     */
     protected $primaryKey = ['property_id', 'start_date', 'amount'];
 
+    /**
+     * @var bool
+     */
     public $incrementing = false;
+
+    /**
+     * Return property of this price history
+     *
+     * @return BelongsTo
+     */
+    public function property(): BelongsTo
+    {
+        return $this->belongsTo(Property::class);
+    }
 
 //    /**
 //     * Set the keys for a save update query.

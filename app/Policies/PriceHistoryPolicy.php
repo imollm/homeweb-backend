@@ -39,18 +39,13 @@ class PriceHistoryPolicy extends Policy
         }
     }
 
-    public function show(User $user, Property $property): bool
+    public function show(User $user): bool
     {
-        $authRoles = ['admin', 'employee'];
+        $authRoles = ['admin', 'employee', 'owner'];
 
         $userRole = $user->role->name;
 
         if ($this->isAuthorizedToDoThisAction($userRole, $authRoles)) {
-
-            return true;
-
-        } elseif ($this->isAuthorizedToDoThisAction($userRole, ['employee'])
-            && $property->owner->id === $user->id) {
 
             return true;
 

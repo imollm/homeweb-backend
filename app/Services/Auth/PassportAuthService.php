@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class PassportAuthService
@@ -72,5 +73,15 @@ class PassportAuthService implements IPassportAuthService
             return $user;
         }
         return null;
+    }
+
+    /**
+     * Return auth user role
+     *
+     * @return string
+     */
+    public function whatIsTheRoleOfAuthUser(): string
+    {
+        return Auth::user()->role->name;
     }
 }
