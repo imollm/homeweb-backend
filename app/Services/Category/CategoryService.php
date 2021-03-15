@@ -31,24 +31,31 @@ class CategoryService implements ICategoryService
      * @param string $id
      * @return bool
      */
-    public function categoryExists(string $name): bool
+    public function categoryExistsById(string $id): bool
+    {
+        return !is_null(Category::find($id));
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function categoryExistsByName(string $name): bool
     {
         return !is_null(Category::where('name', $name)->get()->first());
     }
 
     /**
-     * @param Category $category
+     * @param string $id
      * @return bool
      */
-    public function hasThisCategoryProperties(Category $category): bool
+    public function hasThisCategoryProperties(string $id): bool
     {
-        $categoryId = $category->id;
-
         $result = DB::table('categories')
                     ->select('categories.id')
                     ->leftJoin('properties', 'categories.id', '=', 'properties.category_id')
                     ->whereNull('properties.category_id')
-                    ->where('categories.id', '=', $categoryId)
+                    ->where('categories.id', '=', $id)
                     ->get();
 
         // If result has value, it says that the category have not properties related
@@ -56,11 +63,11 @@ class CategoryService implements ICategoryService
     }
 
     /**
-     * @param Category $category
+     * @param string $id
      * @return bool
      */
-    public function delete(Category $category): bool
+    public function delete(string $id): bool
     {
-        return $category->delete();
+        return Category::find($id)->delete();
     }
 }

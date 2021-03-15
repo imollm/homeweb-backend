@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 interface ICategoryService
 {
     public function validatePostCategoryData(Request $request);
-    public function categoryExists(string $name): bool;
-    public function hasThisCategoryProperties(Category $category): bool;
-    public function delete(Category $category): bool;
+    public function categoryExistsById(string $id): bool;
+    public function categoryExistsByName(string $name): bool;
+    public function hasThisCategoryProperties(string $id): bool;
+    public function delete(string $id): bool;
 }

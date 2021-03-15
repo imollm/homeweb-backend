@@ -46,7 +46,7 @@ class CategoryController extends Controller
 
             $this->categoryService->validatePostCategoryData($request);
 
-            if ($this->categoryService->categoryExists($categoryName)) {
+            if ($this->categoryService->categoryExistsByName($categoryName)) {
 
                 return response()->json([
                     'success' => false,
@@ -161,11 +161,11 @@ class CategoryController extends Controller
     {
         if (Auth::user()->can('delete', Category::class)) {
 
-            if ($category = $this->categoryService->categoryExists($id)) {
+            if ($this->categoryService->categoryExistsById($id)) {
 
-                if (!$this->categoryService->hasThisCategoryProperties($category)) {
+                if (!$this->categoryService->hasThisCategoryProperties($id)) {
 
-                    if ($this->categoryService->delete($category)) {
+                    if ($this->categoryService->delete($id)) {
 
                         return response()->json([
                             'success' => true,
