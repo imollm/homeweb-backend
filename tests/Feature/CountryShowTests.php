@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\tests\Feature;
 
+use App\Models\City;
 use App\Models\Country;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,7 +20,7 @@ class CountryShowTests extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
-                'data' => array(),
+                'data' => Country::all()->toArray(),
                 'message' => 'List of all countries',
             ]);
     }

@@ -29,6 +29,13 @@ class CityService implements ICityService
         ])->validate();
     }
 
+    public function existThisCity(string $id): bool
+    {
+        $city = City::find($id);
+
+        return !is_null($city);
+    }
+
     public function existsRelatedCountry(Request $request): bool
     {
         $countryId = $request->input('country_id');
@@ -69,5 +76,15 @@ class CityService implements ICityService
                         ]);
 
         return !is_null($city);
+    }
+
+    public function hasThisCityRelatedProperties(string $id): bool
+    {
+        return count(City::find($id)->properties) > 0 ? false : true;
+    }
+
+    public function delete(string $id): bool
+    {
+        return City::find($id)->delete();
     }
 }

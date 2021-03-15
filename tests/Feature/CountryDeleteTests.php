@@ -79,14 +79,24 @@ class CountryDeleteTests extends TestCase
                 ->select('countries.*')
                 ->leftJoin('cities', 'countries.id', '=', 'cities.country_id')
                 ->whereNull('cities.country_id')
-                ->get()->first()->id;
+                ->get()->first();
 
-        $uri = Config::get('app.url') . '/api/countries/'.$countryWithOutRelationsWithCities.'/delete';
+        $countryId = $countryWithOutRelationsWithCities->id;
+        $countryName = $countryWithOutRelationsWithCities->name;
+
+        $country = [
+            'id' => $countryId,
+            'name' => $countryName
+        ];
+
+        $uri = Config::get('app.url') . '/api/countries/'.$countryId.'/delete';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson($uri)
             ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertDatabaseMissing('countries', $country);
     }
 
 }

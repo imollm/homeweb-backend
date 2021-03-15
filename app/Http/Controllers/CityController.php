@@ -33,7 +33,11 @@ class CityController extends Controller
      */
     public function index(): JsonResponse
     {
-
+        return response()->json([
+            'success' => true,
+            'data' => City::all(),
+            'message' => 'List of all cities'
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -102,7 +106,22 @@ class CityController extends Controller
      */
     public function show(string $id): JsonResponse
     {
+        if ($this->cityService->existThisCity($id)) {
 
+            return response()->json([
+                'success' => true,
+                'data' => City::find($id),
+                'message' => 'City found'
+            ], Response::HTTP_OK);
+
+        } else {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'City not found'
+            ], Response::HTTP_NOT_FOUND);
+
+        }
     }
 
     /**
@@ -147,9 +166,42 @@ class CityController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        if (Auth::user()->can('delete', City::class)) {
+        if (Auth::user()->can('destroy', City::class)) {
 
+            if ($this->cityService->existThisCity($id)) {
 
+                if ($this->cityService->hasThisCityRelatedProperties($id)) {
+
+                    if ($this->cityService->delete($id)) {
+
+                        return response()->json([], Response::HTTP_NO_CONTENT);
+
+                    } else {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Error while delete city'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                    }
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Error, this city has properties related'
+                    ], Response::HTTP_CONFLICT);
+
+                }
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'City not found'
+                ], Response::HTTP_NOT_FOUND);
+
+            }
 
         } else {
 
