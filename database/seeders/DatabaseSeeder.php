@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CitySeeder::class,
             PropertySeeder::class,
-            RangePriceSeeder::class
+            RangePriceSeeder::class,
+            PriceHistory::class,
         ]);
     }
 }
