@@ -14,8 +14,18 @@ class CreateToursTable extends Migration
     public function up()
     {
         Schema::create('tours', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('employee_id');
+            $table->date('date');
+            $table->time('time');
             $table->timestamps();
+
+            $table->primary(['property_id', 'customer_id', 'employee_id', 'date', 'time']);
+
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

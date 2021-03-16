@@ -75,6 +75,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Return tours of this user
+     *
+     * @return HasMany
+     */
+    public function tours(): HasMany
+    {
+        return $this->hasMany(Tour::class);
+    }
+
+    /**
      * Tells if the user have admin role
      *
      * @return bool

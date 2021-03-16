@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PropertySeeder::class,
             RangePriceSeeder::class,
             PriceHistorySeeder::class,
+            TourSeeder::class,
         ]);
     }
 }

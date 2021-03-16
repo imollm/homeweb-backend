@@ -60,16 +60,15 @@
     ```sh
       php artisan migrate --seed
     ```
-
-6. Generar tokens keys.
-    ```sh
-      php artisan passport:install
-    ```
-
-7. Generar claus d'encriptació de l'aplicació
+6. Generar claus d'encriptació de l'aplicació
    ```sh
       php artisan key:generate
    ```
+
+7. Generar tokens client keys.
+    ```sh
+      php artisan passport:install
+    ```
 
    Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
 
@@ -94,7 +93,7 @@ Abans de realitzar tests per carregar les credencials dels usuaris dins .env i a
 <li style="list-style: none"><span style="color: orange">API_OWNER1_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
 </ul>
 
-Executar la comanda
+Executar la comanda, per publicar la configuració que tenim dins .env i que poguem accedir-hi mitjançant l'array declarat dins app/config.php
 
    ```sh
       php artisan config:cache

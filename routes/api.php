@@ -7,6 +7,7 @@ use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TourController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -100,6 +101,17 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/index', [PriceHistoryController::class, 'index'])->name('index');
         Route::get('/{propertyId}/show', [PriceHistoryController::class, 'show'])->where('propertyId', '[0-9]+')->name('show');
         Route::post('/store', [PriceHistoryController::class, 'store'])->name('store');
+    });
+    // Tours auth routes
+    Route::prefix('tours')->name('tours.')->group(function () {
+        Route::get('/index', [TourController::class, 'index'])->name('index');
+        Route::get('/{tourId}/show', [TourController::class, 'show'])->where('tourId', '[0-9]+')->name('show');
+        Route::get('/property/{propertyId}/show', [TourController::class, 'showByPropertyId'])->where('propertyId', '[0-9]+')->name('property.show');
+        Route::get('/employee/{employeeId}/show', [TourController::class, 'showByEmployeeId'])->where('employeeId', '[0-9]+')->name('employee.show');
+        Route::get('/customer/{customerId}/show', [TourController::class, 'showByCustomerId'])->where('customerId', '[0-9]+')->name('customer.show');
+        Route::post('/store', [TourController::class, 'index'])->name('store');
+        Route::put('/update', [TourController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [TourController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });
 });
 /*-----------------------------------------------------------------------------------*/

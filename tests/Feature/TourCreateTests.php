@@ -4,19 +4,17 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class TourCreateTests extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    public function test_tour_create_customer_role_unauthorized()
     {
-        $response = $this->get('/');
+        $token = $this->getRoleTokenAuth('customer');
 
-        $response->assertStatus(200);
+        $uri = Config::get('app.url') . '/api/tours/store';
+
+
     }
 }

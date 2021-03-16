@@ -78,4 +78,14 @@ class Property extends Model
     {
         return $this->hasMany(PriceHistory::class);
     }
+
+    /**
+     * Return tours of this property
+     *
+     * @return HasMany
+     */
+    public function tours(): HasMany
+    {
+        return $this->hasMany(Tour::class);
+    }
 }
