@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class PriceHistoryShowTest extends TestCase
+class PriceHistoryShowTests extends TestCase
 {
     private PropertyService $propertyService;
 

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\PriceHistory\PriceHistoryService;
 use Illuminate\Support\ServiceProvider;
 
 class PriceHistoryServiceProvider extends ServiceProvider
@@ -23,6 +24,8 @@ class PriceHistoryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind('App\Providers\PriceHistoryServiceProvider', function ($app) {
+            return new PriceHistoryService();
+        });
     }
 }

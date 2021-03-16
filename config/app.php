@@ -180,7 +180,8 @@ return [
         App\Providers\CategoryServiceProvider::class,
         App\Providers\CountryServiceProvider::class,
         App\Providers\CityServiceProvider::class,
-
+        App\Providers\PriceHistoryServiceProvider::class,
+        App\Providers\TourServiceProvider::class,
     ],
 
     /*

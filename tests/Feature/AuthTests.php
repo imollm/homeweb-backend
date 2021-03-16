@@ -10,7 +10,7 @@ use Tests\TestCase;
  * Class AuthTest
  * @package Tests\Feature
  */
-class AuthTest extends TestCase
+class AuthTests extends TestCase
 {
     /**
      * Test Admin role login

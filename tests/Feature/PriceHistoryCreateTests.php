@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class PriceHistoryCreateTest extends TestCase
+class PriceHistoryCreateTests extends TestCase
 {
     public function test_price_history_create_customer_role_unauthorized()
     {
