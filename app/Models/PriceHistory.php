@@ -22,9 +22,9 @@ class PriceHistory extends Model
      */
     protected $fillable = [
         'property_id',
-        'start_date',
+        'start',
         'amount',
-        'end_date'
+        'end'
     ];
 
     /**
@@ -35,7 +35,7 @@ class PriceHistory extends Model
     /**
      * @var string[]
      */
-    protected $primaryKey = ['property_id', 'start_date', 'amount'];
+    protected $primaryKey = ['property_id', 'start', 'amount'];
 
     /**
      * @var bool

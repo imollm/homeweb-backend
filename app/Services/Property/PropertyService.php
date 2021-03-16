@@ -195,9 +195,9 @@ class PropertyService implements IPropertyService
      * Return the property owner id
      *
      * @param string $id
-     * @return string
+     * @return int
      */
-    public function whichIsTheOwnerIdOfThisProperty(string $id): string
+    public function whichIsTheOwnerIdOfThisProperty(string $id): int
     {
         return Property::find($id)->owner->id;
     }

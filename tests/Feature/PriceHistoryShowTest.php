@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\PriceHistory;
 use App\Models\Property;
 use App\Services\Property\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -140,20 +139,16 @@ class PriceHistoryShowTest extends TestCase
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $allOwnersWithProperties =
-            DB::table('users')->join('properties', 'users.id', '=', 'properties.user_id')->groupBy('users.id')->pluck('users.id')->toArray();
-
         $ownerDoAction =
-            DB::table('users')->where('users.email', '=', 'owner@homeweb.com')->pluck('users.id')->first();
-
-        $ownerDoNotAction = array_diff($allOwnersWithProperties, array(($ownerDoAction)));
-
-        $anotherOwnerWithProperties = $ownerDoNotAction[rand(1, sizeof($ownerDoNotAction))];
+            DB::table('users')
+                ->where('users.email', '=', 'owner@homeweb.com')
+                ->pluck('users.id')
+                ->first();
 
         $propertyIdIsNotYours =
             DB::table('properties')
                 ->select('properties.*')
-                ->where('properties.user_id', '<>', $anotherOwnerWithProperties)
+                ->where('properties.user_id', '<>', $ownerDoAction)
                 ->first()->id;
 
         $uri = Config::get('app.url') . '/api/priceHistory/'.$propertyIdIsNotYours.'/show';
@@ -165,6 +160,32 @@ class PriceHistoryShowTest extends TestCase
             ->assertJson([
                 'success' => false,
                 'message' => 'This property is not yours'
+            ]);
+    }
+
+    public function test_price_history_show_by_property_id_owner_role_and_he_is_the_owner()
+    {
+        $token = $this->getRoleTokenAuth('owner');
+
+        $propertyIdOwnedByOwnerDoAction =
+            DB::table('users')
+                ->join('roles', 'users.role_id', '=', 'roles.id')
+                ->join('properties', 'users.id', '=', 'properties.user_id')
+                ->where('users.name', '=', 'owner')
+                ->groupBy('users.id')
+                ->pluck('users.id')
+                ->first();
+
+        $uri = Config::get('app.url') . '/api/priceHistory/'.$propertyIdOwnedByOwnerDoAction.'/show';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'data' => $this->propertyService->getPriceHistoryOfThisProperty($propertyIdOwnedByOwnerDoAction),
+                'message' => 'Price history of your property ' . $propertyIdOwnedByOwnerDoAction
             ]);
     }
 }

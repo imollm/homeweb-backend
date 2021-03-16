@@ -14,6 +14,6 @@ interface IPropertyService
     public function validateFilterPostData(Request $request);
     public function getPropertiesByFilters(Request $request): Collection | null;
     public function existsThisProperty(string $id): bool;
-    public function whichIsTheOwnerIdOfThisProperty(string $id): string;
+    public function whichIsTheOwnerIdOfThisProperty(string $id): int;
     public function getPriceHistoryOfThisProperty(string $id): array;
 }

@@ -18,9 +18,9 @@ class PriceHistorySeeder extends Seeder
     public function run()
     {
         $startDates = [
-            '2021-01-01 21:00:00',
-            '2021-01-01 22:00:00',
-            '2021-01-01 23:00:00'
+            '2021-01-01',
+            '2021-01-02',
+            '2021-01-03'
         ];
 
         $howManyPropertiesAre = Property::count();
@@ -28,11 +28,12 @@ class PriceHistorySeeder extends Seeder
         $amountAugment = 0;
 
         for ($i = 0; $i < $howManyPropertiesAre; $i++) {
-            foreach ($startDates as $startDate) {
+            foreach ($startDates as $key => $startDate) {
                 DB::table('price_history')->insert([
                     'property_id' => ($i + 1),
-                    'start_date' => $startDate,
+                    'start' => $startDate,
                     'amount' => 100000 * $amountAugment,
+                    'end' => ($key < 2) ? $startDates[$key + 1] : null,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]);

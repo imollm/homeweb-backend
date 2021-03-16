@@ -81,6 +81,8 @@ class CountryCreateTests extends TestCase
                 'success' => true,
                 'message' => 'Country created'
             ]);
+
+        $this->assertDatabaseHas('countries', $payload);
     }
 
     public function test_country_store_ok_role_admin_authorized()
@@ -102,5 +104,7 @@ class CountryCreateTests extends TestCase
                 'success' => true,
                 'message' => 'Country created'
             ]);
+
+        $this->assertDatabaseHas('countries', $payload);
     }
 }

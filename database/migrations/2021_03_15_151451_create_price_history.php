@@ -15,12 +15,12 @@ class CreatePriceHistory extends Migration
     {
         Schema::create('price_history', function (Blueprint $table) {
             $table->unsignedBigInteger('property_id');
-            $table->timestamp('start_date');
+            $table->date('start');
             $table->float('amount');
-            $table->timestamp('end_date')->nullable()->default(null);
+            $table->date('end')->nullable()->default(null);
             $table->timestamps();
 
-            $table->primary(['property_id', 'start_date', 'amount']);
+            $table->primary(['property_id', 'start', 'amount']);
 
             $table->foreign('property_id')->references('id')->on('properties');
         });

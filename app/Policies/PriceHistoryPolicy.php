@@ -17,9 +17,9 @@ class PriceHistoryPolicy extends Policy
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
 
-    public function store(User $user, Property $property): bool
+    public function store(User $user): bool
     {
-        $authRoles = ['admin', 'employee'];
+        $authRoles = ['admin', 'employee', 'owner'];
 
         $userRole = $user->role->name;
 
@@ -27,12 +27,7 @@ class PriceHistoryPolicy extends Policy
 
             return true;
 
-        } elseif ($this->isAuthorizedToDoThisAction($userRole, ['employee'])
-                && $property->owner->id === $user->id) {
-
-            return true;
-
-        } else {
+        }  else {
 
             return false;
 

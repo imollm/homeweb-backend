@@ -9,14 +9,34 @@ use App\Services\Property\PropertyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class PriceHistoryController
+ * @package App\Http\Controllers
+ */
 class PriceHistoryController extends Controller
 {
+    /**
+     * @var PriceHistoryService
+     */
     private PriceHistoryService $priceHistoryService;
+    /**
+     * @var PropertyService
+     */
     private PropertyService $propertyService;
+    /**
+     * @var PassportAuthService
+     */
     private PassportAuthService $passportAuthService;
 
+    /**
+     * PriceHistoryController constructor.
+     * @param PriceHistoryService $priceHistoryService
+     * @param PropertyService $propertyService
+     * @param PassportAuthService $passportAuthService
+     */
     public function __construct(
         PriceHistoryService $priceHistoryService,
         PropertyService $propertyService,
@@ -34,7 +54,7 @@ class PriceHistoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        if (Auth::user()->can('index')) {
+        if (Auth::user()->can('index', PriceHistory::class)) {
 
             return response()->json([
                 'success' => true,
@@ -54,10 +74,70 @@ class PriceHistoryController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
-        //
+        if (Auth::user()->can('store', PriceHistory::class)) {
+
+            $this->priceHistoryService->validatePostData($request);
+
+            if ((Auth::user()->role->name === 'admin' || Auth::user()->role->name === 'employee') ||
+                $this->priceHistoryService->areYouAllowedToStoreAPriceChangeOfThisProperty($request)
+            ) {
+
+                if ($this->priceHistoryService->hasThisPropertyTheSamePriceChange($request)) {
+
+                    if ($this->priceHistoryService->startTimestampGivenIsGreaterThanLast($request)) {
+
+                        if ($this->priceHistoryService->create($request)) {
+
+                            return response()->json([
+                                'success' => true,
+                                'message' => 'Price change created'
+                            ], Response::HTTP_CREATED);
+
+                        } else {
+
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Error when store price change'
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                        }
+
+                    } else {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Start timestamp given is lower than last price change start timestamp'
+                        ], Response::HTTP_CONFLICT);
+
+                    }
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'This property has identical price change'
+                    ], Response::HTTP_CONFLICT);
+
+                }
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The property is not yours'
+                ], Response::HTTP_UNAUTHORIZED);
+
+            }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 
     /**
@@ -84,7 +164,7 @@ class PriceHistoryController extends Controller
 
                 } elseif (
                     $roleAuthUser === 'owner' &&
-                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) === auth()->user()->id
+                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) === Auth::user()->id
                 ) {
 
                     return response()->json([
