@@ -75,13 +75,23 @@ class User extends Authenticatable
     }
 
     /**
-     * Return tours of this user
+     * Return tours of role employee
      *
      * @return HasMany
      */
-    public function tours(): HasMany
+    public function makeTours(): HasMany
     {
-        return $this->hasMany(Tour::class);
+        return $this->hasMany(Tour::class, 'employee_id', 'id');
+    }
+
+    /**
+     * Return tours of role customer
+     *
+     * @return HasMany
+     */
+    public function visitTours(): HasMany
+    {
+        return $this->hasMany(Tour::class, 'customer_id', 'id');
     }
 
     /**

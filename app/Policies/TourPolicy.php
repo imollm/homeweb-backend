@@ -5,17 +5,49 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TourPolicy
+class TourPolicy extends Policy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function index(User $user): bool
     {
-        //
+        $authRoles = ['admin'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function store(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'owner', 'customer'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function show(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'owner', 'customer'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function showByPropertyId(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'customer', 'owner'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function showByHashId(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'customer', 'owner'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function update(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'customer'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
 }

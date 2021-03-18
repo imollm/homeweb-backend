@@ -23,13 +23,15 @@ class Tour extends Model
         'customer_id',
         'employee_id',
         'date',
-        'time'
+        'time',
+        'hash_id'
     ];
 
     /**
      * @var bool
      */
     public $incrementing = false;
+
 
     /**
      * @var string[]

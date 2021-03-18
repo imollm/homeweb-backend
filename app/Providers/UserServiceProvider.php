@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\Property\PropertyService;
-use App\Services\Tour\TourService;
 use App\Services\User\UserService;
 use Illuminate\Support\ServiceProvider;
 
-class TourServiceProvider extends ServiceProvider
+class UserServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -26,8 +24,8 @@ class TourServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('App\Providers\TourServiceProvider', function ($app) {
-            return new TourService(new PropertyService(), new UserService());
+        $this->app->bind('App\Providers\UserServiceProvider', function ($app) {
+            return new UserService();
         });
     }
 }

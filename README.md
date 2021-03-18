@@ -93,7 +93,7 @@ Abans de realitzar tests per carregar les credencials dels usuaris dins .env i a
 <li style="list-style: none"><span style="color: orange">API_OWNER1_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
 </ul>
 
-Executar la comanda, per publicar la configuració que tenim dins .env i que poguem accedir-hi mitjançant l'array declarat dins app/config.php
+Executar la comanda, per publicar la configuració que tenim dins .env i que puguem accedir-hi mitjançant array declarat dins config/api.php, això després quedarà guardat dins la cache per ser utilitzat.
 
    ```sh
       php artisan config:cache

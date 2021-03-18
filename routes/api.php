@@ -105,11 +105,10 @@ Route::middleware('auth:api')->group(function () {
     // Tours auth routes
     Route::prefix('tours')->name('tours.')->group(function () {
         Route::get('/index', [TourController::class, 'index'])->name('index');
-        Route::get('/{tourId}/show', [TourController::class, 'show'])->where('tourId', '[0-9]+')->name('show');
+        Route::get('/show', [TourController::class, 'show'])->name('show');
+        Route::get('/{hashId}/showByHashId', [TourController::class, 'showByHashId'])->where('hash', '[0-9a-zA-Z]+')->name('hashId.show');
         Route::get('/property/{propertyId}/show', [TourController::class, 'showByPropertyId'])->where('propertyId', '[0-9]+')->name('property.show');
-        Route::get('/employee/{employeeId}/show', [TourController::class, 'showByEmployeeId'])->where('employeeId', '[0-9]+')->name('employee.show');
-        Route::get('/customer/{customerId}/show', [TourController::class, 'showByCustomerId'])->where('customerId', '[0-9]+')->name('customer.show');
-        Route::post('/store', [TourController::class, 'index'])->name('store');
+        Route::post('/store', [TourController::class, 'store'])->name('store');
         Route::put('/update', [TourController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [TourController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });

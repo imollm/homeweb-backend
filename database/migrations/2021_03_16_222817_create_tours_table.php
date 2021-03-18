@@ -19,6 +19,7 @@ class CreateToursTable extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->date('date');
             $table->time('time');
+            $table->string('hash_id');
             $table->timestamps();
 
             $table->primary(['property_id', 'customer_id', 'employee_id', 'date', 'time']);

@@ -182,6 +182,7 @@ return [
         App\Providers\CityServiceProvider::class,
         App\Providers\PriceHistoryServiceProvider::class,
         App\Providers\TourServiceProvider::class,
+        App\Providers\UserServiceProvider::class,
     ],
 
     /*
