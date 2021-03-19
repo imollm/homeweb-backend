@@ -11,6 +11,8 @@ interface ITourService
     public function allDataExists(Request $request): bool;
     public function areAvailability(Request $request): bool;
     public function create(Request $request): bool;
+    public function update(Request $request): bool;
+    public function delete(string $hashId): bool;
     public function areToursIntoSystem(): bool;
 
     public function validateHashId(Request $request);

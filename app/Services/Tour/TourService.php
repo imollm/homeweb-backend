@@ -298,4 +298,37 @@ class TourService implements ITourService
     {
         return Tour::whereHashId($hashId)->count() > 0;
     }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function update(Request $request): bool
+    {
+        $propertyId = $request->input('property_id');
+        $customerId = $request->input('customer_id');
+        $employeeId = $request->input('employee_id');
+        $date = $request->input('date');
+        $time = $request->input('time');
+        $hashId = $request->input('hash_id');
+
+        $newHashId = hash("sha256", $propertyId.$customerId.$employeeId.$date.$time);
+
+        return Tour::whereHashId($hashId)->update([
+            'date' => $date,
+            'time' => $time,
+            'hash_id' => $newHashId
+        ]);
+    }
+
+    /**
+     * @param string $hashId
+     * @return bool
+     */
+    public function delete(string $hashId): bool
+    {
+        $tourDeleted = Tour::whereHashId($hashId)->delete();
+
+        return !is_null($tourDeleted);
+    }
 }

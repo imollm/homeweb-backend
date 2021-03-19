@@ -60,16 +60,6 @@ class TourController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return JsonResponse
-     */
-    public function create(): JsonResponse
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
@@ -130,7 +120,6 @@ class TourController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param string $hashId
      * @return JsonResponse
      */
     public function show(): JsonResponse
@@ -166,7 +155,7 @@ class TourController extends Controller
                         return response()->json([
                             'success' => true,
                             'data' => $this->tourService->getToursOfPropertiesOwnedByOwnerId($authUserId),
-                            'message' => 'All tours of owner ' . $authUserId . ' properties'
+                            'message' => 'All tours of properties owner ' . $authUserId
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([], Response::HTTP_NO_CONTENT);
@@ -342,13 +331,30 @@ class TourController extends Controller
 
                 if ($this->tourService->thisUserIsRelatedWithThisTour($authUserRole, $authUserId, $hashId)) {
 
-                    if ($this->tourService->update($request)) {
+                    if ($this->tourService->areAvailability($request)) {
 
+                        if ($this->tourService->update($request)) {
 
+                            return response()->json([
+                                'success' => true,
+                                'message' => 'Tour updated successfully'
+                            ], Response::HTTP_OK);
+
+                        } else {
+
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Error while updating tour'
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                        }
 
                     } else {
 
-
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'There are not availability'
+                        ], Response::HTTP_CONFLICT);
 
                     }
 
@@ -357,7 +363,7 @@ class TourController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'This tour ' . $hashId . ' it is not related to you'
-                    ], Response::HTTP_CONFLICT);
+                    ], Response::HTTP_UNAUTHORIZED);
 
                 }
 
@@ -380,11 +386,58 @@ class TourController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $id
+     * @param string $hashId
      * @return JsonResponse
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $hashId): JsonResponse
     {
-        //
+        if (Auth::user()->can('destroy', Tour::class)) {
+
+            if ($this->tourService->existsThisTourByHashId($hashId)) {
+
+                $authUserRole = Auth::user()->role->name;
+                $authUserId = Auth::user()->id;
+
+                if ($this->tourService->thisUserIsRelatedWithThisTour($authUserRole, $authUserId, $hashId)) {
+
+                    if ($this->tourService->delete($hashId)) {
+
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Tour deleted'
+                        ], Response::HTTP_OK);
+
+                    } else {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Error while deleting tour'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                    }
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tour is not yours'
+                    ], Response::HTTP_UNAUTHORIZED);
+
+                }
+
+            } else {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tour not found'
+                ], Response::HTTP_NOT_FOUND);
+
+            }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 }

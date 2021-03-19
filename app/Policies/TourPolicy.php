@@ -18,7 +18,7 @@ class TourPolicy extends Policy
 
     public function store(User $user): bool
     {
-        $authRoles = ['admin', 'employee', 'owner', 'customer'];
+        $authRoles = ['admin', 'employee', 'customer'];
 
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
@@ -45,6 +45,13 @@ class TourPolicy extends Policy
     }
 
     public function update(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'customer'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function destroy(User $user): bool
     {
         $authRoles = ['admin', 'employee', 'customer'];
 

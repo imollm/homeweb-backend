@@ -31,7 +31,7 @@ Route::prefix('/auth')->name('auth.public.')->group(function () {
 
 Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/all', [PropertyController::class, 'all'])->name('all');
-    Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('showById');
     Route::post('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
 });
 
@@ -110,7 +110,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/property/{propertyId}/show', [TourController::class, 'showByPropertyId'])->where('propertyId', '[0-9]+')->name('property.show');
         Route::post('/store', [TourController::class, 'store'])->name('store');
         Route::put('/update', [TourController::class, 'update'])->name('update');
-        Route::delete('/{id}/delete', [TourController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
+        Route::delete('/{hashId}/delete', [TourController::class, 'destroy'])->where('hashId', '[0-9a-zA-Z]+')->name('delete');
     });
 });
 /*-----------------------------------------------------------------------------------*/

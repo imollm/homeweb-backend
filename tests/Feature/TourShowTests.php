@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -494,7 +495,7 @@ class TourShowTests extends TestCase
             ->assertJson([
                 'success' => true,
                 'data' => $toursOfPropertiesOwnedByOwner,
-                'message' => 'All tours of owner ' . $ownerId . ' properties'
+                'message' => 'All tours of properties owner ' . $ownerId
             ]);
     }
 
@@ -513,11 +514,11 @@ class TourShowTests extends TestCase
                     ->get('tours.hash_id')
                     ->toArray();
 
-        Tour::whereHashId($arrayOfToursToDelete)->delete();
+        DB::table('tours')->whereIn('hash_id', $arrayOfToursToDelete)->delete();
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->getJson($uri)
+            ->getJson($uri)->dump()
             ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 

@@ -12,19 +12,13 @@ use Tests\TestCase;
 
 class TourCreateTests extends TestCase
 {
-    public function test_tour_create_customer_role_unauthorized()
+    public function test_tour_create_owner_role_unauthorized()
     {
-        $token = $this->getRoleTokenAuth('customer');
+        $token = $this->getRoleTokenAuth('owner');
 
         $uri = Config::get('app.url') . '/api/tours/store';
 
-        $payload = [
-            'property_id' => '',
-            'customer_id' => '',
-            'employee_id' => '',
-            'date' => '',
-            'time' => ''
-        ];
+        $payload = [];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
