@@ -5,6 +5,7 @@ namespace App\Services\PriceHistory;
 
 use App\Models\PriceHistory;
 use App\Models\Property;
+use App\Services\Property\PropertyService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -16,6 +17,19 @@ use Illuminate\Validation\ValidationException;
  */
 class PriceHistoryService implements IPriceHistory
 {
+    /**
+     * @var PropertyService
+     */
+    private PropertyService $propertyService;
+
+    /**
+     * PriceHistoryService constructor.
+     * @param PropertyService $propertyService
+     */
+    public function __construct(PropertyService $propertyService)
+    {
+        $this->propertyService = $propertyService;
+    }
 
     /**
      * @param Request $request
@@ -96,7 +110,11 @@ class PriceHistoryService implements IPriceHistory
             'end' => null
         ]);
 
-        return !is_null($newPriceChange);
+        // Third update price of property
+
+        $updatedPriceOnProperty = $this->propertyService->updatePriceByPropertyId($propertyId, $amount);
+
+        return !is_null($newPriceChange) && $updatedPriceOnProperty;
     }
 
     /**

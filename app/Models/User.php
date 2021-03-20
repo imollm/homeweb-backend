@@ -95,6 +95,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Return the sales of one employee
+     *
+     * @return HasMany
+     */
+    public function mySales(): HasMany
+    {
+        return $this->hasMany(Sale::class, 'seller_id', 'id');
+    }
+
+    /**
+     * Return the buys of one customer
+     *
+     * @return HasMany
+     */
+    public function myBuys(): HasMany
+    {
+        return $this->hasMany(Sale::class, 'buyer_id', 'id');
+    }
+
+    /**
      * Tells if the user have admin role
      *
      * @return bool

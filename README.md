@@ -69,8 +69,10 @@
     ```sh
       php artisan passport:install
     ```
-
-   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6.
+   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6. Podem fer-ho mitjançant una comanda que he creat que fa la migration més els seeders i genera les claus de passport.
+    ```sh
+      php artisan db:restore
+    ```
 
 
 ### Test amb Postman

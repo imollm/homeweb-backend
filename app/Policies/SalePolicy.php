@@ -5,17 +5,14 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SalePolicy
+class SalePolicy extends Policy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function store(User $user): bool
     {
-        //
+        $authRoles = ['admin', 'employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
 }

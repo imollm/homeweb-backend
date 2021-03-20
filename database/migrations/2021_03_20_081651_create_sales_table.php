@@ -14,8 +14,19 @@ class CreateSalesTable extends Migration
     public function up()
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('buyer_id');
+            $table->unsignedBigInteger('seller_id');
+            $table->date('date');
+            $table->float('amount');
+            $table->string('hash_id');
             $table->timestamps();
+
+            $table->primary(['property_id', 'buyer_id', 'seller_id', 'date']);
+
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

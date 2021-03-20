@@ -292,6 +292,10 @@ class PriceHistoryCreateTests extends TestCase
             ]);
 
         $this->assertDatabaseHas('price_history', $valuesOfLastPriceChange);
+        $this->assertDatabaseHas('properties', [
+            'id' => $payload['property_id'],
+            'price' => $payload['amount']
+            ]);
         $this->assertDatabaseHas('price_history', $payload);
     }
 
@@ -327,6 +331,10 @@ class PriceHistoryCreateTests extends TestCase
             ]);
 
         $this->assertDatabaseHas('price_history', $valuesOfLastPriceChange);
+        $this->assertDatabaseHas('properties', [
+            'id' => $payload['property_id'],
+            'price' => $payload['amount']
+        ]);
         $this->assertDatabaseHas('price_history', $payload);
     }
 
@@ -370,6 +378,10 @@ class PriceHistoryCreateTests extends TestCase
             ]);
 
         $this->assertDatabaseHas('price_history', $valuesOfLastPriceChange);
+        $this->assertDatabaseHas('properties', [
+            'id' => $payload['property_id'],
+            'price' => $payload['amount']
+        ]);
         $this->assertDatabaseHas('price_history', $payload);
     }
 }

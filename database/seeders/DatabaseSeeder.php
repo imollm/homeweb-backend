@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             RangePriceSeeder::class,
             PriceHistorySeeder::class,
             TourSeeder::class,
+            SaleSeeder::class,
         ]);
     }
 }

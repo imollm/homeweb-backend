@@ -7,6 +7,7 @@ use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\TourController;
 use Illuminate\Support\Facades\Route;
 
@@ -111,6 +112,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/store', [TourController::class, 'store'])->name('store');
         Route::put('/update', [TourController::class, 'update'])->name('update');
         Route::delete('/{hashId}/delete', [TourController::class, 'destroy'])->where('hashId', '[0-9a-zA-Z]+')->name('delete');
+    });
+    // Sales auth routes
+    Route::prefix('sales')->name('sales.')->group(function () {
+        Route::post('/store', [SaleController::class, 'store'])->name('store');
     });
 });
 /*-----------------------------------------------------------------------------------*/

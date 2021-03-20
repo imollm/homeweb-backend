@@ -210,4 +210,9 @@ class PropertyService implements IPropertyService
     {
         return Property::find($id)->priceHistory->toArray();
     }
+
+    public function updatePriceByPropertyId(string $propertyId, float $price): bool
+    {
+        return Property::whereId($propertyId)->update(['price' => $price]);
+    }
 }

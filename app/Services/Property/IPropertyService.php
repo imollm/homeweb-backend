@@ -16,4 +16,5 @@ interface IPropertyService
     public function existsThisProperty(string $id): bool;
     public function whichIsTheOwnerIdOfThisProperty(string $id): int;
     public function getPriceHistoryOfThisProperty(string $id): array;
+    public function updatePriceByPropertyId(string $propertyId, float $price): bool;
 }
