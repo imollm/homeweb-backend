@@ -33,8 +33,8 @@ class UserService implements IUserService
 
         $existsCustomer =
             User::join('roles', 'users.role_id', '=', 'roles.id')
-                ->where('roles.name', $role)
-                ->where('users.id', $id)
+                ->where('roles.name', '=',$role)
+                ->where('users.id', '=', $id)
                 ->pluck('users.id')->first();
 
         return !is_null($existsCustomer);
@@ -50,8 +50,8 @@ class UserService implements IUserService
 
         $existsCustomer =
             User::join('roles', 'users.role_id', '=', 'roles.id')
-                ->where('roles.name', $role)
-                ->where('users.id', $id)
+                ->where('roles.name', '=', $role)
+                ->where('users.id', '=', $id)
                 ->pluck('users.id')->first();
 
         return !is_null($existsCustomer);

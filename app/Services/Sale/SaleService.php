@@ -112,7 +112,7 @@ class SaleService implements ISaleService
 
         $hashId = hash("sha256", $propertyId.$buyerId.$sellerId.$date);
 
-        return Sale::create([
+        $sale = Sale::create([
             'property_id' => $propertyId,
             'buyer_id' => $buyerId,
             'seller_id' => $sellerId,
@@ -120,5 +120,11 @@ class SaleService implements ISaleService
             'amount' => $amount,
             'hash_id' => $hashId
         ]);
+
+        // Update bool sale on property table
+
+        $sold = Property::whereId($propertyId)->update(['sold' => true]);
+
+        return $sale && $sold;
     }
 }
