@@ -184,6 +184,7 @@ return [
         App\Providers\TourServiceProvider::class,
         App\Providers\UserServiceProvider::class,
         App\Providers\SaleServiceProvider::class,
+        App\Providers\FeatureServiceProvider::class,
     ],
 
     /*
