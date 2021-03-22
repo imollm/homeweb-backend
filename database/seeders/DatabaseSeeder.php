@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             PriceHistorySeeder::class,
             TourSeeder::class,
             SaleSeeder::class,
+            FeatureSeeder::class,
+            FeaturePropertySeeder::class,
         ]);
     }
 }
