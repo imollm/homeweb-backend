@@ -20,6 +20,8 @@ class FeaturePropertySeeder extends Seeder
         $properties = Property::all()->toArray();
         $features = Feature::all()->toArray();
 
+        unset($features[0]);
+
         foreach ($properties as $property) {
 
             foreach ($features as $feature) {

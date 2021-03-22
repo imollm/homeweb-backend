@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
@@ -49,6 +50,11 @@ Route::prefix('countries')->name('countries.')->group(function () {
 Route::prefix('cities')->name('cities.')->group(function () {
     Route::get('/index', [CityController::class, 'index'])->name('index');
     Route::get('/{id}/show', [CityController::class, 'show'])->where('id', '[0-9]+')->name('show');
+});
+
+Route::prefix('features')->name('features.')->group(function () {
+    Route::get('/index', [FeatureController::class, 'index'])->name('index');
+    Route::get('/{id}/show', [FeatureController::class, 'show'])->name('show')->where('id', '[0-9]+')->name('show');;
 });
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
@@ -116,6 +122,12 @@ Route::middleware('auth:api')->group(function () {
     // Sales auth routes
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::post('/store', [SaleController::class, 'store'])->name('store');
+    });
+    // Features auth routes
+    Route::prefix('features')->name('features.')->group(function () {
+        Route::post('/create', [FeatureController::class, 'store'])->name('create');
+        Route::put('/update', [FeatureController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [FeatureController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });
 });
 /*-----------------------------------------------------------------------------------*/
