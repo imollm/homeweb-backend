@@ -119,29 +119,49 @@
 				},
 				{
 					"name": "SHOW BY FILTER",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
 					"request": {
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"reference\": \"qxmd31\",\n    \"price\": 2,\n    \"city_id\": 1,\n    \"category_id\": 2\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
 							}
-						},
+						],
 						"url": {
-							"raw": "{{baseUrl}}/properties/showByFilter",
+							"raw": "{{baseUrl}}/properties/showByFilter?reference&price&location=2&category=",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"properties",
 								"showByFilter"
+							],
+							"query": [
+								{
+									"key": "reference",
+									"value": null
+								},
+								{
+									"key": "price",
+									"value": null
+								},
+								{
+									"key": "location",
+									"value": "2"
+								},
+								{
+									"key": "category",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -284,7 +304,7 @@
 			"name": "Categories",
 			"item": [
 				{
-					"name": "ALL",
+					"name": "INDEX",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true,
 						"disabledSystemHeaders": {
@@ -308,13 +328,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/categories/all",
+							"raw": "{{baseUrl}}/categories/index",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"categories",
-								"all"
+								"index"
 							]
 						}
 					},
@@ -460,12 +480,292 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "STORE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"ABC\",\n    \"name\": \"Alemany\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countries/store",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SHOW BY ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries/1/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"1",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"ABC\",\n    \"name\": \"Alema\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countries/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries/3/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"3",
+								"delete"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Cities",
-			"item": []
+			"item": [
+				{
+					"name": "INDEX",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cities/index",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "STORE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"City name\",\n    \"country_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/store",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SHOW BY ID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cities/1/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"1",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"New Name\",\n    \"country_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cities/4/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"4",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Users",
@@ -610,7 +910,37 @@
 		},
 		{
 			"name": "Tours",
-			"item": []
+			"item": [
+				{
+					"name": "SHOW",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tours/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tours",
+								"show"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Sales",
@@ -927,6 +1257,108 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Price History",
+			"item": [
+				{
+					"name": "INDEX",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/priceHistory/index",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"priceHistory",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SHOW BY PROPERTY ID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/priceHistory/1/show",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"priceHistory",
+								"1",
+								"show"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "STORE",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"property_id\": 1,\n    \"start_date\": \"2021-02-01 12:00:45\",\n    \"amount\": 1000000,\n    \"end_date\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/priceHistory/store",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"priceHistory",
+								"store"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -934,7 +1366,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{apiTokeAdmin}}",
+				"value": "{{apiTokenAdmin}}",
 				"type": "string"
 			}
 		]
@@ -966,7 +1398,7 @@
 		},
 		{
 			"key": "apiTokenAdmin",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZTkyZmEzYTczNDJhYTJlZjA2MTlkNTE3MDI5MGZiNGRiOWM0OTI2NjBkMTg5OTRiNDkwOTYxNGI2NTFhYWNlODQyNGE0MjU3MTFmMTQ2MmYiLCJpYXQiOiIxNjE1NDI1MTk3Ljc4NTI5NCIsIm5iZiI6IjE2MTU0MjUxOTcuNzg1MzA2IiwiZXhwIjoiMTY0Njk2MTE5Ny43ODExODIiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.kTm_tIp76QwCUf2g6WsUZIuCFdVW8vKecQsm4wc4SfFOr0Iu8C3U1mD6R3Wo4TJlUWXEUtKxX6WQd3gkVdjdNhgEKh2QDStMpWmFzX0QfHhs6MxSQfSaMkiPomhqSKCaLIGt9ezXbRnWeD_uXhZDi1eTP7CNPKPAnsF6JiK1wZuebCAZh7fSN7UsZnmsR2YBJBnPzx-2QH7mBiRrcH5AbjUHZycIMXJxUv0DtIGsAlCxDTdbdN1uBxbCxm1R5o0HXyrdT2mBe4ezHQ7cswrFoD8YOBtOfCKlhnGVfBxUA5qw6V-5gaVVbKQ-KRzLJBGd8FTtcJN-GhHE7LNcBgXBhIlxlKyyU8IBg8OZmTKKYpfvpQL9PpNH2W9XzZn6OVhFQH-TTZcBgeQNoCr3D0PSCq-VMbFQFEYN9mmzUt8xtELvWrYbg6NShygYOAG2zFCe2v5OhHQGsioxU3X4Fk5Ec7KZF1zu0eoxZVhp7Rt0PHcFbIHOvMULv76EH0yart2cdESlenyv0Kl9akjhStOUBHtLFspbnYW_QwBUvKeVXKea9CqRfUdIi-x1-aHTIf6VmdOSzyrGP12jygl7DY-Q_Bcr3a1cqR1OD3-hcrowo59YhJmAHqnwXiVsYcp1W1hIun9RFsc0sy2-CDmsIdjNKFqAccQCkNrCYJArtSmAw38"
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOWEwMjQ4MTE1MTVjMjIzNjU3ZTk0ZjA4NDU0Mjg3ODNlZWE0ZTU0ZjQzNWI3NjFlNDdmYWVhYjU0ZjMyNzU5NjEyNDYxMjBkZmY1OWJhYjkiLCJpYXQiOiIxNjE2MDgyNDc3LjMwNTU0NSIsIm5iZiI6IjE2MTYwODI0NzcuMzA1NTUxIiwiZXhwIjoiMTY0NzYxODQ3Ny4yNTI2NzkiLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.2peTtx1GlQVXz9RwB5TXtihs9ST690kTH4pzCcQy3KexHVvJen1QcbcYG-udbXDmCEFVMaHYOCGz_50YSGyniQUts2Muw9Z5wx4dLaRcQlaaR9FDYvUVSLKHEhEB0CDtFrCoMc2ZY3oqd7DjGi-xMrC9rWENzeSvW4ygRo9jz2POsvMTZzRm_6Q0lxO0tKuTc5DyKYrFL_VECwo6FUelrUyZoBwDnRWWNKZEDGTd3WxGnYdw9liGj17xg2cHue04m0v7zv7yUAjuo-zAw4zpyG3j4lrTksRK4ARNmtWf4SpZXo0G6F5Lq4aGUxGaPL7oNRabT0dGEhQqm0UkBFoTNx5akKXksiMsURJjC3F2W9LrjHzU0SUkqttvrqUvdevTXT_fW0uCLvttEPfS4NJKgD70c3u5kR_PiEsl2nT5iv_iWRE3TbWbTAE5JxkLrA2ULeLtHUmEEU1Cq0DhSXDNzahJ7-6cy0I-1j_C89hw2lCLgckxZTdE0446MMBvyXZDQikq982-UcxwiKx8Dn9EwpNkaxE4EECAU4Y-qBiTrqN9ogbwHsu-lJK8JDjJlT-IqRgwpu9AgW61ORhKbYp5evv7BcnyUcGGfcfNv-6Z5SRm1GcUQ5hq3QrzdyePNVbWgQQupNV6NuwUwGoZxWX8OreerxdYOpbZJakoz-XpzNI"
 		},
 		{
 			"key": "apiTokenEmployee",
