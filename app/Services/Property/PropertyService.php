@@ -135,7 +135,14 @@ class PropertyService implements IPropertyService
      */
     public function validateFilterPostData(Request $request)
     {
-        Validator::make($request->all(), [
+        $data = [
+            'reference' => $request->reference,
+            'price' => $request->price,
+            'location' => $request->location,
+            'category' => $request->category,
+        ];
+
+        Validator::make($data, [
             'reference' => 'nullable|max:255',
             'price' => 'nullable',
             'location' => 'nullable',
@@ -150,10 +157,10 @@ class PropertyService implements IPropertyService
     public function getPropertiesByFilters(Request $request): Collection | null
     {
         $conditions = [
-            'reference' => $request->has('reference') ? $request->input('reference') : '',
-            'price' => $request->has('price') ? $request->input('price') : '',
-            'city_id' => $request->has('city_id') ? $request->input('city_id') : '',
-            'category_id' => $request->has('category_id') ? $request->input('category_id') : '',
+            'reference' => $request->reference,
+            'price' => $request->price,
+            'city_id' => $request->location,
+            'category_id' => $request->category,
         ];
 
         $query = Property::select();

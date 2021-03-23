@@ -88,7 +88,6 @@ class PropertyController extends Controller
                 'success' => true,
                 'data' => $result,
                 'message' => 'Properties request',
-                'filters' => $request->all()
             ], Response::HTTP_OK);
         } else {
             return response()->json([], Response::HTTP_NO_CONTENT);
