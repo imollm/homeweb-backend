@@ -18,6 +18,13 @@ use Illuminate\Validation\ValidationException;
  */
 class PropertyService implements IPropertyService
 {
+    private Property $property;
+
+    public function __construct(Property $property)
+    {
+        $this->property = $property;
+    }
+
     /**
      * Validate request data and return new property with this data
      *
@@ -163,28 +170,33 @@ class PropertyService implements IPropertyService
             'category_id' => $request->category,
         ];
 
-        $query = Property::select();
+        if ($conditions['reference'] !== '' || $conditions['price'] !== '' || $conditions['city_id'] !== '' || $conditions['category_id'] !== '') {
 
-        foreach ($conditions as $condition => $value) {
+            $query = Property::select('*');
 
-            if (!is_null($value)) {
+            foreach ($conditions as $condition => $value) {
 
-                if ($condition === 'price') {
+                if (!is_null($value)) {
 
-                    $query->where(function ($q) use ($value) {
+                    if ($condition === 'price') {
 
-                        $bigPrice = RangePrice::where('id', $value)->first()->big_price;
-                        $smallPrice = RangePrice::where('id', $value)->first()->small_price;
+                        $query->where(function ($q) use ($value) {
 
-                        $q->whereBetween('price', [$smallPrice, $bigPrice]);
+                            $bigPrice = RangePrice::where('id', $value)->first()->big_price;
+                            $smallPrice = RangePrice::where('id', $value)->first()->small_price;
 
-                    });
-                } else {
-                    $query->where($condition, $value);
+                            $q->whereBetween('price', [$smallPrice, $bigPrice]);
+
+                        });
+                    } else {
+                        $query->where($condition, $value);
+                    }
                 }
             }
+            return $query->get();
+        } else {
+            return null;
         }
-        return $query->get();
     }
 
     /**

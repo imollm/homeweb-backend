@@ -35,8 +35,7 @@ Route::prefix('/auth')->name('auth.public.')->group(function () {
 Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/all', [PropertyController::class, 'all'])->name('all');
     Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('showById');
-    Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])
-        ->name('showByFilter');
+    Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {
