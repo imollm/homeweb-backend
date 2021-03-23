@@ -66,43 +66,33 @@ class PropertyShowTests extends TestCase
 
         $randomPropertyReference = Property::inRandomOrder()->first()->reference;
 
-        $payload = [
-            'reference' => $randomPropertyReference,
-            'price' => '',
-            'city_id' => '',
-            'category_id' => ''
-        ];
+        $uri = $uri . '?reference=' . $randomPropertyReference;
 
         $this
-            ->postJson($uri, $payload)
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
                 'data' => array(),
-                'message' => 'Properties request',
-                'filters' => array()
+                'message' => 'Properties request'
             ]);
     }
 
     public function test_show_property_by_filter_price()
     {
         $range = '100.000 a 200.000';
-        $rangeId = RangePrice::where('range', $range)->first()->id;
+        $rangeId = RangePrice::where('value', $range)->first()->id;
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $payload = [
-            'reference' => '',
-            'price' => $rangeId,
-            'city_id' => '',
-            'category_id' => ''
-        ];
+        $uri = $uri . '?price=' . $rangeId;
 
         $this
-            ->postJson($uri, $payload)
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
+                'data' => array(),
                 'message' => 'Properties request'
             ]);
     }
@@ -113,21 +103,15 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $payload = [
-            'reference' => '',
-            'price' => '',
-            'city_id' => $cityId,
-            'category_id' => ''
-        ];
+        $uri = $uri . '?location=' . $cityId;
 
         $this
-            ->postJson($uri, $payload)
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
                 'data' => array(),
                 'message' => 'Properties request',
-                'filters' => array()
             ]);
     }
 
@@ -137,21 +121,15 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $payload = [
-            'reference' => '',
-            'price' => '',
-            'city_id' => '',
-            'category_id' => $categoryId
-        ];
+        $uri = $uri . '?category=' . $categoryId;
 
         $this
-            ->postJson($uri, $payload)
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
                 'data' => array(),
                 'message' => 'Properties request',
-                'filters' => array()
             ]);
     }
 
@@ -169,15 +147,10 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $payload = [
-            'reference' => $randomPropertyReference,
-            'price' => '',
-            'city_id' => '',
-            'category_id' => $categoryIdWithAnyPropertyRelated
-        ];
+        $uri = $uri . '?reference='.$randomPropertyReference.'&category=' . $categoryIdWithAnyPropertyRelated;
 
         $this
-            ->postJson($uri, $payload)->dump()
+            ->getJson($uri)
             ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
@@ -191,14 +164,9 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $payload = [
-            'reference' => $randPropertyReference,
-            'price' => $randRangePriceId,
-            'city_id' => $randCityId,
-            'category_id' => $randCategoryId
-        ];
+        $uri = $uri.'?reference='.$randPropertyReference.'&price='.$randRangePriceId.'&location='.$randCityId.'&category='.$randCategoryId;
 
-        $response = $this->postJson($uri, $payload);
+        $response = $this->getJson($uri);
 
         if ($response->status() === Response::HTTP_OK) {
             $response->assertStatus(Response::HTTP_OK)
@@ -206,7 +174,6 @@ class PropertyShowTests extends TestCase
                     'success' => true,
                     'data' => array(),
                     'message' => 'Properties request',
-                    'filters' => array()
                 ]);
         } elseif ($response->status() === Response::HTTP_NO_CONTENT) {
             $response->assertStatus(Response::HTTP_NO_CONTENT);
