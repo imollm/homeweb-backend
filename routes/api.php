@@ -7,6 +7,7 @@ use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\RangePriceController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\TourController;
@@ -38,7 +39,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {
-    Route::get('/all', [CategoryController::class, 'all'])->name('all');
+    Route::get('/index', [CategoryController::class, 'index'])->name('index');
     Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
 });
 
@@ -56,6 +57,8 @@ Route::prefix('features')->name('features.')->group(function () {
     Route::get('/index', [FeatureController::class, 'index'])->name('index');
     Route::get('/{id}/show', [FeatureController::class, 'show'])->name('show')->where('id', '[0-9]+')->name('show');;
 });
+
+Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/

@@ -16,28 +16,28 @@ class RangePriceSeeder extends Seeder
     public function run()
     {
         DB::table('range_prices')->insert([
-            'range' => '100.000 a 200.000',
+            'value' => '100.000 a 200.000',
             'big_price' => 200000,
             'small_price' => 100000,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('range_prices')->insert([
-            'range' => '200.000 a 300.000',
+            'value' => '200.000 a 300.000',
             'big_price' => 300000,
             'small_price' => 200000,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('range_prices')->insert([
-            'range' => '300.000 a 400.000',
+            'value' => '300.000 a 400.000',
             'big_price' => 400000,
             'small_price' => 300000,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('range_prices')->insert([
-            'range' => '400.000 a 500.000',
+            'value' => '400.000 a 500.000',
             'big_price' => 500000,
             'small_price' => 400000,
             'created_at' => Carbon::now(),

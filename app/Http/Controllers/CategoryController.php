@@ -86,13 +86,11 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function all(): JsonResponse
+    public function index(): JsonResponse
     {
-        $categories = Category::all();
-
         return response()->json([
             'success' => true,
-            'data' => $categories,
+            'data' => Category::all()->toArray(),
             'message' => 'All categories'
         ], Response::HTTP_OK);
     }

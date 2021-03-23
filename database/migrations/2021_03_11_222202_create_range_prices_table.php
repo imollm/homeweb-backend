@@ -15,7 +15,7 @@ class CreateRangePricesTable extends Migration
     {
         Schema::create('range_prices', function (Blueprint $table) {
             $table->id();
-            $table->string('range');
+            $table->string('value');
             $table->float('big_price');
             $table->float('small_price');
             $table->timestamps();
