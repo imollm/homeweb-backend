@@ -15,4 +15,6 @@ interface ICityService
     public function create(Request $request): bool;
     public function hasThisCityRelatedProperties(string $id): bool;
     public function delete(string $id): bool;
+    public function getAllCities(): array;
+    public function getCityById(string $id): array;
 }

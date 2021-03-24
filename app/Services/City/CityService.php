@@ -16,6 +16,23 @@ use Illuminate\Validation\ValidationException;
  */
 class CityService implements ICityService
 {
+    /**
+     * @var City
+     */
+    private City $city;
+
+    private Country $country;
+
+    /**
+     * CityService constructor.
+     * @param City $city
+     * @param Country $country
+     */
+    public function __construct(City $city, Country $country)
+    {
+        $this->city = $city;
+        $this->country = $country;
+    }
 
     /**
      * @param Request $request
@@ -29,33 +46,49 @@ class CityService implements ICityService
         ])->validate();
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
     public function existThisCity(string $id): bool
     {
-        $city = City::find($id);
+        $city = $this->city->find($id);
 
         return !is_null($city);
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function existsRelatedCountry(Request $request): bool
     {
         $countryId = $request->input('country_id');
 
-        return !is_null(Country::find($countryId));
+        return !is_null($this->country->find($countryId));
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function existsThisCityWithSameCountry(Request $request): bool
     {
         $countryId = $request->input('country_id');
         $name = strtolower($request->input('name'));
 
-        $cityAlreadyExists = City::where('name', $name)->where('country_id', $countryId)->get()->first();
+        $cityAlreadyExists = $this->city->where('name', $name)->where('country_id', $countryId)->get()->first();
 
         return is_null($cityAlreadyExists);
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function create(Request $request): bool
     {
-        $country = City::create([
+        $country = $this->city->create([
             'country_id' => $request->input('country_id'),
             'name' => strtolower($request->input('name'))
         ]);
@@ -63,13 +96,17 @@ class CityService implements ICityService
         return $country ? true : false;
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function update(Request $request): bool
     {
         $cityId = $request->input('id');
         $cityName = $request->input('name');
         $cityCountryId = $request->input('country_id');
 
-        $city = City::where('id', $cityId)
+        $city = $this->city->where('id', $cityId)
                         ->update([
                             'name' => $cityName,
                             'country_id' => $cityCountryId
@@ -78,13 +115,42 @@ class CityService implements ICityService
         return !is_null($city);
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
     public function hasThisCityRelatedProperties(string $id): bool
     {
-        return count(City::find($id)->properties) > 0 ? false : true;
+        return count($this->city->find($id)->properties) > 0 ? false : true;
     }
 
+    /**
+     * @param string $id
+     * @return bool
+     */
     public function delete(string $id): bool
     {
-        return City::find($id)->delete();
+        return $this->city->find($id)->delete();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCities(): array
+    {
+        $cities = $this->city->all();
+
+        return !is_null($cities) ? $cities->toArray() : [];
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getCityById(string $id): array
+    {
+        $city = $this->city->find($id);
+
+        return !is_null($city) ? $city->toArray() : [];
     }
 }

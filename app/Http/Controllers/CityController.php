@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Services\City\CityService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class CityController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => City::all(),
+            'data' => $this->cityService->getAllCities(),
             'message' => 'List of all cities'
         ], Response::HTTP_OK);
     }
@@ -110,7 +111,7 @@ class CityController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => City::find($id),
+                'data' => $this->cityService->getCityById($id),
                 'message' => 'City found'
             ], Response::HTTP_OK);
 
