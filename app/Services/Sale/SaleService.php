@@ -248,6 +248,8 @@ class SaleService implements ISaleService
      */
     private function getSale(string $hashId): array
     {
-        return $this->sale->whereHashId($hashId)->get()->first()->toArray();
+        $sale = $this->sale->whereHashId($hashId)->get()->first();
+
+        return !is_null($sale) ? $sale->toArray() : [];
     }
 }

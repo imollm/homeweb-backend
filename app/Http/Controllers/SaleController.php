@@ -152,13 +152,13 @@ class SaleController extends Controller
                         'message' => 'Sale by hash id ' . $hashId
                     ], Response::HTTP_OK);
 
-                } else {
-
-                    return response()->json([], Response::HTTP_NO_CONTENT);
-
                 }
-
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Any sale with this params'
+            ], Response::HTTP_NOT_FOUND);
 
         } else {
 

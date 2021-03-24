@@ -60,9 +60,6 @@ class SaleShowTests extends TestCase
                     'message' => 'All sales of user ' . $userId . ' with role ' . $userRole
                 ]);
 
-        } else if ($response->status() === Response::HTTP_NO_CONTENT) {
-
-            $response->assertJson([]);
         }
     }
 
@@ -91,9 +88,6 @@ class SaleShowTests extends TestCase
                 'message' => 'All sales of user ' . $userId . ' with role ' . $userRole
             ]);
 
-        } else if ($response->status() === Response::HTTP_NO_CONTENT) {
-
-            $response->assertJson([]);
         }
     }
 
@@ -115,7 +109,7 @@ class SaleShowTests extends TestCase
         $response =
             $this
                 ->withHeader('Authorization', 'Bearer ' . $token)
-                ->getJson($uri)->dump();
+                ->getJson($uri);
 
         if ($response->status() === Response::HTTP_OK) {
 
@@ -125,14 +119,88 @@ class SaleShowTests extends TestCase
                 'message' => 'All sales of user ' . $userId . ' with role ' . $userRole
             ]);
 
-        } else if ($response->status() === Response::HTTP_NO_CONTENT) {
-
-            $response->assertJson([]);
         }
     }
 
-    public function test_sale_show_by_hash_id_admin_role()
+    public function test_sale_show_by_hash_id_not_found_admin_role()
     {
+        $token = $this->getRoleTokenAuth('admin');
 
+        $hashId = Sale::max('hash_id') . 'ssss';
+
+        $uri = Config::get('app.url') . '/api/sales/'.$hashId.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Any sale with this params'
+            ]);
+    }
+
+    public function test_sale_show_by_hash_id_is_not_her_sale_employee_role()
+    {
+        $token = $this->getRoleTokenAuth('employee');
+
+        $ownerId = User::whereName('Owner')->get()->first()->id;
+        $saleRelatedWithAnotherOwner = Sale::where('seller_id', '<>', $ownerId)->get()->first()->hash_id;
+
+        $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithAnotherOwner.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Any sale with this params'
+            ]);
+    }
+
+    public function test_sale_show_by_hash_id_is_not_her_sale_customer_role()
+    {
+        $token = $this->getRoleTokenAuth('customer');
+
+        $customerId = User::whereName('Customer')->get()->first()->id;
+        $saleRelatedWithAnotherOCustomer =
+            Sale::where('buyer_id', '<>', $customerId)->get()->first()->hash_id;
+
+        $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithAnotherOCustomer.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Any sale with this params'
+            ]);
+    }
+
+    public function test_sale_show_by_hash_id_is_not_her_sale_owner_role()
+    {
+        $token = $this->getRoleTokenAuth('owner');
+
+        $ownerId = User::whereName('Owner')->get()->first()->id;
+        $saleRelatedWithAnotherOwner =
+            Sale::join('properties', 'sales.property_id', '=', 'properties.id')
+                ->join('users', 'properties.user_id', '=', 'users.id')
+                ->where('users.id', '<>', $ownerId)
+                ->get('sales.*')
+                ->first()
+                ->hash_id;
+
+        $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithAnotherOwner.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Any sale with this params'
+            ]);
     }
 }
