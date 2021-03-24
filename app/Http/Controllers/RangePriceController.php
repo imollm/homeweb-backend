@@ -20,7 +20,7 @@ class RangePriceController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => RangePrice::all()->toArray(),
+            'data' => RangePrice::all(['id','value'])->toArray(),
             'message' => 'All range of prices'
         ], Response::HTTP_OK);
     }
