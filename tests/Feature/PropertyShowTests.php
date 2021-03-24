@@ -180,4 +180,15 @@ class PropertyShowTests extends TestCase
         }
     }
 
+    public function test_show_property_by_no_filters()
+    {
+        $uri = Config::get('app.url') . '/api/properties/showByFilter';
+
+        $uri = $uri.'?reference=&price=&location=&category=';
+
+        $this
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+    }
+
 }

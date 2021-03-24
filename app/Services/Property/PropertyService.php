@@ -170,7 +170,7 @@ class PropertyService implements IPropertyService
             'category_id' => $request->category,
         ];
 
-        if ($conditions['reference'] !== '' || $conditions['price'] !== '' || $conditions['city_id'] !== '' || $conditions['category_id'] !== '') {
+        if (!empty($conditions['reference']) || !empty($conditions['price']) || !empty($conditions['city_id']) || !empty($conditions['category_id'])) {
 
             $query = Property::select('*');
 
