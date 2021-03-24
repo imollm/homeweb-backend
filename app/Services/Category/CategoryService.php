@@ -17,6 +17,20 @@ use Illuminate\Validation\ValidationException;
 class CategoryService implements ICategoryService
 {
     /**
+     * @var Category
+     */
+    private Category $category;
+
+    /**
+     * CategoryService constructor.
+     * @param Category $category
+     */
+    public function __construct(Category $category)
+    {
+        $this->category = $category;
+    }
+
+    /**
      * @param Request $request
      * @throws ValidationException
      */
@@ -33,7 +47,7 @@ class CategoryService implements ICategoryService
      */
     public function categoryExistsById(string $id): bool
     {
-        return !is_null(Category::find($id));
+        return !is_null($this->category->find($id));
     }
 
     /**
@@ -42,7 +56,7 @@ class CategoryService implements ICategoryService
      */
     public function categoryExistsByName(string $name): bool
     {
-        return !is_null(Category::where('name', $name)->get()->first());
+        return !is_null($this->category->where('name', $name)->get()->first());
     }
 
     /**
@@ -68,6 +82,36 @@ class CategoryService implements ICategoryService
      */
     public function delete(string $id): bool
     {
-        return Category::find($id)->delete();
+        return $this->category->find($id)->delete();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCategories(): array
+    {
+        return $this->category->all()->toArray();
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function create(string $name): bool
+    {
+        $newCategory = $this->category->create(['name' => $name]);
+
+        return !is_null($newCategory);
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getCategoryById(string $id): array
+    {
+        $category = $this->category->find($id);
+
+        return !is_null($category) ? $category->toArray() : [];
     }
 }

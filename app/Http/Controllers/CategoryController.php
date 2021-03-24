@@ -57,10 +57,7 @@ class CategoryController extends Controller
 
             else {
 
-                $category = new Category();
-                $category->name = $categoryName;
-
-                if ($category->save()) {
+                if ($this->categoryService->create($categoryName)) {
                     return response()->json([
                         'success' => true,
                         'message' => 'Category added correctly',
@@ -90,7 +87,7 @@ class CategoryController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => Category::all()->toArray(),
+            'data' => $this->categoryService->getAllCategories(),
             'message' => 'All categories'
         ], Response::HTTP_OK);
     }
@@ -103,19 +100,17 @@ class CategoryController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $category = Category::find($id);
-
-        if (!$category) {
+        if ($this->categoryService->categoryExistsById($id)) {
+            return response()->json([
+                'success' => true,
+                'data' => $this->categoryService->getCategoryById($id),
+                'message' => 'The category was request'
+            ], Response::HTTP_OK);
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Category not found'
             ], Response::HTTP_NOT_FOUND);
-        } else {
-            return response()->json([
-                'success' => true,
-                'data' => $category,
-                'message' => 'The category was request'
-            ], Response::HTTP_OK);
         }
 
     }

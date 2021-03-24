@@ -14,4 +14,7 @@ interface ICategoryService
     public function categoryExistsByName(string $name): bool;
     public function hasThisCategoryProperties(string $id): bool;
     public function delete(string $id): bool;
+    public function getAllCategories(): array;
+    public function create(string $name): bool;
+    public function getCategoryById(string $id): array;
 }

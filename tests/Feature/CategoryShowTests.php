@@ -14,7 +14,7 @@ class CategoryShowTests extends TestCase
 {
     public function test_show_all_categories()
     {
-        $uri = Config::get('app.url') . '/api/categories/all';
+        $uri = Config::get('app.url') . '/api/categories/index';
 
         $this
             ->getJson($uri)
@@ -44,7 +44,7 @@ class CategoryShowTests extends TestCase
 
     public function test_show_category_by_id_not_exists()
     {
-        $categoryNotExists = 1000; // Category not exists
+        $categoryNotExists = Category::max('id') + 1;
 
         $uri = Config::get('app.url') . '/api/categories/'.$categoryNotExists.'/show';
 

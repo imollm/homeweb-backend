@@ -16,6 +16,20 @@ use Illuminate\Support\Facades\Auth;
 class PassportAuthService implements IPassportAuthService
 {
     /**
+     * @var User
+     */
+    private User $user;
+
+    /**
+     * PassportAuthService constructor.
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Validate if request data is valid
      * Validate if user already exists
      *
@@ -42,7 +56,7 @@ class PassportAuthService implements IPassportAuthService
      */
     public function registerNewUser(Request $request): User
     {
-        $user = User::create([
+        $user = $this->user->create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
@@ -69,7 +83,7 @@ class PassportAuthService implements IPassportAuthService
             $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
             $user = auth()->user();
             $user['token'] = $token;
-            $user['role'] = User::find(auth()->id())->role->name;
+            $user['role'] = $this->user->find(auth()->id())->role->name;
             return $user;
         }
         return null;
