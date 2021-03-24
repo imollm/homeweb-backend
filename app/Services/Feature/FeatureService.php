@@ -16,11 +16,25 @@ use Illuminate\Validation\ValidationException;
 class FeatureService implements IFeatureService
 {
     /**
+     * @var Feature
+     */
+    private Feature $feature;
+
+    /**
+     * FeatureService constructor.
+     * @param Feature $feature
+     */
+    public function __construct(Feature $feature)
+    {
+        $this->feature = $feature;
+    }
+
+    /**
      * @return array
      */
     public function getAllFeatures(): array
     {
-        return Feature::all()->toArray();
+        return $this->feature->all()->toArray();
     }
 
     /**
@@ -41,7 +55,7 @@ class FeatureService implements IFeatureService
      */
     public function create(Request $request): bool
     {
-        $feature = Feature::create([
+        $feature = $this->feature->create([
             'name' => $request->input('name')
         ]);
 
@@ -56,7 +70,7 @@ class FeatureService implements IFeatureService
     {
         $featureId = $request->input('id');
 
-        return !is_null(Feature::find($featureId));
+        return !is_null($this->feature->find($featureId));
     }
 
     /**
@@ -69,7 +83,7 @@ class FeatureService implements IFeatureService
         $featureName = $request->input('name');
 
         return
-            Feature::find($featureId)->update(['name' => $featureName]);
+            $this->feature->find($featureId)->update(['name' => $featureName]);
 
     }
 
@@ -79,7 +93,7 @@ class FeatureService implements IFeatureService
      */
     public function getFeatureById(string $id): array | false
     {
-        $feature = Feature::find($id);
+        $feature = $this->feature->find($id);
 
         return !is_null($feature) ? $feature->toArray() : false;
     }
@@ -90,7 +104,7 @@ class FeatureService implements IFeatureService
      */
     public function delete(string $id): bool
     {
-        return Feature::find($id)->delete();
+        return $this->feature->find($id)->delete();
     }
 
     /**
@@ -99,6 +113,6 @@ class FeatureService implements IFeatureService
      */
     public function canThisFeatureBeDeleted(string $id): bool
     {
-        return Feature::find($id)->properties()->count() === 0;
+        return $this->feature->find($id)->properties()->count() === 0;
     }
 }
