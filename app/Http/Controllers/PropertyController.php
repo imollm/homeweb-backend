@@ -83,7 +83,7 @@ class PropertyController extends Controller
 
         $result = $this->propertyService->getPropertiesByFilters($request);
 
-        if (!is_null($result)) {
+        if (count($result) > 0) {
             return response()->json([
                 'success' => true,
                 'data' => $result,

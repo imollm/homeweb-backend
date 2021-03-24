@@ -150,7 +150,7 @@ class PropertyShowTests extends TestCase
         $uri = $uri . '?reference='.$randomPropertyReference.'&category=' . $categoryIdWithAnyPropertyRelated;
 
         $this
-            ->getJson($uri)
+            ->getJson($uri)->dump()
             ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
