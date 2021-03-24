@@ -187,7 +187,7 @@ class PropertyShowTests extends TestCase
         $uri = $uri.'?reference=&price=&location=&category=';
 
         $this
-            ->getJson($uri)
+            ->getJson($uri)->dump()
             ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
