@@ -17,6 +17,19 @@ use Illuminate\Validation\ValidationException;
  */
 class CountryService implements ICountryService
 {
+    /**
+     * @var Country
+     */
+    private Country $country;
+
+    /**
+     * CountryService constructor.
+     * @param Country $country
+     */
+    public function __construct(Country $country)
+    {
+        $this->country = $country;
+    }
 
     /**
      * @param Request $request
@@ -39,13 +52,13 @@ class CountryService implements ICountryService
         $code = $request->input('code');
         $name = $request->input('name');
 
-        if (!is_null(Country::where('code', '=', $code)->get()->first())) {
+        if (!is_null($this->country->where('code', '=', $code)->get()->first())) {
 
             return false;
 
         } else {
 
-            Country::create([
+            $this->country->create([
                 'code' => strtoupper($code),
                 'name' => strtolower($name)
             ]);
@@ -61,7 +74,7 @@ class CountryService implements ICountryService
      */
     public function update(Request $request): bool
     {
-        if ($country = Country::where('code', '=', $request->input('code'))->get()->first()) {
+        if ($country = $this->country->where('code', '=', $request->input('code'))->get()->first()) {
 
             $country->update(['name' => $request->input('name')]);
             return true;
@@ -85,9 +98,11 @@ class CountryService implements ICountryService
      * @param string $id
      * @return Country|null
      */
-    public function existsThisCountry(string $id): Country | null
+    public function existsThisCountry(string $id): Country | bool
     {
-        return Country::find($id);
+        $country = $this->country->find($id);
+
+        return !is_null($country) ? $country : false;
     }
 
     /**
@@ -97,5 +112,26 @@ class CountryService implements ICountryService
     public function hasThisCountryAnyCityRelated(Country $country): bool
     {
         return count($country->cities) > 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllCountries(): array
+    {
+        $countries = $this->country->all();
+
+        return !is_null($countries) ? $countries->toArray() : [];
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getCountryById(string $id): array
+    {
+        $country = $this->country->find($id);
+
+        return !is_null($country) ? $country->toArray() : [];
     }
 }

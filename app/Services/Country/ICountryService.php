@@ -11,8 +11,10 @@ interface ICountryService
 {
     public function validatePostData(Request $request);
     public function create(Request $request): bool;
-    public function existsThisCountry(string $id): Country | null;
+    public function existsThisCountry(string $id): Country | bool;
     public function update(Request $request): bool;
     public function delete(Country $country): bool;
     public function hasThisCountryAnyCityRelated(Country $country): bool;
+    public function getAllCountries(): array;
+    public function getCountryById(string $id): array;
 }

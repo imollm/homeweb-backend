@@ -39,11 +39,9 @@ class CountryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $countries = Country::all();
-
         return response()->json([
             'success' => true,
-            'data' => $countries,
+            'data' => $this->countryService->getAllCountries(),
             'message' => 'List of all countries',
         ], Response::HTTP_OK);
     }
@@ -88,20 +86,18 @@ class CountryController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $country = Country::find($id);
-
-        if (!$country) {
+        if ($this->countryService->existsThisCountry($id)) {
+            return response()->json([
+                'success' => true,
+                'data' => $this->countryService->getCountryById($id),
+                'message' => 'Country found'
+            ], Response::HTTP_OK);
+        } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Country not found'
             ], Response::HTTP_NOT_FOUND);
         }
-
-        return response()->json([
-            'success' => true,
-            'data' => $country->toArray(),
-            'message' => 'Country found'
-        ], Response::HTTP_OK);
     }
 
     /**
