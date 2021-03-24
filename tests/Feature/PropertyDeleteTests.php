@@ -3,9 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -54,7 +58,42 @@ class PropertyDeleteTests extends TestCase
 
     public function test_delete_property_ok_admin_role()
     {
+        // FIRST CREATE NEW PROPERTY WITHOUT RELATIONS WITH SALES AND TOURS
+
         $token = $this->getRoleTokenAuth('admin');
+
+        $uri = Config::get('app.url') . '/api/properties/create';
+
+        $payload = [
+            'category_id' => 1,
+            'user_id' => null,
+            'city_id' => 1,
+            'title' => Str::title(10),
+            'reference' => Str::random(12),
+            'plot_meters' => 100,
+            'built_meters' => 90,
+            'address' => Str::random(20),
+            'longitude' => 10.00,
+            'latitude' => 20.00,
+            'description' => Str::random(30),
+            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
+            'sold' => false,
+            'active' => true,
+            'price' => 190.000,
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Property added correctly',
+            ]);
+
+        $this->assertDatabaseHas('properties', $payload);
+
+        // SECOND TRY TO DELETE THIS PROPERTY WITHOUT THIS RELATIONS
 
         $propertyIdCanBeDeleted =
             Property::doesntHave('sales')->doesntHave('tours')->get()->first()->toArray();
