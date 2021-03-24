@@ -50,7 +50,7 @@ class SaleShowTests extends TestCase
         $response =
             $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->getJson($uri)->dump();
+            ->getJson($uri);
 
         if ($response->status() === Response::HTTP_OK) {
 
@@ -64,5 +64,75 @@ class SaleShowTests extends TestCase
 
             $response->assertJson([]);
         }
+    }
+
+    public function test_sale_index_customer_role()
+    {
+        $token = $this->getRoleTokenAuth('customer');
+
+        $userDoAction = User::whereEmail('customer@homeweb.com')->get()->first();
+        $userId = $userDoAction->id;
+        $userRole = $userDoAction->role->name;
+
+        $sales = Sale::whereSellerId($userId)->get()->toArray();
+
+        $uri = Config::get('app.url') . '/api/sales/index';
+
+        $response =
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $token)
+                ->getJson($uri);
+
+        if ($response->status() === Response::HTTP_OK) {
+
+            $response->assertJson([
+                'success' => true,
+                'data' => $sales,
+                'message' => 'All sales of user ' . $userId . ' with role ' . $userRole
+            ]);
+
+        } else if ($response->status() === Response::HTTP_NO_CONTENT) {
+
+            $response->assertJson([]);
+        }
+    }
+
+    public function test_sale_index_owner_role()
+    {
+        $token = $this->getRoleTokenAuth('owner');
+
+        $userDoAction = User::whereEmail('owner@homeweb.com')->get()->first();
+        $userId = $userDoAction->id;
+        $userRole = $userDoAction->role->name;
+
+        $sales = Sale::join('properties', 'sales.property_id', '=', 'properties.id')
+            ->where('properties.user_id', '=', $userId)
+            ->get('sales.*')
+            ->toArray();
+
+        $uri = Config::get('app.url') . '/api/sales/index';
+
+        $response =
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $token)
+                ->getJson($uri)->dump();
+
+        if ($response->status() === Response::HTTP_OK) {
+
+            $response->assertJson([
+                'success' => true,
+                'data' => $sales,
+                'message' => 'All sales of user ' . $userId . ' with role ' . $userRole
+            ]);
+
+        } else if ($response->status() === Response::HTTP_NO_CONTENT) {
+
+            $response->assertJson([]);
+        }
+    }
+
+    public function test_sale_show_by_hash_id_admin_role()
+    {
+
     }
 }

@@ -39,6 +39,9 @@ class SaleService implements ISaleService
      */
     private Property $property;
 
+    /**
+     * @var User
+     */
     private User $user;
 
     /**
@@ -150,7 +153,7 @@ class SaleService implements ISaleService
 
             $myPropertiesIds = $this->property->whereUserId($ownerId)->get()->pluck('id');
 
-            return $this->sale->wherePropertyId($myPropertiesIds)->get()->toArray();
+            return $this->sale->whereIn('property_id', $myPropertiesIds)->get()->toArray();
 
         }
         return array();
@@ -182,5 +185,69 @@ class SaleService implements ISaleService
 
         }
         return array();
+    }
+
+    /**
+     * @param string $hashId
+     * @param string $role
+     * @param string $userId
+     * @return array
+     */
+    public function getSaleByHashId(string $hashId, string $role, string $userId): array
+    {
+        return match($role) {
+            'admin' => $this->getSale($hashId),
+            'customer' => $this->isThisSaleOfThisCustomer($userId, $hashId),
+            'employee' => $this->isThisSaleOfThisEmployee($userId, $hashId),
+            'owner' => $this->isThisSaleOfThisOwner($userId, $hashId),
+            default => []
+        };
+    }
+
+    /**
+     * @param string $userId
+     * @param string $hashId
+     * @return array
+     */
+    private function isThisSaleOfThisCustomer(string $userId, string $hashId): array
+    {
+        $buyerId = $this->sale->whereHashId($hashId)->get()->first()->buyer_id;
+
+        return $buyerId === $userId ? $this->getSale($hashId) : [];
+    }
+
+    /**
+     * @param string $userId
+     * @param string $hashId
+     * @return array
+     */
+    private function isThisSaleOfThisEmployee(string $userId, string $hashId): array
+    {
+        $sellerId = $this->sale->whereHashId($hashId)->get()->first()->seller_id;
+
+        return $sellerId === $userId ? $this->getSale($hashId) : [];
+    }
+
+    /**
+     * @param string $userId
+     * @param string $hashId
+     * @return array
+     */
+    private function isThisSaleOfThisOwner(string $userId, string $hashId): array
+    {
+        $propertyId = $this->sale->whereHashId($hashId)->get()->first()->property_id;
+
+        $is = $this->property->whereUserId($userId)->whereId($propertyId)->get()->first();
+
+        return !is_null($is) ? $this->getSale($hashId) : [];
+    }
+
+    /**
+     * @param string $hashId
+     * @return mixed
+     */
+    private function getSale(string $hashId): array
+    {
+        return $this->sale->whereHashId($hashId)->get()->first()->toArray();
     }
 }

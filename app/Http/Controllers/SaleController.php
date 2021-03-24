@@ -132,12 +132,39 @@ class SaleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Sale $sale
+     * @param string $hashId
      * @return JsonResponse
      */
-    public function show(Sale $sale): JsonResponse
+    public function showByHashId(string $hashId): JsonResponse
     {
-        //
+        if (Auth::user()->can('showByHashId', Sale::class)) {
+
+            $authRole = Auth::user()->role->name;
+            $authUserId = Auth::user()->id;
+
+            if ($sale = $this->saleService->getSaleByHashId($hashId, $authRole, $authUserId)) {
+
+                if (count($sale) > 0) {
+
+                    return response()->json([
+                        'success' => true,
+                        'data' => $sale,
+                        'message' => 'Sale by hash id ' . $hashId
+                    ], Response::HTTP_OK);
+
+                } else {
+
+                    return response()->json([], Response::HTTP_NO_CONTENT);
+
+                }
+
+            }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 
     /**

@@ -55,7 +55,7 @@ Route::prefix('cities')->name('cities.')->group(function () {
 
 Route::prefix('features')->name('features.')->group(function () {
     Route::get('/index', [FeatureController::class, 'index'])->name('index');
-    Route::get('/{id}/show', [FeatureController::class, 'show'])->name('show')->where('id', '[0-9]+')->name('show');;
+    Route::get('/{id}/show', [FeatureController::class, 'show'])->where('id', '[0-9]+')->name('show');
 });
 
 Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
@@ -126,6 +126,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::post('/store', [SaleController::class, 'store'])->name('store');
         Route::get('/index', [SaleController::class, 'index'])->name('index');
+        Route::get('/{hashId}/showByHashId', [SaleController::class, 'showByHashId'])->where('hash', '[0-9a-zA-Z]+')->name('hashId.show');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {

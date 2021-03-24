@@ -16,4 +16,5 @@ interface ISaleService
     public function getSalesByOwnerId(string $ownerId): array;
     public function getSalesByCustomerId(string $customerId): array;
     public function getSalesByEmployeeId(string $employeeId): array;
+    public function getSaleByHashId(string $hashId, string $role, string $userId): array;
 }
