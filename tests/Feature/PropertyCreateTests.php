@@ -210,7 +210,7 @@ class PropertyCreateTests extends TestCase
 
         $payload = [
             'category_id' => 1,
-            'user_id' => '',
+            'user_id' => null, // Owner id
             'city_id' => 1,
             'title' => Str::title(10),
             'reference' => Str::random(12),
@@ -234,6 +234,8 @@ class PropertyCreateTests extends TestCase
                 'success' => true,
                 'message' => 'Property added correctly',
             ]);
+
+        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_create_new_property_employee_role_with_correct_owner_id()
@@ -271,6 +273,8 @@ class PropertyCreateTests extends TestCase
                 'success' => true,
                 'message' => 'Property added correctly',
             ]);
+
+        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_create_new_property_employee_role_with_incorrect_owner_id()

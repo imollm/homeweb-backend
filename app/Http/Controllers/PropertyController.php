@@ -36,13 +36,13 @@ class PropertyController extends Controller
      *
      * @return JsonResponse
      */
-    public function all(): JsonResponse
+    public function index(): JsonResponse
     {
-        $properties = Property::all();
+        $activeProperties = $this->propertyService->getActiveProperties();
 
         return response()->json([
             'success' => true,
-            'data' => $properties,
+            'data' => $activeProperties,
             'message' => 'List of all properties',
         ], Response::HTTP_OK);
     }
@@ -131,13 +131,13 @@ class PropertyController extends Controller
      * Update property
      *
      * @param Request $request
-     * @param $id
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request): JsonResponse
     {
-        $propertyExists = Property::find($id);
+        $propertyId = $request->input('id');
+        $propertyExists = Property::find();
 
         if (!$propertyExists) {
             return response()->json([
@@ -150,10 +150,10 @@ class PropertyController extends Controller
 
             $this->propertyService->validatePostPropertyData($request);
 
-            if ($this->propertyService->createOrUpdateProperty($request, 'update', $id)) {
+            if ($this->propertyService->createOrUpdateProperty($request, 'update', $propertyId)) {
                 return response()->json([
                     'success' => true,
-                    'data' => Property::find($id),
+                    'data' => Property::find($propertyId),
                     'message' => 'Property updated successfully',
                 ], Response::HTTP_OK);
             } else {
@@ -173,32 +173,40 @@ class PropertyController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function delete($id): JsonResponse
+    public function delete(string $id): JsonResponse
     {
-        $property = Property::find($id);
-        if (!$property) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Property not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        if (Auth::user()->can('delete', Property::class)) {
 
-        if (Auth::user()->can('delete')) {
+            if ($this->propertyService->existsThisProperty($id)) {
 
-            if ($property->delete()) {
+                if ($this->propertyService->delete($id)) {
 
-                return response()->json([
-                    'success' => true
-                ], Response::HTTP_OK);
+                    return response()->json([], Response::HTTP_NO_CONTENT);
+
+                } else {
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Property can not be deleted'
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                }
 
             } else {
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Post can not be deleted'
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    'message' => 'Property not found'
+                ], Response::HTTP_NOT_FOUND);
+
             }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
         }
+
     }
 
     /**

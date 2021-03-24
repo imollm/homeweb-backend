@@ -18,11 +18,32 @@ use Illuminate\Validation\ValidationException;
  */
 class PropertyService implements IPropertyService
 {
+    /**
+     * @var Property
+     */
     private Property $property;
 
-    public function __construct(Property $property)
+    /**
+     * @var User
+     */
+    private User $user;
+
+    /**
+     * @var RangePrice
+     */
+    private RangePrice $rangePrice;
+
+    /**
+     * PropertyService constructor.
+     * @param Property $property
+     * @param User $user
+     * @param RangePrice $rangePrice
+     */
+    public function __construct(Property $property, User $user, RangePrice $rangePrice)
     {
         $this->property = $property;
+        $this->user = $user;
+        $this->rangePrice = $rangePrice;
     }
 
     /**
@@ -107,7 +128,7 @@ class PropertyService implements IPropertyService
     {
         if ($action === 'update') {
 
-            return Property::find($propertyId)->update($request->all()) ? true : false;
+            return $this->property->find($propertyId)->update($request->all()) ? true : false;
 
         } elseif ($action === 'create') {
 
@@ -115,12 +136,12 @@ class PropertyService implements IPropertyService
 
             if (is_numeric($ownerId)) {
                 if ($this->haveThisUserOwnerRole($ownerId)) {
-                    return Property::create($request->all()) ? true : false;
+                    return $this->property->create($request->all()) ? true : false;
                 } else {
                     return false;
                 }
             } else {
-                return Property::create($request->all()) ? true : false;
+                return $this->property->create($request->all()) ? true : false;
             }
         } else {
             return false;
@@ -133,7 +154,7 @@ class PropertyService implements IPropertyService
      */
     private function haveThisUserOwnerRole(string $userId): bool
     {
-        return User::find($userId)->role->name === 'owner';
+        return $this->user->find($userId)->role->name === 'owner';
     }
 
     /**
@@ -172,7 +193,7 @@ class PropertyService implements IPropertyService
 
         if (!empty($conditions['reference']) || !empty($conditions['price']) || !empty($conditions['city_id']) || !empty($conditions['category_id'])) {
 
-            $query = Property::select('*');
+            $query = $this->property->select('*');
 
             foreach ($conditions as $condition => $value) {
 
@@ -182,8 +203,8 @@ class PropertyService implements IPropertyService
 
                         $query->where(function ($q) use ($value) {
 
-                            $bigPrice = RangePrice::where('id', $value)->first()->big_price;
-                            $smallPrice = RangePrice::where('id', $value)->first()->small_price;
+                            $bigPrice = $this->rangePrice->where('id', $value)->first()->big_price;
+                            $smallPrice = $this->rangePrice->where('id', $value)->first()->small_price;
 
                             $q->whereBetween('price', [$smallPrice, $bigPrice]);
 
@@ -207,7 +228,7 @@ class PropertyService implements IPropertyService
      */
     public function existsThisProperty(string $id): bool
     {
-        return !is_null(Property::find($id));
+        return !is_null($this->property->find($id));
     }
 
     /**
@@ -218,7 +239,7 @@ class PropertyService implements IPropertyService
      */
     public function whichIsTheOwnerIdOfThisProperty(string $id): int
     {
-        return Property::find($id)->owner->id;
+        return $this->property->find($id)->owner->id;
     }
 
     /**
@@ -227,11 +248,58 @@ class PropertyService implements IPropertyService
      */
     public function getPriceHistoryOfThisProperty(string $id): array
     {
-        return Property::find($id)->priceHistory->toArray();
+        return $this->property->find($id)->priceHistory->toArray();
     }
 
+    /**
+     * @param string $propertyId
+     * @param float $price
+     * @return bool
+     */
     public function updatePriceByPropertyId(string $propertyId, float $price): bool
     {
-        return Property::whereId($propertyId)->update(['price' => $price]);
+        return $this->property->whereId($propertyId)->update(['price' => $price]);
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getActiveProperties(): array
+    {
+        $activeProperties = $this->property->whereActive(true)->get()->toArray();
+
+        return !is_null($activeProperties) ? $activeProperties : [];
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function delete(string $id): bool
+    {
+        if ($this->canBeDeletedThisProperty($id)) {
+
+            if ($this->property->find($id)->delete()) {
+
+                return true;
+
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    private function canBeDeletedThisProperty(string $id): bool
+    {
+        $property = $this->property->find($id);
+
+        return
+            count($property->sales) === 0 ||
+            count($property->tours) === 0;
     }
 }

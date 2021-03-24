@@ -33,7 +33,7 @@ Route::prefix('/auth')->name('auth.public.')->group(function () {
 });
 
 Route::prefix('properties')->name('properties.')->group(function () {
-    Route::get('/all', [PropertyController::class, 'all'])->name('all');
+    Route::get('/index', [PropertyController::class, 'index'])->name('index');
     Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('showById');
     Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
 });
@@ -73,9 +73,10 @@ Route::middleware('auth:api')->group(function () {
     // Properties auth routes
     Route::prefix('properties')->name('properties.')->group(function () {
         Route::post('/create', [PropertyController::class, 'create'])->name('create');
-        Route::put('/{id}/update', [PropertyController::class, 'update'])->where('id', '[0-9]+')->name('update');
+        Route::put('/update', [PropertyController::class, 'update'])->name('update');
         Route::get('/{id}/setActive/{status}', [PropertyController::class, 'setActive'])->where(['id' => '[0-9]+', 'status' => '[0-1]{1}'])->name('setActive');
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
+        Route::delete('/{id}/delete', [PropertyController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
     });
     // Roles auth routes
     Route::prefix('roles')->name('roles.')->group(function () {

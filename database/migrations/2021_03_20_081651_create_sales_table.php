@@ -14,7 +14,7 @@ class CreateSalesTable extends Migration
     public function up()
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('property_id')->unique();
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('seller_id');
             $table->date('date');
@@ -24,9 +24,9 @@ class CreateSalesTable extends Migration
 
             $table->primary(['property_id', 'buyer_id', 'seller_id', 'date']);
 
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
-            $table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties');
+            $table->foreign('buyer_id')->references('id')->on('users');
+            $table->foreign('seller_id')->references('id')->on('users');
         });
     }
 

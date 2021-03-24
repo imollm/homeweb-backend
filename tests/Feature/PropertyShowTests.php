@@ -17,14 +17,16 @@ class PropertyShowTests extends TestCase
 {
     public function test_show_all_properties()
     {
-        $uri = Config::get('app.url') . '/api/properties/all';
+        $uri = Config::get('app.url') . '/api/properties/index';
+
+        $activeProperties = Property::whereActive(true)->get()->toArray();
 
         $this
             ->getJson($uri)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
-                'data' => array(),
+                'data' => $activeProperties,
                 'message' => 'List of all properties'
             ]);
     }

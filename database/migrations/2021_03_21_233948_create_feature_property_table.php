@@ -20,8 +20,8 @@ class CreateFeaturePropertyTable extends Migration
             $table->timestamps();
 
             $table->unique(['feature_id', 'property_id']);
-            $table->foreign('feature_id')->references('id')->on('features');
-            $table->foreign('property_id')->references('id')->on('properties');
+            $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

@@ -91,6 +91,16 @@ class Property extends Model
     }
 
     /**
+     * Return the sale of this property
+     *
+     * @return HasMany
+     */
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    /**
      * Return features of this property
      *
      * @return BelongsToMany
