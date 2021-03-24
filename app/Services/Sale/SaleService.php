@@ -69,36 +69,6 @@ class SaleService implements ISaleService
     }
 
     /**
-     * @param string $buyerId
-     * @param string $propertyId
-     * @return bool
-     */
-    public function theBuyerAndTheOwnerAreTheSame(string $buyerId, string $propertyId): bool
-    {
-        return Property::whereId($propertyId)->get()->first()->user_id === $buyerId;
-    }
-
-    /**
-     * @param string $buyerId
-     * @param string $propertyId
-     * @return Sale|null
-     */
-    public function theBuyerHadAlreadyBoughtThisProperty(string $buyerId, string $propertyId): Sale | null
-    {
-        return Sale::whereBuyerId($buyerId)->wherePropertyId($propertyId)->get()->first();
-    }
-
-    /**
-     * @param string $saleDate
-     * @param Sale $previousSale
-     * @return bool
-     */
-    public function theSaleDateIsHigherThanThenPreviousSaleDate(string $saleDate, Sale $previousSale): bool
-    {
-        return $previousSale->date < $saleDate;
-    }
-
-    /**
      * @param Request $request
      * @return bool
      */
@@ -126,5 +96,14 @@ class SaleService implements ISaleService
         $sold = Property::whereId($propertyId)->update(['sold' => true]);
 
         return $sale && $sold;
+    }
+
+    public function isToSellThisProperty(Request $request): bool
+    {
+        $propertyId = $request->input('property_id');
+
+        $sold = Property::find($propertyId)->sold;
+
+        return !$sold;
     }
 }

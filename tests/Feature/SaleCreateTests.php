@@ -70,15 +70,13 @@ class SaleCreateTests extends TestCase
         $buyerIdExists =
             User::join('roles', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', '=', 'customer')
-                ->get()
-                ->first()
-                ->id;
+                ->pluck('users.id')
+                ->first();
         $sellerIdExists =
             User::join('roles', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', '=', 'employee')
-                ->get()
-                ->first()
-                ->id;
+                ->pluck('users.id')
+                ->first();
 
         $payload = [
             'property_id' => $propertyIdNotExists,
@@ -109,9 +107,8 @@ class SaleCreateTests extends TestCase
         $sellerIdExists =
             User::join('roles', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', '=', 'employee')
-                ->get()
-                ->first()
-                ->id;
+                ->pluck('users.id')
+                ->first();
 
         $payload = [
             'property_id' => $propertyIdNotExists,
@@ -141,15 +138,13 @@ class SaleCreateTests extends TestCase
         $buyerIdExists =
             User::join('roles', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', '=', 'customer')
-                ->get()
-                ->first()
-                ->id;
+                ->pluck('users.id')
+                ->first();
         $sellerIdNotExists = // Get customer user
             User::join('roles', 'roles.id', '=', 'users.role_id')
                 ->where('roles.name', '=', 'customer')
-                ->get()
-                ->first()
-                ->id;
+                ->pluck('users.id')
+                ->first();
 
         $payload = [
             'property_id' => $propertyIdNotExists,
@@ -169,18 +164,79 @@ class SaleCreateTests extends TestCase
             ]);
     }
 
-    public function test_sale_create_employee_role_buyer_and_owner_are_the_same()
+    public function test_sale_create_admin_role_property_was_sold()
     {
-        $token = $this->getRoleTokenAuth('employee');
+        $token = $this->getRoleTokenAuth('admin');
 
         $uri = Config::get('app.url') . '/api/sales/store';
 
+        $propertySold = Property::whereSold(1)->get()->first()->id;
+
+        $buyerIdExists =
+            User::join('roles', 'roles.id', '=', 'users.role_id')
+                ->where('roles.name', '=', 'customer')
+                ->pluck('users.id')
+                ->first();
+        $sellerIdExists =
+            User::join('roles', 'roles.id', '=', 'users.role_id')
+                ->where('roles.name', '=', 'employee')
+                ->pluck('users.id')
+                ->first();
+
         $payload = [
-            'property_id' => $propertyIdNotExists,
+            'property_id' => $propertySold,
             'buyer_id' => $buyerIdExists,
-            'seller_id' => $sellerIdNotExists,
+            'seller_id' => $sellerIdExists,
             'date' => '2021-08-26',
             'amount' => 300000
         ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CONFLICT)
+            ->assertJson([
+                'success' => false,
+                'message' => 'This property was sold'
+            ]);
+    }
+
+    public function test_sale_creat_ok_admin_role()
+    {
+        $token = $this->getRoleTokenAuth('admin');
+
+        $uri = Config::get('app.url') . '/api/sales/store';
+
+        $propertyToSell = Property::whereSold(0)->first()->id;
+
+        $buyerIdExists =
+            User::join('roles', 'roles.id', '=', 'users.role_id')
+                ->where('roles.name', '=', 'customer')
+                ->pluck('users.id')
+                ->first();
+        $sellerIdExists =
+            User::join('roles', 'roles.id', '=', 'users.role_id')
+                ->where('roles.name', '=', 'employee')
+                ->pluck('users.id')
+                ->first();
+
+        $payload = [
+            'property_id' => $propertyToSell,
+            'buyer_id' => $buyerIdExists,
+            'seller_id' => $sellerIdExists,
+            'date' => '2021-08-26',
+            'amount' => 300000
+        ];
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Sale created'
+            ]);
+
+        $this->assertDatabaseHas('sales', $payload);
     }
 }

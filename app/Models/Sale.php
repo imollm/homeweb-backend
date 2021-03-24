@@ -13,8 +13,8 @@ class Sale extends Model
 
     protected $fillable = [
         'property_id',
-        'customer_id',
-        'employee_id',
+        'buyer_id',
+        'seller_id',
         'date',
         'amount',
         'hash_id'

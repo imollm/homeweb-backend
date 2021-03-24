@@ -55,52 +55,21 @@ class SaleController extends Controller
 
             if ($this->saleService->allDataExists($request)) {
 
-                $propertyId = $request->input('property_id');
-                $buyerId = $request->input('buyer_id');
+                if ($this->saleService->isToSellThisProperty($request)) {
 
-                if ($this->saleService->theBuyerAndTheOwnerAreTheSame($buyerId, $propertyId)) {
+                    if ($this->saleService->create($request)) {
 
-                    if (!is_null($previousSale = $this->saleService->theBuyerHadAlreadyBoughtThisProperty($buyerId, $propertyId))) {
-
-                        $saleDate = $request->input('date');
-
-                        if ($this->saleService->theSaleDateIsHigherThanThenPreviousSaleDate($saleDate, $previousSale)) {
-
-                            if ($this->saleService->create($request)) {
-
-                                return response()->json([
-                                    'success' => false,
-                                    'message' => 'Sale created'
-                                ], Response::HTTP_CREATED);
-
-                            } else {
-
-                                return response()->json([
-                                    'success' => false,
-                                    'message' => 'Error while save sale'
-                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
-
-                            }
-
-                        }
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Sale created'
+                        ], Response::HTTP_CREATED);
 
                     } else {
 
-                       if ($this->saleService->create($request)) {
-
-                           return response()->json([
-                               'success' => false,
-                               'message' => 'Sale created'
-                           ], Response::HTTP_CREATED);
-
-                       } else {
-
-                           return response()->json([
-                               'success' => false,
-                               'message' => 'Error while save sale'
-                           ], Response::HTTP_INTERNAL_SERVER_ERROR);
-
-                       }
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Error while save sale'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
                     }
 
@@ -108,7 +77,7 @@ class SaleController extends Controller
 
                     return response()->json([
                         'success' => false,
-                        'message' => 'Buyer can not be the same as the owner'
+                        'message' => 'This property was sold'
                     ], Response::HTTP_CONFLICT);
 
                 }

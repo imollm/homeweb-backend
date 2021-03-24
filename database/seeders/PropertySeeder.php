@@ -39,7 +39,7 @@ class PropertySeeder extends Seeder
                 'latitude' => 100.23,
                 'description' => Str::random(100),
                 'energetic_certification' => Arr::random($energetic_certification_values),
-                'sold' => false,
+                'sold' => ($i === 0),
                 'active' => $i % 2 == 0,
                 'price' => 100000 * ($i+1),
                 'created_at' => Carbon::now(),
