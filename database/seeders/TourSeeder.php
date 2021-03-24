@@ -24,7 +24,7 @@ class TourSeeder extends Seeder
         $date = date('Y-m-d');
         $time = date('H:i:s', strtotime('10:00:00'));
 
-        for ($i = 0; $i < count($propertiesId) - 1; $i++) {
+        for ($i = 0; $i < count($propertiesId); $i++) {
 
             $propertyId = $propertiesId[$i];
             $customerId = ($i < 2) ? $customersId[0] : $customersId[1];
