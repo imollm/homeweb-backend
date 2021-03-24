@@ -167,26 +167,4 @@ class SaleController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Sale $sale
-     * @return JsonResponse
-     */
-    public function update(Request $request, Sale $sale): JsonResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Sale $sale
-     * @return JsonResponse
-     */
-    public function destroy(Sale $sale): JsonResponse
-    {
-        //
-    }
 }
