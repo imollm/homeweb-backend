@@ -15,4 +15,11 @@ class SalePolicy extends Policy
 
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
+
+    public function index(User $user): bool
+    {
+        $authRoles = ['admin', 'employee', 'customer', 'owner'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
 }

@@ -125,6 +125,7 @@ Route::middleware('auth:api')->group(function () {
     // Sales auth routes
     Route::prefix('sales')->name('sales.')->group(function () {
         Route::post('/store', [SaleController::class, 'store'])->name('store');
+        Route::get('/index', [SaleController::class, 'index'])->name('index');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {

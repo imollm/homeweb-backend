@@ -37,7 +37,38 @@ class SaleController extends Controller
      */
     public function index(): JsonResponse
     {
+        if (Auth::user()->can('index', Sale::class)) {
 
+            $authRole = Auth::user()->role->name;
+            $authUserId = Auth::user()->id;
+
+            $sales = match ($authRole) {
+                'admin' => $this->saleService->getAllSales(),
+                'employee' => $this->saleService->getSalesByEmployeeId($authUserId),
+                'owner' => $this->saleService->getSalesByOwnerId($authUserId),
+                'customer' => $this->saleService->getSalesByCustomerId($authUserId),
+                default => [],
+            };
+
+            if (count($sales) > 0) {
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $sales,
+                    'message' => 'All sales of user ' . $authUserId . ' with role ' . $authRole
+                ], Response::HTTP_OK);
+
+            } else {
+
+                return response()->json([], Response::HTTP_NO_CONTENT);
+
+            }
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
     }
 
     /**

@@ -201,7 +201,7 @@ class SaleCreateTests extends TestCase
             ]);
     }
 
-    public function test_sale_creat_ok_admin_role()
+    public function test_sale_create_ok_admin_role()
     {
         $token = $this->getRoleTokenAuth('admin');
 

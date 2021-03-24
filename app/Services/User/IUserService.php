@@ -9,4 +9,5 @@ interface IUserService
     public function existsThisUser(string $id): bool;
     public function existsThisCustomer(string $id): bool;
     public function existsThisEmployee(string $id): bool;
+    public function existsThisOwner(string $id): bool;
 }

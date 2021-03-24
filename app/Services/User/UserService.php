@@ -56,4 +56,21 @@ class UserService implements IUserService
 
         return !is_null($existsCustomer);
     }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function existsThisOwner(string $id): bool
+    {
+        $role = 'owner';
+
+        $existsOwner =
+            User::join('roles', 'users.role_id', '=', 'roles.id')
+                ->where('roles.name', '=', $role)
+                ->where('users.id', '=', $id)
+                ->pluck('users.id')->first();
+
+        return !is_null($existsOwner);
+    }
 }
