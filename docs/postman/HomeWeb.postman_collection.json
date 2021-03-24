@@ -137,7 +137,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/properties/showByFilter?reference&price&location=2&category=",
+							"raw": "{{baseUrl}}/properties/showByFilter?category=1",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -148,19 +148,22 @@
 							"query": [
 								{
 									"key": "reference",
-									"value": null
+									"value": null,
+									"disabled": true
 								},
 								{
 									"key": "price",
-									"value": null
+									"value": null,
+									"disabled": true
 								},
 								{
 									"key": "location",
-									"value": "2"
+									"value": "",
+									"disabled": true
 								},
 								{
 									"key": "category",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
