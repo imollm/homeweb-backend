@@ -2,87 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
+use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @var UserService
      */
-    public function index()
-    {
-        //
-    }
+    private UserService $userService;
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * UserController constructor.
+     * @param UserService $userService
      */
-    public function create()
+    public function __construct(UserService $userService)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param User $user
-     * @return Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param User $user
-     * @return Response
-     */
-    public function edit(User $user)
-    {
-        //
+        $this->userService = $userService;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param User $user
-     * @return Response
+     * @param UserUpdateRequest $request
+     * @return JsonResponse
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request): JsonResponse
     {
-        //
-    }
+        $request->validated();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param User $user
-     * @return Response
-     */
-    public function destroy(User $user)
-    {
-        //
+        if ($this->userService->update($request)) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User updated'
+            ], Response::HTTP_OK);
+
+        } else {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error while updating user'
+            ], Response::HTTP_CONFLICT);
+
+        }
     }
 }

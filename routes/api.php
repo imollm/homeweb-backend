@@ -11,6 +11,7 @@ use App\Http\Controllers\RangePriceController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\TourController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -134,6 +135,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [FeatureController::class, 'store'])->name('create');
         Route::put('/update', [FeatureController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [FeatureController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
+    });
+    // Users auth routes
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::put('/update', [UserController::class, 'update'])->name('update');
     });
 });
 /*-----------------------------------------------------------------------------------*/

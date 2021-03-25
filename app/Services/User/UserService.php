@@ -5,6 +5,9 @@ namespace App\Services\User;
 
 
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class UserService
@@ -13,12 +16,26 @@ use App\Models\User;
 class UserService implements IUserService
 {
     /**
+     * @var User
+     */
+    private User $user;
+
+    /**
+     * UserService constructor.
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param string $id
      * @return bool
      */
     public function existsThisUser(string $id): bool
     {
-        $existsUser = User::find($id);
+        $existsUser = $this->user->find($id);
 
         return !is_null($existsUser);
     }
@@ -32,7 +49,7 @@ class UserService implements IUserService
         $role = 'customer';
 
         $existsCustomer =
-            User::join('roles', 'users.role_id', '=', 'roles.id')
+            $this->user->join('roles', 'users.role_id', '=', 'roles.id')
                 ->where('roles.name', '=',$role)
                 ->where('users.id', '=', $id)
                 ->pluck('users.id')->first();
@@ -49,7 +66,7 @@ class UserService implements IUserService
         $role = 'employee';
 
         $existsCustomer =
-            User::join('roles', 'users.role_id', '=', 'roles.id')
+            $this->user->join('roles', 'users.role_id', '=', 'roles.id')
                 ->where('roles.name', '=', $role)
                 ->where('users.id', '=', $id)
                 ->pluck('users.id')->first();
@@ -66,11 +83,31 @@ class UserService implements IUserService
         $role = 'owner';
 
         $existsOwner =
-            User::join('roles', 'users.role_id', '=', 'roles.id')
+            $this->user->join('roles', 'users.role_id', '=', 'roles.id')
                 ->where('roles.name', '=', $role)
                 ->where('users.id', '=', $id)
                 ->pluck('users.id')->first();
 
         return !is_null($existsOwner);
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function update(Request $request): bool
+    {
+        $user = $this->user->find($request->input('id'));
+
+        return  $user->update($request->all());
+    }
+
+    /**
+     * @param string $id
+     * @return User
+     */
+    public function getUserById(string $id): User
+    {
+        return $this->user->find($id);
     }
 }
