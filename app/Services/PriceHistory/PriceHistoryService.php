@@ -17,6 +17,8 @@ use Illuminate\Validation\ValidationException;
  */
 class PriceHistoryService implements IPriceHistory
 {
+    private PriceHistory $priceHistory;
+
     /**
      * @var PropertyService
      */
@@ -24,10 +26,12 @@ class PriceHistoryService implements IPriceHistory
 
     /**
      * PriceHistoryService constructor.
+     * @param PriceHistory $priceHistory
      * @param PropertyService $propertyService
      */
-    public function __construct(PropertyService $propertyService)
+    public function __construct(PriceHistory $priceHistory, PropertyService $propertyService)
     {
+        $this->priceHistory = $priceHistory;
         $this->propertyService = $propertyService;
     }
 
@@ -56,7 +60,7 @@ class PriceHistoryService implements IPriceHistory
         $amount = $request->input('amount');
 
         $hasAlreadyThisChange =
-            PriceHistory::where([
+            $this->priceHistory->where([
                 'property_id' => $propertyId,
                 'start' => $startTimestamp,
                 'amount' => $amount
@@ -75,7 +79,7 @@ class PriceHistoryService implements IPriceHistory
         $startTimestampGiven = $request->input('start');
 
         $lastPriceChange =
-            PriceHistory::wherePropertyId($propertyId)
+            $this->priceHistory->wherePropertyId($propertyId)
                             ->whereEnd(null)
                             ->get()
                             ->first();
@@ -95,7 +99,7 @@ class PriceHistoryService implements IPriceHistory
 
         // First update end_timestamp of last price change
 
-        PriceHistory::wherePropertyId($propertyId)
+        $this->priceHistory->wherePropertyId($propertyId)
                             ->whereEnd(null)
                             ->update([
                                 'end' => $startTimestamp
@@ -103,7 +107,7 @@ class PriceHistoryService implements IPriceHistory
 
         // Second create new price change
 
-        $newPriceChange = PriceHistory::create([
+        $newPriceChange = $this->priceHistory->create([
             'property_id' => $propertyId,
             'start' => $startTimestamp,
             'amount' => $amount,
@@ -125,7 +129,11 @@ class PriceHistoryService implements IPriceHistory
     {
         $propertyId = $request->input('property_id');
 
-        $ownerId = Property::find($propertyId)->owner->id;
+        $property = $this->propertyService->getPropertyById($propertyId);
+
+        if (is_null($property)) return false;
+
+        $ownerId = $property->owner->id;
 
         return Auth::user()->role->name === 'owner' && $ownerId === Auth::user()->id;
     }

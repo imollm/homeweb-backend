@@ -19,4 +19,5 @@ interface IPropertyService
     public function updatePriceByPropertyId(string $propertyId, float $price): bool;
     public function getActiveProperties(): array;
     public function delete(string $id): bool;
+    public function getPropertyById(string $id): Property;
 }

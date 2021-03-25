@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\RangePrice;
+use App\Models\User;
 use App\Services\Property\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,7 +20,7 @@ class PriceHistoryShowTests extends TestCase
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->propertyService = new PropertyService();
+        $this->propertyService = new PropertyService(new Property(), new User(), new RangePrice());
     }
 
     public function test_price_history_index_customer_role_unauthorized()
@@ -169,11 +171,9 @@ class PriceHistoryShowTests extends TestCase
 
         $propertyIdOwnedByOwnerDoAction =
             DB::table('users')
-                ->join('roles', 'users.role_id', '=', 'roles.id')
                 ->join('properties', 'users.id', '=', 'properties.user_id')
-                ->where('users.name', '=', 'owner')
-                ->groupBy('users.id')
-                ->pluck('users.id')
+                ->where('users.name', '=', 'Owner')
+                ->pluck('properties.id')
                 ->first();
 
         $uri = Config::get('app.url') . '/api/priceHistory/'.$propertyIdOwnedByOwnerDoAction.'/show';

@@ -152,7 +152,7 @@ class PriceHistoryController extends Controller
 
             if ($this->propertyService->existsThisProperty($propertyId)) {
 
-                $roleAuthUser = $this->passportAuthService->whatIsTheRoleOfAuthUser();
+                $roleAuthUser = Auth::user()->role->name;
 
                 if ($roleAuthUser === 'admin' || $roleAuthUser === 'employee') {
 
@@ -164,7 +164,7 @@ class PriceHistoryController extends Controller
 
                 } elseif (
                     $roleAuthUser === 'owner' &&
-                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) === Auth::user()->id
+                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) == Auth::user()->id
                 ) {
 
                     return response()->json([
@@ -198,26 +198,4 @@ class PriceHistoryController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param PriceHistory $priceHistory
-     * @return JsonResponse
-     */
-    public function update(Request $request, PriceHistory $priceHistory): JsonResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param PriceHistory $priceHistory
-     * @return JsonResponse
-     */
-    public function destroy(PriceHistory $priceHistory): JsonResponse
-    {
-        //
-    }
 }
