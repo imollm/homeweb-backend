@@ -88,14 +88,4 @@ class PassportAuthService implements IPassportAuthService
         }
         return null;
     }
-
-    /**
-     * Return auth user role
-     *
-     * @return string
-     */
-    public function whatIsTheRoleOfAuthUser(): string
-    {
-        return Auth::user()->role->name;
-    }
 }

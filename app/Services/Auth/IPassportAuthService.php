@@ -12,5 +12,4 @@ interface IPassportAuthService
     public function validateNewUserData(Request $request);
     public function registerNewUser(Request $request): User;
     public function login(array $credentials): ?Authenticatable;
-    public function whatIsTheRoleOfAuthUser(): string;
 }
