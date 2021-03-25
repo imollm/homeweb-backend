@@ -302,4 +302,13 @@ class PropertyService implements IPropertyService
             count($property->sales) === 0 ||
             count($property->tours) === 0;
     }
+
+    /**
+     * @param string $id
+     * @return Property
+     */
+    public function getPropertyById(string $id): Property
+    {
+        return $this->property->find($id);
+    }
 }
