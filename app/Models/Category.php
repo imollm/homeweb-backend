@@ -17,7 +17,7 @@ class Category extends Pivot
     /**
      * @var string[]
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'image'];
 
     /**
      * This field is to say to Eloquent the name of table

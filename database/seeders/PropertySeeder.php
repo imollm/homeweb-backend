@@ -32,6 +32,7 @@ class PropertySeeder extends Seeder
                 'city_id' => City::inRandomOrder()->first()->id,
                 'title' => Str::random(10),
                 'reference' => strtolower(Str::random(6)),
+                'image' => 'property' . ($i + 1) . '.jpg',
                 'plot_meters' => $i * 100,
                 'built_meters' => $i * 90,
                 'address' => Str::random(20),

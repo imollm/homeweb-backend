@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Category;
-use App\Services\Category\CategoryService;
 use App\Services\File\FileService;
 use Illuminate\Support\ServiceProvider;
 
-class CategoryServiceProvider extends ServiceProvider
+class FileServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -26,8 +24,8 @@ class CategoryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('App\Providers\CategoryServiceProvider', function ($app) {
-            return new CategoryService(new Category(), new FileService());
+        $this->app->bind('App\Providers\FileServiceProvider', function ($app) {
+            return new FileService();
         });
     }
 }

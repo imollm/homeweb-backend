@@ -28,6 +28,7 @@ class Property extends Model
         'city_id',
         'title',
         'reference',
+        'image',
         'plot_meters',
         'built_meters',
         'address',

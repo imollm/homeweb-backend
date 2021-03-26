@@ -185,6 +185,7 @@ return [
         App\Providers\UserServiceProvider::class,
         App\Providers\SaleServiceProvider::class,
         App\Providers\FeatureServiceProvider::class,
+        App\Providers\FileServiceProvider::class,
     ],
 
     /*

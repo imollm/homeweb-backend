@@ -7,6 +7,7 @@ use App\Services\Category\CategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,9 +39,9 @@ class CategoryController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function create(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        if (Auth::user()->can('create', Category::class)) {
+        if (Auth::user()->can('store', Category::class)) {
 
             $categoryName = $request->input('name');
 
@@ -57,7 +58,7 @@ class CategoryController extends Controller
 
             else {
 
-                if ($this->categoryService->create($categoryName)) {
+                if ($this->categoryService->create($request)) {
                     return response()->json([
                         'success' => true,
                         'message' => 'Category added correctly',
@@ -198,4 +199,5 @@ class CategoryController extends Controller
             return $this->unauthorizedUser();
         }
     }
+
 }

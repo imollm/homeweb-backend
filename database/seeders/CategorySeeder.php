@@ -15,11 +15,12 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        $categories = ['Casa', 'Xalet', 'Apartament', 'Pis', 'Masia', 'Garatge'];
+        $categories = ['Casa', 'Xalet', 'Apartament', 'Finca', 'Masia'];
 
         foreach ($categories as $category) {
             DB::table('categories')->insert([
                 'name' => strtolower($category),
+                'image' => strtolower($category) . '.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);

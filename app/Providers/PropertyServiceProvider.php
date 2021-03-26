@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Property;
 use App\Models\RangePrice;
 use App\Models\User;
+use App\Services\File\FileService;
 use App\Services\Property\PropertyService;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,7 +29,7 @@ class PropertyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->bind('App\Providers\PropertyServiceProvider', function ($app) {
-            return new PropertyService(new Property(), new User(), new RangePrice());
+            return new PropertyService(new Property(), new User(), new RangePrice(), new FileService());
         });
     }
 }

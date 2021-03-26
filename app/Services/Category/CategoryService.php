@@ -5,6 +5,7 @@ namespace App\Services\Category;
 
 
 use App\Models\Category;
+use App\Services\File\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -22,12 +23,19 @@ class CategoryService implements ICategoryService
     private Category $category;
 
     /**
+     * @var FileService
+     */
+    private FileService $fileService;
+
+    /**
      * CategoryService constructor.
      * @param Category $category
+     * @param FileService $fileService
      */
-    public function __construct(Category $category)
+    public function __construct(Category $category, FileService $fileService)
     {
         $this->category = $category;
+        $this->fileService = $fileService;
     }
 
     /**
@@ -94,14 +102,26 @@ class CategoryService implements ICategoryService
     }
 
     /**
-     * @param string $name
+     * @param Request $request
      * @return bool
+     * @throws ValidationException
      */
-    public function create(string $name): bool
+    public function create(Request $request): bool
     {
-        $newCategory = $this->category->create(['name' => $name]);
+        $newCategory = $this->category->create(['name' => $request->input('name')]);
 
-        return !is_null($newCategory);
+        if(!is_null($newCategory)) {
+
+            $this->fileService->validatePostFile($request);
+
+            if ($image_path = $this->fileService->storeImage($request, 'categories')) {
+
+                $this->category->whereName($newCategory->name)->update(['image' => $image_path]);
+
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

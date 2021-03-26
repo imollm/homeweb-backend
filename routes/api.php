@@ -5,6 +5,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
@@ -63,6 +64,11 @@ Route::prefix('features')->name('features.')->group(function () {
 Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
 
 Route::get('contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+Route::prefix('image')->name('image.')->group(function () {
+    Route::get('category/{id}', [FileController::class, 'categories'])->where('id', '[0-9]+')->name('categories');
+    Route::get('property/{id}', [FileController::class, 'properties'])->where('id', '[0-9]+')->name('properties');
+});
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
@@ -90,7 +96,7 @@ Route::middleware('auth:api')->group(function () {
     });
     // Categories auth routes
     Route::prefix('categories')->name('categories.')->group(function () {
-        Route::post('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
         Route::put('/{id}/update', [CategoryController::class, 'update'])->where('id', '[0-9]+')->name('update');
         Route::delete('/{id}/delete', [CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
     });

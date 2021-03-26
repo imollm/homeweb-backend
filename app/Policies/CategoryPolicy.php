@@ -18,7 +18,7 @@ class CategoryPolicy extends Policy
      * @param User $user
      * @return bool
      */
-    public function create(User $user): bool
+    public function store(User $user): bool
     {
         return $this->isAuthorizedToDoThisAction($user->role->name, ['admin', 'employee']);
     }

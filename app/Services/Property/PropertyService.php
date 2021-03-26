@@ -6,6 +6,7 @@ namespace App\Services\Property;
 use App\Models\Property;
 use App\Models\RangePrice;
 use App\Models\User;
+use App\Services\File\FileService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -34,16 +35,23 @@ class PropertyService implements IPropertyService
     private RangePrice $rangePrice;
 
     /**
+     * @var FileService
+     */
+    private FileService $fileService;
+
+    /**
      * PropertyService constructor.
      * @param Property $property
      * @param User $user
      * @param RangePrice $rangePrice
+     * @param FileService $fileService
      */
-    public function __construct(Property $property, User $user, RangePrice $rangePrice)
+    public function __construct(Property $property, User $user, RangePrice $rangePrice, FileService $fileService)
     {
         $this->property = $property;
         $this->user = $user;
         $this->rangePrice = $rangePrice;
+        $this->fileService = $fileService;
     }
 
     /**
@@ -101,19 +109,36 @@ class PropertyService implements IPropertyService
      * @param Request $request
      * @param string $action
      * @return bool
+     * @throws ValidationException
      */
     private function roleOwnerWantsCreateOrUpdateProperty(Request $request, string $action): bool
     {
-        $property = new Property($request->all());
+        $saved = false;
+        $image = false;
+
+        $propertyRef = $request->input('reference');
+
         if ($action === 'update') {
 
-            return Auth::user()->properties()->update($request->all()) ? true : false;
+            $saved = Auth::user()->properties()->update($request->all()) ? true : false;
+
+            if ($request->has('image') && $request->file('image')->isValid()) {
+                $this->fileService->validatePostFile($request);
+                $image = $this->fileService->storeImage($request, 'properties');
+                $this->property->whereReference($propertyRef)->update(['image' => $image]);
+            }
 
         } elseif ($action === 'create') {
 
-            return Auth::user()->properties()->save($property) ? true : false;
+            $property = new Property($request->all());
+            $saved = Auth::user()->properties()->save($property) ? true : false;
+
+            $this->fileService->validatePostFile($request);
+            $image = $this->fileService->storeImage($request, 'properties');
+            $this->property->whereReference($propertyRef)->update(['image' => $image]);
         }
-        return false;
+
+        return $saved && $image;
     }
 
     /**

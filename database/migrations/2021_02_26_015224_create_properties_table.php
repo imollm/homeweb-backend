@@ -20,6 +20,7 @@ class CreatePropertiesTable extends Migration
             $table->unsignedBigInteger('city_id');
             $table->string('title');
             $table->string('reference')->unique();
+            $table->string('image')->default(null)->nullable();
             $table->float('plot_meters')->default(0);
             $table->float('built_meters')->default(0);
             $table->string('address')->nullable();

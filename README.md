@@ -73,7 +73,11 @@
     ```sh
       php artisan db:restore
     ```
-
+8. Dins l'arxiu ```.env``` haurem de configurar el nostre gestor de correu electrònic perquè el formulari de contacte de la web funcionai. De nou executar 
+   ```sh
+      php artisan config:cache
+   ```
+   Per poder publicar la configuració del gestor de correo electrònic.
 
 ### Test amb Postman
 1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
