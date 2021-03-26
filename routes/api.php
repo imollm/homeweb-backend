@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\PassportAuthController;
@@ -60,6 +61,8 @@ Route::prefix('features')->name('features.')->group(function () {
 });
 
 Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
+
+Route::get('contact/send', [ContactController::class, 'send'])->name('contact.send');
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
