@@ -38,35 +38,49 @@ class FileController extends Controller
 
     /**
      * @param string $id
-     * @return Response
+     * @return JsonResponse
      */
-    public function categories(string $id): Response
+    public function categories(string $id): JsonResponse
     {
         if ($category = $this->categoryService->getCategoryById($id)) {
             try {
                 $image = Storage::disk('categories')->get($category['image']);
             }
             catch (\Illuminate\Contracts\Filesystem\FileNotFoundException $e) {
-                return new Response(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+                return response()->json([
+                    'success' => true,
+                    'message' => $e->getMessage()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-        return new Response($image, Response::HTTP_OK, ['Content-type' => 'image/jpg']);
+        return response()->json([
+            'success' => true,
+            'data' => base64_encode($image),
+            'message' => 'Request image'
+        ], Response::HTTP_OK, ['Content-type' => 'image/jpg']);
     }
 
     /**
      * @param string $id
-     * @return Response
+     * @return JsonResponse
      */
-    public function properties(string $id): Response
+    public function properties(string $id): JsonResponse
     {
         if ($property = $this->propertyService->getPropertyById($id)) {
             try {
                 $image = Storage::disk('properties')->get($property->image);
             }
             catch (\Illuminate\Contracts\Filesystem\FileNotFoundException $e) {
-                return new Response(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+                return response()->json([
+                    'success' => true,
+                    'message' => $e->getMessage()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-        return new Response($image, Response::HTTP_OK, ['Content-type' => 'image/jpg']);
+        return response()->json([
+            'success' => true,
+            'data' => base64_encode($image),
+            'message' => 'Request image'
+        ], Response::HTTP_OK, ['Content-type' => 'image/jpg']);
     }
 }
