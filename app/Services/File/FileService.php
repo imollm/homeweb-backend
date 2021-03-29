@@ -4,7 +4,10 @@
 namespace App\Services\File;
 
 
+use App\Models\Category;
+use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -17,15 +20,34 @@ use Illuminate\Validation\ValidationException;
  */
 class FileService implements IFileService
 {
+    /**
+     * @var Property
+     */
+    private Property $property;
+
+    /**
+     *
+     */
+    private Category $category;
+
+    /**
+     * FileService constructor.
+     * @param Property $property
+     * @param Category $category
+     */
+    public function __construct(Property $property, Category $category)
+    {
+        $this->property = $property;
+        $this->category = $category;
+    }
 
     /**
      * @param Request $request
+     * @param string $categoryOrProperty
      * @throws ValidationException
      */
-    public function validatePostFile(Request $request)
+    private function validatePostFile(Request $request, string $categoryOrProperty)
     {
-        $categoryOrProperty = $request->has('reference') ? 'reference' : 'name';
-
         Validator::make($request->all(), [
             $categoryOrProperty => 'required',
             'image' => 'mimes:jpeg,png|max:1014'
@@ -34,29 +56,61 @@ class FileService implements IFileService
 
     /**
      * @param Request $request
-     * @param string $disk
-     * @return string|bool
+     * @return bool
+     * @throws ValidationException
      */
-    public function storeImage(Request $request, string $disk): string | bool
+    public function storePropertyImage(Request $request): bool
     {
-        if ($request->has('image') && $request->file('image')->isValid()) {
+        $this->validatePostFile($request, 'reference');
 
-            $image = $request->file('image');
+        if ($this->isValidFile($request) === false) return false;
 
-            ($disk === 'categories') ?
-                $categoryOrProperty = 'name' :
-                $categoryOrProperty = 'reference';
+        $image = $request->file('image');
+        $propertyRef = $request->input('reference');
 
-            $image_path =
-                str_replace(' ', '_',
-                    Str::random(10).'_'.
-                    $request->input($categoryOrProperty).'.'.
-                    $request->image->extension());
+        $imageName = $this->getImageName($image);
 
-            if (Storage::disk($disk)->put($image_path, File::get($image))) {
-                return $image_path;
-            }
-        }
-        return false;
+        return Storage::disk('properties')->put($imageName, File::get($image))
+            ? $this->property->whereReference($propertyRef)->update(['image' => $imageName])
+            : false;
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     * @throws ValidationException
+     */
+    public function storeCategoryImage(Request $request): bool
+    {
+        $this->validatePostFile($request, 'name');
+
+        if ($this->isValidFile($request) === false) return false;
+
+        $image = $request->file('image');
+        $categoryName = $request->input('name');
+
+        $imageName = $this->getImageName($image);
+
+        return Storage::disk('categories')->put($imageName, File::get($image))
+            ? $this->category->whereName($categoryName)->update(['image' => $imageName])
+            : false;
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    private function isValidFile(Request $request): bool
+    {
+        return $request->hasFile('image') && $request->file('image')->isValid();
+    }
+
+    private function getImageName(UploadedFile $image): string
+    {
+        return
+            str_replace(' ', '_',
+                Str::random(10).'_'.
+                $image->getClientOriginalName().'.'.
+                $image->getClientOriginalExtension());
     }
 }

@@ -14,13 +14,13 @@ interface IFileService
 {
     /**
      * @param Request $request
+     * @return bool
      */
-    public function validatePostFile(Request $request);
+    public function storePropertyImage(Request $request): bool;
 
     /**
      * @param Request $request
-     * @param string $disk
-     * @return string|bool
+     * @return bool
      */
-    public function storeImage(Request $request, string $disk): string | bool;
+    public function storeCategoryImage(Request $request): bool;
 }

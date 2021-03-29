@@ -114,29 +114,20 @@ class PropertyService implements IPropertyService
     private function roleOwnerWantsCreateOrUpdateProperty(Request $request, string $action): bool
     {
         $saved = false;
-        $image = false;
-
-        $propertyRef = $request->input('reference');
 
         if ($action === 'update') {
 
             $saved = Auth::user()->properties()->update($request->all()) ? true : false;
 
-            if ($request->has('image') && $request->file('image')->isValid()) {
-                $this->fileService->validatePostFile($request);
-                $image = $this->fileService->storeImage($request, 'properties');
-                $this->property->whereReference($propertyRef)->update(['image' => $image]);
-            }
 
         } elseif ($action === 'create') {
 
             $property = new Property($request->all());
             $saved = Auth::user()->properties()->save($property) ? true : false;
 
-            $this->fileService->validatePostFile($request);
-            $image = $this->fileService->storeImage($request, 'properties');
-            $this->property->whereReference($propertyRef)->update(['image' => $image]);
         }
+
+        $image = $this->fileService->storePropertyImage($request);
 
         return $saved && $image;
     }
@@ -148,29 +139,33 @@ class PropertyService implements IPropertyService
      * @param string $action
      * @param string $propertyId
      * @return bool
+     * @throws ValidationException
      */
     private function roleAdminOrEmployeeWantsCreateOrUpdateProperty(Request $request, string $action, string $propertyId): bool
     {
+        $saved = false;
+
         if ($action === 'update') {
 
-            return $this->property->find($propertyId)->update($request->all()) ? true : false;
+            $saved = $this->property->find($propertyId)->update($request->all())
+                ? is_string($this->fileService->storePropertyImage($request))
+                : false;
 
         } elseif ($action === 'create') {
 
             $ownerId = $request->input('user_id');
 
-            if (is_numeric($ownerId)) {
-                if ($this->haveThisUserOwnerRole($ownerId)) {
-                    return $this->property->create($request->all()) ? true : false;
-                } else {
-                    return false;
-                }
+            if (is_numeric($ownerId) && $this->haveThisUserOwnerRole($ownerId)) {
+                $saved = $this->property->create($request->all())
+                    ? is_string($this->fileService->storePropertyImage($request))
+                    : false;
             } else {
-                return $this->property->create($request->all()) ? true : false;
+                $saved = $this->property->create($request->all())
+                    ? is_string($this->fileService->storePropertyImage($request))
+                    : false;
             }
-        } else {
-            return false;
         }
+        return $saved;
     }
 
     /**

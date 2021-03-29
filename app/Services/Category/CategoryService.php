@@ -110,18 +110,7 @@ class CategoryService implements ICategoryService
     {
         $newCategory = $this->category->create(['name' => $request->input('name')]);
 
-        if(!is_null($newCategory)) {
-
-            $this->fileService->validatePostFile($request);
-
-            if ($image_path = $this->fileService->storeImage($request, 'categories')) {
-
-                $this->category->whereName($newCategory->name)->update(['image' => $image_path]);
-
-                return true;
-            }
-        }
-        return false;
+        return !is_null($newCategory) && $this->fileService->storeCategoryImage($request);
     }
 
     /**

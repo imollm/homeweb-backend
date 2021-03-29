@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('upload/image', [ImageController::class]);
 /*-----------------------------------------------------------------------------------*/
 /*-------------------------------------PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
