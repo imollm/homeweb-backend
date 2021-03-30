@@ -15,6 +15,38 @@ use Tests\TestCase;
 
 class PropertyCreateTests extends TestCase
 {
+    private function getPayload(array $values = []): array
+    {
+        $payload = [
+            'user_id' => '',
+            'category_id' => 1,
+            'city_id' => 1,
+            'title' => Str::random(10),
+            'reference' => Str::random(12),
+            'image' => '',
+            'plot_meters' => 100,
+            'built_meters' => 90,
+            'address' => Str::random(20),
+            'longitude' => 10.00,
+            'latitude' => 20.00,
+            'description' => Str::random(30),
+            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
+            'sold' => false,
+            'active' => true,
+            'price' => 190.000,
+        ];
+
+        foreach ($values as $keyValues => $valueToChange) {
+            foreach ($payload as $keyPayload => $payloadValue) {
+                if ($keyValues === $keyPayload) {
+                    $payload[$keyPayload] = $valueToChange;
+                    break;
+                }
+            }
+        }
+        return $payload;
+    }
+
     public function test_create_new_property_customer_role_unauthorized()
     {
         $token = $this->getRoleTokenAuth('customer');
@@ -40,23 +72,8 @@ class PropertyCreateTests extends TestCase
         $ownerRole = Role::where('name', '=', 'owner')->first();
         $ownerUser = User::where('role_id', '=', $ownerRole->id)->first()->id;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => $ownerUser,
-            'city_id' => 1,
-            'title' => 1000, // This field is required and must be a STRING not INTEGER
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // title must be a string, integer given
+        $payload = $this->getPayload(['title' => 1000, 'user_id' => $ownerUser]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -72,23 +89,8 @@ class PropertyCreateTests extends TestCase
 
         $referenceAlreadyExists = Property::inRandomOrder()->first()->reference;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => '',
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => $referenceAlreadyExists, // Reference is unique in DB, now post the same reference in a new property
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // Reference is unique in DB, now post with the same reference in a new property
+        $payload = $this->getPayload(['reference' => $referenceAlreadyExists]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -102,23 +104,8 @@ class PropertyCreateTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/create';
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => '', // Now this field comes empty
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // Now user_id field comes empty
+        $payload = $this->getPayload(['user_id' => '']);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -138,23 +125,7 @@ class PropertyCreateTests extends TestCase
         $ownerRole = Role::where('name', '=', 'owner')->first();
         $ownerUser = User::where('role_id', '=', $ownerRole->id)->first()->id;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => $ownerUser,
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        $payload = $this->getPayload(['user_id' => $ownerUser]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -174,23 +145,8 @@ class PropertyCreateTests extends TestCase
 
         $notOwnerUser = 1;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => $notOwnerUser, // This is the question, this id is not owner
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // This is the question, this id is not owner
+        $payload = $this->getPayload(['user_id' => $notOwnerUser]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -208,23 +164,8 @@ class PropertyCreateTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/create';
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => null, // Owner id
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // Owner id to null
+        $payload = $this->getPayload(['user_id' => null]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -247,23 +188,7 @@ class PropertyCreateTests extends TestCase
         $ownerRole = Role::where('name', '=', 'owner')->first();
         $ownerUser = User::where('role_id', '=', $ownerRole->id)->first()->id;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => $ownerUser,
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        $payload = $this->getPayload(['user_id' => $ownerUser]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
@@ -285,23 +210,8 @@ class PropertyCreateTests extends TestCase
 
         $notOwnerUser = 1;
 
-        $payload = [
-            'category_id' => 1,
-            'user_id' => $notOwnerUser, // This is the question, this id is not owner
-            'city_id' => 1,
-            'title' => Str::title(10),
-            'reference' => Str::random(12),
-            'plot_meters' => 100,
-            'built_meters' => 90,
-            'address' => Str::random(20),
-            'longitude' => 10.00,
-            'latitude' => 20.00,
-            'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
-            'sold' => false,
-            'active' => true,
-            'price' => 190.000,
-        ];
+        // This is the question, this id is not owner
+        $payload = $this->getPayload(['user_id' => $notOwnerUser]);
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
