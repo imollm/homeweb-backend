@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('upload/image', [ImageController::class]);
 /*-----------------------------------------------------------------------------------*/
 /*-------------------------------------PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
@@ -65,11 +64,6 @@ Route::prefix('features')->name('features.')->group(function () {
 Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
 
 Route::get('contact/send', [ContactController::class, 'send'])->name('contact.send');
-
-Route::prefix('image')->name('image.')->group(function () {
-    Route::get('category/{id}', [FileController::class, 'categories'])->where('id', '[0-9]+')->name('categories');
-    Route::get('property/{id}', [FileController::class, 'properties'])->where('id', '[0-9]+')->name('properties');
-});
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/

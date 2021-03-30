@@ -137,7 +137,7 @@ class PropertyShowTests extends TestCase
 
     public function test_show_property_by_filters_that_not_have_properties_with_this_values()
     {
-        $categoryIdWithAnyPropertyRelated =
+        $categoryIdWithNotPropertyRelated =
             DB::table('categories')
             ->select('categories.id')
             ->leftJoin('properties', 'categories.id', '=', 'properties.category_id')
@@ -149,7 +149,7 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $uri = $uri . '?reference='.$randomPropertyReference.'&category=' . $categoryIdWithAnyPropertyRelated;
+        $uri .= '?reference='.$randomPropertyReference.'&category=' . $categoryIdWithNotPropertyRelated;
 
         $this
             ->getJson($uri)->dump()

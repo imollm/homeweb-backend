@@ -28,7 +28,7 @@ class PropertySeeder extends Seeder
         for($i = 0; $i < 5; $i++) {
             DB::table('properties')->insert([
                 'user_id' => Arr::random($ownersIdsOnSystem),
-                'category_id' => $i + 1,
+                'category_id' => $i === 0 ? 2 : $i + 1,
                 'city_id' => City::inRandomOrder()->first()->id,
                 'title' => Str::random(10),
                 'reference' => strtolower(Str::random(6)),

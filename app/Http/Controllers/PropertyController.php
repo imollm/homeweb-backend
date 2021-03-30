@@ -137,7 +137,7 @@ class PropertyController extends Controller
     public function update(Request $request): JsonResponse
     {
         $propertyId = $request->input('id');
-        $propertyExists = Property::find();
+        $propertyExists = $this->propertyService->getPropertyById($propertyId);
 
         if (!$propertyExists) {
             return response()->json([
@@ -148,7 +148,7 @@ class PropertyController extends Controller
 
         if (Auth::user()->can('update', $propertyExists)) {
 
-            $this->propertyService->validatePostPropertyData($request);
+            $this->propertyService->validatePutPropertyData($request);
 
             if ($this->propertyService->createOrUpdateProperty($request, 'update', $propertyId)) {
                 return response()->json([

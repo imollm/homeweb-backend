@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 interface IPropertyService
 {
     public function validatePostPropertyData(Request $request);
+    public function validatePutPropertyData(Request $request);
     public function createOrUpdateProperty(Request $request, string $action, string $propertyId = ''): bool;
     public function validateFilterPostData(Request $request);
     public function getPropertiesByFilters(Request $request): Collection | null;
@@ -19,5 +20,5 @@ interface IPropertyService
     public function updatePriceByPropertyId(string $propertyId, float $price): bool;
     public function getActiveProperties(): array;
     public function delete(string $id): bool;
-    public function getPropertyById(string $id): Property;
+    public function getPropertyById(string $id): Property | false;
 }

@@ -22,7 +22,7 @@ class CreatePriceHistory extends Migration
 
             $table->primary(['property_id', 'start', 'amount']);
 
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties');
         });
     }
 

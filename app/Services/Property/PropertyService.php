@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use function PHPUnit\Framework\isNull;
 
 /**
  * Class PropertyService
@@ -71,6 +72,19 @@ class PropertyService implements IPropertyService
     }
 
     /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    public function validatePutPropertyData(Request $request)
+    {
+        Validator::make($request->all(), [
+            'category_id' => 'required|numeric',
+            'user_id' => 'numeric|nullable',
+            'title' => 'required|string|max:255',
+        ])->validate();
+    }
+
+    /**
      * Method to save a new property
      *
      * @param Request $request
@@ -118,7 +132,7 @@ class PropertyService implements IPropertyService
 
         if ($action === 'update') {
 
-            $saved = Auth::user()->properties()->update($request->all()) ? true : false;
+            $saved = Auth::user()->properties()->update($request->except(['id', 'reference'])) ? true : false;
 
 
         } elseif ($action === 'create') {
@@ -321,10 +335,11 @@ class PropertyService implements IPropertyService
 
     /**
      * @param string $id
-     * @return Property
+     * @return Property|false
      */
-    public function getPropertyById(string $id): Property
+    public function getPropertyById(string $id): Property | false
     {
-        return $this->property->find($id);
+        $property = $this->property->find($id);
+        return !is_null($property) ? $property : false ;
     }
 }
