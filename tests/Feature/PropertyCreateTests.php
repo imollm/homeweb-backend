@@ -18,12 +18,12 @@ class PropertyCreateTests extends TestCase
     private function getPayload(array $values = []): array
     {
         $payload = [
-            'user_id' => '',
+            'user_id' => null,
             'category_id' => 1,
             'city_id' => 1,
             'title' => Str::random(10),
             'reference' => Str::random(12),
-            'image' => '',
+            'image' => null,
             'plot_meters' => 100,
             'built_meters' => 90,
             'address' => Str::random(20),

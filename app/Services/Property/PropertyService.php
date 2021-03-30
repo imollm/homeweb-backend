@@ -77,6 +77,7 @@ class PropertyService implements IPropertyService
      * @param string $action
      * @param string $propertyId
      * @return bool
+     * @throws ValidationException
      */
     public function createOrUpdateProperty(Request $request, string $action, string $propertyId  = ''): bool
     {
@@ -127,9 +128,9 @@ class PropertyService implements IPropertyService
 
         }
 
-        $image = $this->fileService->storePropertyImage($request);
+        if ($request->hasFile('image')) $this->fileService->storePropertyImage($request);
 
-        return $saved && $image;
+        return $saved;
     }
 
     /**
@@ -147,25 +148,20 @@ class PropertyService implements IPropertyService
 
         if ($action === 'update') {
 
-            $saved = $this->property->find($propertyId)->update($request->all())
-                ? is_string($this->fileService->storePropertyImage($request))
-                : false;
+            $saved = $this->property->find($propertyId)->update($request->all());
 
         } elseif ($action === 'create') {
 
             $ownerId = $request->input('user_id');
 
-            if (is_numeric($ownerId) && $this->haveThisUserOwnerRole($ownerId)) {
-                $saved = $this->property->create($request->all())
-                    ? is_string($this->fileService->storePropertyImage($request))
-                    : false;
-            } else {
-                $saved = $this->property->create($request->all())
-                    ? is_string($this->fileService->storePropertyImage($request))
-                    : false;
+            if ((is_numeric($ownerId) && $this->haveThisUserOwnerRole($ownerId) || empty($ownerId))) {
+                $saved = $this->property->create($request->all());
             }
         }
-        return $saved;
+
+        if ($request->hasFile('image')) $this->fileService->storePropertyImage($request);
+
+        return $saved !== false;
     }
 
     /**

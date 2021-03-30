@@ -50,7 +50,7 @@ class FileService implements IFileService
     {
         Validator::make($request->all(), [
             $categoryOrProperty => 'required',
-            'image' => 'mimes:jpeg,png|max:1014'
+            'image' => 'nullable|mimes:jpeg,png|max:1014'
         ])->validate();
     }
 
@@ -102,7 +102,7 @@ class FileService implements IFileService
      */
     private function isValidFile(Request $request): bool
     {
-        return $request->hasFile('image') && $request->file('image')->isValid();
+        return $request->file('image')->isValid();
     }
 
     private function getImageName(UploadedFile $image): string
