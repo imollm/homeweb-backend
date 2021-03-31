@@ -5,6 +5,7 @@ namespace App\Services\Category;
 
 
 use App\Models\Category;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 interface ICategoryService
@@ -17,4 +18,5 @@ interface ICategoryService
     public function getAllCategories(): array;
     public function create(Request $request): bool;
     public function getCategoryById(string $id): array;
+    public function getPropertiesByCategoryName(string $name): array;
 }

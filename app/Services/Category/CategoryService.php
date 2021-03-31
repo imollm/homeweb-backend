@@ -5,6 +5,7 @@ namespace App\Services\Category;
 
 
 use App\Models\Category;
+use App\Models\Property;
 use App\Services\File\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -122,5 +123,12 @@ class CategoryService implements ICategoryService
         $category = $this->category->find($id);
 
         return !is_null($category) ? $category->toArray() : [];
+    }
+
+    public function getPropertiesByCategoryName(string $name): array
+    {
+        return  $this->category->whereHas('properties', function ($query) use ($name) {
+                    $query->where('name', 'like', "%{$name}%");
+                })->get()->toArray();
     }
 }

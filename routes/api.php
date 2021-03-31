@@ -44,6 +44,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/index', [CategoryController::class, 'index'])->name('index');
     Route::get('/{id}/show', [CategoryController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::get('/{name}/properties', [CategoryController::class, 'properties'])->where('name', '[a-zA-Z]+')->name('properties');
 });
 
 Route::prefix('countries')->name('countries.')->group(function () {
