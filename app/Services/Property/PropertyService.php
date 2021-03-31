@@ -342,4 +342,13 @@ class PropertyService implements IPropertyService
         $property = $this->property->find($id);
         return !is_null($property) ? $property : false ;
     }
+
+    /**
+     * @param int $count
+     * @return array
+     */
+    public function getLastProperties(int $count): array
+    {
+        return $this->property->orderBy('created_at', 'DESC')->take($count)->get()->toArray();
+    }
 }

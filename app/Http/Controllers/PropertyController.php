@@ -280,4 +280,20 @@ class PropertyController extends Controller
             }
         }
     }
+
+    /**
+     * Return last 6 properties
+     *
+     * @return JsonResponse
+     */
+    public function last(): JsonResponse
+    {
+        $count = 6;
+        
+        return response()->json([
+            'success' => true,
+            'data' => $this->propertyService->getLastProperties($count),
+            'message' => 'Last '.$count.' properties'
+        ], Response::HTTP_OK);
+    }
 }

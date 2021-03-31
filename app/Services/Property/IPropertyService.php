@@ -21,4 +21,5 @@ interface IPropertyService
     public function getActiveProperties(): array;
     public function delete(string $id): bool;
     public function getPropertyById(string $id): Property | false;
+    public function getLastProperties(int $count): array;
 }

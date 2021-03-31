@@ -38,6 +38,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/index', [PropertyController::class, 'index'])->name('index');
     Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('showById');
     Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
+    Route::get('/last', [PropertyController::class, 'last'])->name('last');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {
