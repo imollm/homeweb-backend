@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use function PHPUnit\Framework\isNull;
 
 /**
  * Class PropertyService
@@ -142,7 +141,7 @@ class PropertyService implements IPropertyService
 
         }
 
-        if ($request->hasFile('image')) $this->fileService->storePropertyImage($request);
+        if ($request->has('image') && $request->hasFile('image')) $this->fileService->storePropertyImage($request);
 
         return $saved;
     }
@@ -159,6 +158,7 @@ class PropertyService implements IPropertyService
     private function roleAdminOrEmployeeWantsCreateOrUpdateProperty(Request $request, string $action, string $propertyId): bool
     {
         $saved = false;
+        $image = false;
 
         if ($action === 'update') {
 
@@ -173,9 +173,9 @@ class PropertyService implements IPropertyService
             }
         }
 
-        if ($request->hasFile('image')) $this->fileService->storePropertyImage($request);
+        if ($request->has('image') && $request->hasFile('image')) $image = $this->fileService->storePropertyImage($request);
 
-        return $saved !== false;
+        return $saved && $image;
     }
 
     /**

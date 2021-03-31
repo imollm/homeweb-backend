@@ -23,4 +23,16 @@ interface IFileService
      * @return bool
      */
     public function storeCategoryImage(Request $request): bool;
+
+    /**
+     * @param string $fileName
+     * @return array
+     */
+    public function getPropertyImage(string $fileName): array;
+
+    /**
+     * @param string $fileName
+     * @return array
+     */
+    public function getCategoryImage(string $fileName): array;
 }

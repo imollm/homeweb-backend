@@ -6,7 +6,9 @@ namespace App\Services\File;
 
 use App\Models\Category;
 use App\Models\Property;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +52,7 @@ class FileService implements IFileService
     {
         Validator::make($request->all(), [
             $categoryOrProperty => 'required',
-            'image' => 'nullable|mimes:jpeg,png|max:1014'
+            'image' => 'nullable|mimes:jpeg,png,jpg|image'
         ])->validate();
     }
 
@@ -63,16 +65,13 @@ class FileService implements IFileService
     {
         $this->validatePostFile($request, 'reference');
 
-        if ($this->isValidFile($request) === false) return false;
+        if (!$request->file('image')->isValid()) return false;
 
-        $image = $request->file('image');
         $propertyRef = $request->input('reference');
 
-        $imageName = $this->getImageName($image);
+        $imageName = Storage::disk('properties')->put('', $request->file('image'));
 
-        return Storage::disk('properties')->put($imageName, File::get($image))
-            ? $this->property->whereReference($propertyRef)->update(['image' => $imageName])
-            : false;
+        return $imageName ? $this->property->whereReference($propertyRef)->update(['image' => $imageName]) : false;
     }
 
     /**
@@ -84,33 +83,45 @@ class FileService implements IFileService
     {
         $this->validatePostFile($request, 'name');
 
-        if ($this->isValidFile($request) === false) return false;
+        if (!$request->file('image')->isValid()) return false;
 
-        $image = $request->file('image');
         $categoryName = $request->input('name');
 
-        $imageName = $this->getImageName($image);
+        $imageName = Storage::disk('categories')->put('', $request->file('image'));
 
-        return Storage::disk('categories')->put($imageName, File::get($image))
-            ? $this->category->whereName($categoryName)->update(['image' => $imageName])
-            : false;
+        return $imageName ? $this->category->whereName($categoryName)->update(['image' => $imageName]) : false;
+    }
+
+
+    /**
+     * @param string $fileName
+     * @return array
+     * @throws FileNotFoundException
+     */
+    public function getPropertyImage(string $fileName): array
+    {
+        $file = [];
+        if ($this->property->whereImage($fileName)) {
+
+            $file['image'] = Storage::disk('properties')->get($fileName);
+            $file['type'] = Storage::disk('properties')->mimeType($fileName);
+        }
+        return $file;
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @param string $fileName
+     * @return array
+     * @throws FileNotFoundException
      */
-    private function isValidFile(Request $request): bool
+    public function getCategoryImage(string $fileName): array
     {
-        return $request->file('image')->isValid();
-    }
+        $file = [];
+        if ($this->category->whereImage($fileName)) {
 
-    private function getImageName(UploadedFile $image): string
-    {
-        return
-            str_replace(' ', '_',
-                Str::random(10).'_'.
-                $image->getClientOriginalName().'.'.
-                $image->getClientOriginalExtension());
+            $file['image'] = Storage::disk('categories')->get($fileName);
+            $file['type'] = Storage::disk('categories')->mimeType($fileName);
+        }
+        return $file;
     }
 }

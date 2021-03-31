@@ -6,7 +6,6 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\FileController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PassportAuthController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\PropertyController;
@@ -64,6 +63,11 @@ Route::prefix('features')->name('features.')->group(function () {
 Route::get('rangePrice/index', [RangePriceController::class, 'index'])->name('rangePrice');
 
 Route::get('contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+Route::prefix('image')->name('image.')->group(function () {
+    Route::get('/categories/{id}', [FileController::class, 'categories'])->where('id', '[a-zA-Z0-9]+[.][a-z]+')->name('categories');
+    Route::get('/properties/{id}', [FileController::class, 'properties'])->where('id', '[a-zA-Z0-9]+[.][a-z]+')->name('properties');
+});
 /*-----------------------------------------------------------------------------------*/
 /*---------------------------------END PUBLIC ROUTES---------------------------------*/
 /*-----------------------------------------------------------------------------------*/
