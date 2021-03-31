@@ -58,7 +58,7 @@ class Property extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     /**
@@ -68,7 +68,7 @@ class Property extends Model
      */
     public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
     /**

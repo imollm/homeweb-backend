@@ -127,8 +127,8 @@ class CategoryService implements ICategoryService
 
     public function getPropertiesByCategoryName(string $name): array
     {
-        return  $this->category->whereHas('properties', function ($query) use ($name) {
-                    $query->where('name', 'like', "%{$name}%");
-                })->get()->toArray();
+        return  $this->category->whereName($name)->get()->first()->properties()
+                    ->with('city')->get()
+                    ->toArray();
     }
 }
