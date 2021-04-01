@@ -349,6 +349,12 @@ class PropertyService implements IPropertyService
      */
     public function getLastProperties(int $count): array
     {
-        return $this->property->orderBy('created_at', 'DESC')->take($count)->get()->toArray();
+        return $this->property
+                ->with('city')
+                ->with('category')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get()
+                ->toArray();
     }
 }
