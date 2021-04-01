@@ -35,6 +35,8 @@ class PropertySeeder extends Seeder
                 'image' => 'property' . ($i + 1) . '.jpg',
                 'plot_meters' => $i * 100,
                 'built_meters' => $i * 90,
+                'rooms' => 3,
+                'baths' => 2,
                 'address' => Str::random(20),
                 'longitude' => 100.24,
                 'latitude' => 100.23,

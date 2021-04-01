@@ -24,6 +24,8 @@ class PropertyCreateTests extends TestCase
             'title' => Str::random(10),
             'reference' => Str::random(12),
             'image' => null,
+            'rooms' => 3,
+            'baths' => 2,
             'plot_meters' => 100,
             'built_meters' => 90,
             'address' => Str::random(20),

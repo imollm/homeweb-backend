@@ -23,6 +23,8 @@ class CreatePropertiesTable extends Migration
             $table->string('image')->default(null)->nullable();
             $table->float('plot_meters')->default(0);
             $table->float('built_meters')->default(0);
+            $table->integer('rooms')->default(0)->nullable();
+            $table->integer('baths')->default(0)->nullable();
             $table->string('address')->nullable();
             $table->float('longitude')->nullable();
             $table->float('latitude')->nullable();

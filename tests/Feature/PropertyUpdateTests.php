@@ -26,6 +26,8 @@ class PropertyUpdateTests extends TestCase
             'image' => null,
             'plot_meters' => 100,
             'built_meters' => 90,
+            'rooms' => 3,
+            'baths' => 2,
             'address' => Str::random(20),
             'longitude' => 10.00,
             'latitude' => 20.00,

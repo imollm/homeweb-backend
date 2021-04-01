@@ -31,6 +31,8 @@ class Property extends Model
         'image',
         'plot_meters',
         'built_meters',
+        'rooms',
+        'baths',
         'address',
         'longitude',
         'latitude',
