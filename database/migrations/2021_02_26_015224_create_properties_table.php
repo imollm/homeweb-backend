@@ -26,8 +26,8 @@ class CreatePropertiesTable extends Migration
             $table->integer('rooms')->default(0)->nullable();
             $table->integer('baths')->default(0)->nullable();
             $table->string('address')->nullable();
-            $table->float('longitude')->nullable();
-            $table->float('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
             $table->longText('description')->nullable();
             $table->enum('energetic_certification', ['obtained', 'in process', 'pending'])->nullable();
             $table->boolean('sold')->default(false);
