@@ -18,7 +18,7 @@ class PropertySeeder extends Seeder
      */
     public function run()
     {
-        $energetic_certification_values = ['obtained', 'in process', 'pending'];
+        $energetic_certification_values = ['obtingut', 'en proces', 'pendent'];
         $ownersIdsOnSystem =
             DB::table('roles')
                 ->join('users', 'roles.id', '=', 'users.role_id')
