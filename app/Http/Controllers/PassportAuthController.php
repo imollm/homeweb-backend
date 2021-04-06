@@ -43,6 +43,7 @@ class PassportAuthController extends Controller
         $user = $this->passportAuthService->registerNewUser($request);
 
         return response()->json([
+            'success' => true,
             'dataUser' => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -70,6 +71,7 @@ class PassportAuthController extends Controller
 
         if ($user && is_object($user)) {
             return response()->json([
+                'success' => true,
                 'dataUser' => [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -87,14 +89,17 @@ class PassportAuthController extends Controller
      * Logout
      *
      * @param Request $request
-     * @return Application|ResponseFactory|\Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function logout(Request $request): Application|ResponseFactory|\Illuminate\Http\Response
+    public function logout(Request $request): JsonResponse
     {
 
         $request->user()->token()->revoke();
 
-        return response('',Response::HTTP_NO_CONTENT);
+        return response()->json([
+            'success' => true,
+            'dataUser' => []
+        ],Response::HTTP_OK);
     }
 
     /**

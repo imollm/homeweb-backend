@@ -31,6 +31,7 @@ class AuthTests extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 2,
                     'name' => 'Admin',
@@ -60,6 +61,7 @@ class AuthTests extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 1,
                     'name' => 'Customer',
@@ -89,6 +91,7 @@ class AuthTests extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 4,
                     'name' => 'Employee',
@@ -118,6 +121,7 @@ class AuthTests extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 5,
                     'name' => 'Owner1',
@@ -147,6 +151,7 @@ class AuthTests extends TestCase
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 3,
                     'name' => 'Owner',
@@ -181,6 +186,7 @@ class AuthTests extends TestCase
         $responseLogin
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 3,
                     'name' => 'Owner',
@@ -220,6 +226,7 @@ class AuthTests extends TestCase
         $loginResponse
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
+                'success' => true,
                 'dataUser' => [
                     'id' => 2,
                     'name' => 'Admin',
