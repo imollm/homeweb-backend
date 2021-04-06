@@ -9,8 +9,17 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ContactController
+ * @package App\Http\Controllers
+ */
 class ContactController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param Contact $sender
+     * @return JsonResponse
+     */
     public function send(Request $request, Contact $sender): JsonResponse
     {
         $validate = Validator::make($request->all(), [

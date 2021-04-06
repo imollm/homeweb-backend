@@ -41,6 +41,9 @@ class RoleController extends Controller
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function myRole(): JsonResponse
     {
         return response()->json([

@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class CityController
+ * @package App\Http\Controllers
+ */
 class CityController extends Controller
 {
     /**
