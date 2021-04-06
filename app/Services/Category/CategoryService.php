@@ -125,6 +125,10 @@ class CategoryService implements ICategoryService
         return !is_null($category) ? $category->toArray() : [];
     }
 
+    /**
+     * @param string $name
+     * @return array
+     */
     public function getPropertiesByCategoryName(string $name): array
     {
         return  $this->category
@@ -135,5 +139,26 @@ class CategoryService implements ICategoryService
                     ->with('city')
                     ->get()
                     ->toArray();
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getPropertiesByCategoryId(string $id): array
+    {
+        $category = $this->category->find($id);
+
+        $properties = $category
+                        ->find($id)
+                        ->properties()
+                        ->with('city')
+                        ->get()
+                        ->toArray();
+
+        $category['properties'] = $properties;
+        $result['category'] = $category;
+
+        return array($result);
     }
 }

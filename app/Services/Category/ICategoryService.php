@@ -19,4 +19,5 @@ interface ICategoryService
     public function create(Request $request): bool;
     public function getCategoryById(string $id): array;
     public function getPropertiesByCategoryName(string $name): array;
+    public function getPropertiesByCategoryId(string $id): array;
 }

@@ -200,12 +200,21 @@ class CategoryController extends Controller
         }
     }
 
-    public function properties(string $name): JsonResponse
+    public function getPropertiesByCategoryName(string $name): JsonResponse
     {
         return response()->json([
             'success' => true,
             'data' => $this->categoryService->getPropertiesByCategoryName($name),
             'message' => 'All properties of ' . $name . ' category'
+        ], Response::HTTP_OK);
+    }
+
+    public function getPropertiesByCategoryId(string $id): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->categoryService->getPropertiesByCategoryId($id),
+            'message' => 'All properties of category by id ' . $id
         ], Response::HTTP_OK);
     }
 }
