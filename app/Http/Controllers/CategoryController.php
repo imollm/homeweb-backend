@@ -200,6 +200,10 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param string $name
+     * @return JsonResponse
+     */
     public function getPropertiesByCategoryName(string $name): JsonResponse
     {
         return response()->json([
@@ -209,6 +213,10 @@ class CategoryController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * @param string $id
+     * @return JsonResponse
+     */
     public function getPropertiesByCategoryId(string $id): JsonResponse
     {
         return response()->json([
