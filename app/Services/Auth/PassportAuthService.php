@@ -6,6 +6,7 @@ namespace App\Services\Auth;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -87,5 +88,16 @@ class PassportAuthService implements IPassportAuthService
             return $user;
         }
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function authUser(): array
+    {
+        return $this->user->whereId(Auth::user()->id)
+                ->with('role')
+                ->get()
+                ->toArray();
     }
 }

@@ -105,14 +105,13 @@ class PassportAuthController extends Controller
     /**
      * Get user object as JSON
      *
-     * @param Request $request
      * @return JsonResponse
      */
-    public function user(Request $request): JsonResponse {
-
+    public function user(): JsonResponse
+    {
         return response()->json([
             'success' => true,
-            'data' => $request->user(),
+            'data' => $this->passportAuthService->authUser(),
             'message' => 'Auth user'
         ], Response::HTTP_OK);
     }
