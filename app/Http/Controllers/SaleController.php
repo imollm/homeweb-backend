@@ -43,7 +43,7 @@ class SaleController extends Controller
             $authUserId = Auth::user()->id;
 
             $sales = match ($authRole) {
-                'admin' => $this->saleService->getAllSales(),
+                'admin' => $this->saleService->getLastSales(),
                 'employee' => $this->saleService->getSalesByEmployeeId($authUserId),
                 'owner' => $this->saleService->getSalesByOwnerId($authUserId),
                 'customer' => $this->saleService->getSalesByCustomerId($authUserId),
