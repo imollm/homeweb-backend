@@ -43,7 +43,7 @@ class PropertyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $activeProperties,
-            'message' => 'List of all properties',
+            'message' => 'List of all activated properties',
         ], Response::HTTP_OK);
     }
 
@@ -289,7 +289,7 @@ class PropertyController extends Controller
     public function last(): JsonResponse
     {
         $count = 6;
-        
+
         return response()->json([
             'success' => true,
             'data' => $this->propertyService->getLastProperties($count),
