@@ -138,9 +138,17 @@ class SaleService implements ISaleService
     /**
      * @return array
      */
-    public function getAllSales(): array
+    public function getLastSales(): array
     {
-        return $this->sale->all()->toArray();
+        $from = date('Y-m-d', strtotime('-1 month'));
+        $to = date('Y-m-d', strtotime('+1 month'));
+
+        return $sales = [
+            'last' => $this->sale->paginate(6)->toArray(),
+            'sales' => $this->sale->count(),
+            'amount' => $this->sale->sum('amount'),
+            'month' => $this->sale->whereBetween('date', array($from, $to))->sum('amount')
+        ];
     }
 
     /**

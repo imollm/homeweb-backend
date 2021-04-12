@@ -12,7 +12,7 @@ interface ISaleService
     public function allDataExists(Request $request): bool;
     public function isToSellThisProperty(Request $request): bool;
     public function create(Request $request): bool;
-    public function getAllSales(): array;
+    public function getLastSales(): array;
     public function getSalesByOwnerId(string $ownerId): array;
     public function getSalesByCustomerId(string $customerId): array;
     public function getSalesByEmployeeId(string $employeeId): array;
