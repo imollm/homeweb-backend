@@ -29,4 +29,11 @@ class SalePolicy extends Policy
 
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
+
+    public function getSalesOfActualYear(User $user): bool
+    {
+        $authRoles = ['admin', 'employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
 }

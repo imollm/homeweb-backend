@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Property\PropertyService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -259,5 +260,14 @@ class SaleService implements ISaleService
         $sale = $this->sale->whereHashId($hashId)->get()->first();
 
         return !is_null($sale) ? $sale->toArray() : [];
+    }
+
+    /**
+     * @param string $year
+     * @return array
+     */
+    public function getSalesOfActualYear(string $year): array
+    {
+        return DB::select("SELECT MONTHNAME(date) AS 'month_name', SUM(amount) AS 'amount' FROM sales WHERE YEAR(date) = ? GROUP BY MONTHNAME(date)", [$year]);
     }
 }

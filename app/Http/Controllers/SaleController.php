@@ -167,4 +167,24 @@ class SaleController extends Controller
         }
     }
 
+    public function getSalesOfActualYear(): JsonResponse
+    {
+        if (Auth::user()->can('getSalesOfActualYear', Sale::class)) {
+
+            $actualYear = date('Y');
+
+            $sales = $this->saleService->getSalesOfActualYear($actualYear);
+
+            return response()->json([
+                'success' => true,
+                'data' => $sales,
+                'message' => 'Sales of ' . $actualYear
+            ], Response::HTTP_OK);
+
+        } else {
+
+            return $this->unauthorizedUser();
+
+        }
+    }
 }

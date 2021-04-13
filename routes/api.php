@@ -140,6 +140,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/store', [SaleController::class, 'store'])->name('store');
         Route::get('/index', [SaleController::class, 'index'])->name('index');
         Route::get('/{hashId}/showByHashId', [SaleController::class, 'showByHashId'])->where('hash', '[0-9a-zA-Z]+')->name('hashId.show');
+        Route::get('/actualYear', [SaleController::class, 'getSalesOfActualYear'])->name('actualYear');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {
