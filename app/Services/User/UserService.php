@@ -4,6 +4,7 @@
 namespace App\Services\User;
 
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,12 +22,19 @@ class UserService implements IUserService
     private User $user;
 
     /**
+     * @var Role
+     */
+    private Role $role;
+
+    /**
      * UserService constructor.
      * @param User $user
+     * @param Role $role
      */
-    public function __construct(User $user)
+    public function __construct(User $user, Role $role)
     {
         $this->user = $user;
+        $this->role = $role;
     }
 
     /**
@@ -109,5 +117,13 @@ class UserService implements IUserService
     public function getUserById(string $id): User
     {
         return $this->user->find($id);
+    }
+
+    /**
+     * @return array
+     */
+    public function getOwners(): array
+    {
+        return $this->role->with('users')->whereName('owner')->get()->toArray();
     }
 }

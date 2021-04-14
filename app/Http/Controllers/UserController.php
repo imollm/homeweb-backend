@@ -56,4 +56,18 @@ class UserController extends Controller
 
         }
     }
+
+    /**
+     * Get all users with role Owner
+     *
+     * @return JsonResponse
+     */
+    public function owners(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->userService->getOwners(),
+            'message' => 'All owners'
+        ], Response::HTTP_OK);
+    }
 }

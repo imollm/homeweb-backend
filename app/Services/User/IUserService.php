@@ -15,4 +15,5 @@ interface IUserService
     public function existsThisOwner(string $id): bool;
     public function update(Request $request): bool;
     public function getUserById(string $id): User;
+    public function getOwners(): array;
 }
