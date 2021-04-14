@@ -39,6 +39,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/{id}/show', [PropertyController::class, 'show'])->where('id', '[0-9]+')->name('showById');
     Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
     Route::get('/last', [PropertyController::class, 'last'])->name('last');
+    Route::get('/active', [PropertyController::class, 'active'])->name('active');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {
@@ -151,6 +152,7 @@ Route::middleware('auth:api')->group(function () {
     // Users auth routes
     Route::prefix('users')->name('users.')->group(function () {
         Route::put('/update', [UserController::class, 'update'])->name('update');
+        Route::get('/owners', [UserController::class, 'owners'])->name('owners');
     });
 });
 /*-----------------------------------------------------------------------------------*/
