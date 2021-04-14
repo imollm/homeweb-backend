@@ -158,7 +158,6 @@ class PropertyService implements IPropertyService
     private function roleAdminOrEmployeeWantsCreateOrUpdateProperty(Request $request, string $action, string $propertyId): bool
     {
         $saved = false;
-        $image = false;
 
         if ($action === 'update') {
 
@@ -175,7 +174,7 @@ class PropertyService implements IPropertyService
 
         if ($request->has('image') && $request->hasFile('image')) $image = $this->fileService->storePropertyImage($request);
 
-        return $saved && $image;
+        return $saved !== false;
     }
 
     /**

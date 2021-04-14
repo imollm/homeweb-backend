@@ -23,16 +23,16 @@ class PropertyCreateTests extends TestCase
             'city_id' => 1,
             'title' => Str::random(10),
             'reference' => Str::random(12),
-            'image' => null,
-            'rooms' => 3,
-            'baths' => 2,
+            'image' => 'image.jpg',
             'plot_meters' => 100,
             'built_meters' => 90,
+            'rooms' => 3,
+            'baths' => 2,
             'address' => Str::random(20),
             'longitude' => 10.00,
             'latitude' => 20.00,
             'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
+            'energetic_certification' => Arr::random(['obtingut', 'en proces', 'pendent']),
             'sold' => false,
             'active' => true,
             'price' => 190.000,
@@ -131,7 +131,7 @@ class PropertyCreateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)
+            ->postJson($uri, $payload)->dump()
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
