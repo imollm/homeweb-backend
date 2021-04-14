@@ -119,7 +119,7 @@ class CountryService implements ICountryService
      */
     public function getAllCountries(): array
     {
-        $countries = $this->country->all();
+        $countries = $this->country->with('cities')->get();
 
         return !is_null($countries) ? $countries->toArray() : [];
     }
