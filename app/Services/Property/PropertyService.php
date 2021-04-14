@@ -357,4 +357,12 @@ class PropertyService implements IPropertyService
                 ->get()
                 ->toArray();
     }
+
+    /**
+     * @return array
+     */
+    public function getAllProperties(): array
+    {
+        return $this->property->all()->toArray();
+    }
 }

@@ -38,11 +38,9 @@ class PropertyController extends Controller
      */
     public function index(): JsonResponse
     {
-        $activeProperties = $this->propertyService->getActiveProperties();
-
         return response()->json([
             'success' => true,
-            'data' => $activeProperties,
+            'data' => $this->propertyService->getAllProperties(),
             'message' => 'List of all activated properties',
         ], Response::HTTP_OK);
     }
@@ -294,6 +292,18 @@ class PropertyController extends Controller
             'success' => true,
             'data' => $this->propertyService->getLastProperties($count),
             'message' => 'Last '.$count.' properties'
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Return active properties
+     */
+    public function active(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->propertyService->getActiveProperties(),
+            'message' => 'Active properties on system'
         ], Response::HTTP_OK);
     }
 }
