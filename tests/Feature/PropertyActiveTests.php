@@ -41,7 +41,11 @@ class PropertyActiveTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Visibility was toggled'
+            ]);
 
         $this->assertDatabaseHas('properties', [
             'id' => $randPropertyId,
@@ -61,7 +65,11 @@ class PropertyActiveTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Visibility was toggled'
+            ]);
 
         $this->assertDatabaseHas('properties', [
             'id' => $randPropertyId,
