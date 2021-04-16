@@ -53,7 +53,7 @@ class PropertyController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $property = Property::find($id);
+        $property = $this->propertyService->getPropertyById($id);
 
         if (!$property) {
             return response()->json([
@@ -64,7 +64,7 @@ class PropertyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $property,
+            'data' => $property->toArray(),
             'message' => 'The property was request'
         ], Response::HTTP_OK);
 
@@ -227,11 +227,14 @@ class PropertyController extends Controller
 
         if (Auth::user()->can('setActive', $property)) {
 
-            $property->active = (bool)$status;
+            $property->active = $status === '1';
 
             if ($property->save()) {
 
-                return response()->json([], Response::HTTP_NO_CONTENT);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Visibility was toggled'
+                ], Response::HTTP_OK);
 
             } else {
 
