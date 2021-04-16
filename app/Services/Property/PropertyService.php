@@ -371,4 +371,13 @@ class PropertyService implements IPropertyService
     {
         return $this->property->all()->toArray();
     }
+
+    /**
+     * @param $count
+     * @return array
+     */
+    public function getLastActiveProperties($count): array
+    {
+        return $this->property->whereActive(true)->orderBy('created_at', 'desc')->take($count)->get()->toArray();
+    }
 }

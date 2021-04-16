@@ -40,6 +40,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/showByFilter', [PropertyController::class, 'showByFilter'])->name('showByFilter');
     Route::get('/last', [PropertyController::class, 'last'])->name('last');
     Route::get('/active', [PropertyController::class, 'active'])->name('active');
+    Route::get('/lastActive', [PropertyController::class, 'lastActive'])->name('lastActive');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {

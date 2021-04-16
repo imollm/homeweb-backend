@@ -309,4 +309,18 @@ class PropertyController extends Controller
             'message' => 'Active properties on system'
         ], Response::HTTP_OK);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function lastActive(): JsonResponse
+    {
+        $count = 6;
+
+        return response()->json([
+            'success' => true,
+            'data' => $this->propertyService->getLastActiveProperties($count),
+            'message' => 'Last active properties'
+        ], Response::HTTP_OK);
+    }
 }
