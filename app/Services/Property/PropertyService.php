@@ -63,6 +63,7 @@ class PropertyService implements IPropertyService
     public function validatePostPropertyData(Request $request)
     {
             Validator::make($request->all(), [
+                'city_id' => 'required|numeric',
                 'category_id' => 'required|numeric',
                 'user_id' => 'numeric|nullable',
                 'title' => 'required|string|max:255',
@@ -338,7 +339,13 @@ class PropertyService implements IPropertyService
      */
     public function getPropertyById(string $id): Property | false
     {
-        $property = $this->property->find($id);
+        $property = $this->property->whereId($id)
+                            ->with('city')
+                            ->with('owner')
+                            ->with('category')
+                            ->get()
+                            ->first();
+
         return !is_null($property) ? $property : false ;
     }
 
@@ -352,7 +359,7 @@ class PropertyService implements IPropertyService
                 ->with('city')
                 ->with('category')
                 ->orderBy('created_at', 'desc')
-                ->take(5)
+                ->take($count)
                 ->get()
                 ->toArray();
     }
