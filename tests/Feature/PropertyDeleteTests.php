@@ -76,7 +76,7 @@ class PropertyDeleteTests extends TestCase
             'longitude' => 10.00,
             'latitude' => 20.00,
             'description' => Str::random(30),
-            'energetic_certification' => Arr::random(['obtained', 'in process', 'pending']),
+            'energetic_certification' => Arr::random(['obtingut', 'en proces', 'pendent']),
             'sold' => false,
             'active' => true,
             'price' => 190.000,
@@ -103,7 +103,11 @@ class PropertyDeleteTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Property deleted successfully'
+            ]);
 
         $this->assertDatabaseMissing('properties', $propertyIdCanBeDeleted);
     }

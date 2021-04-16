@@ -179,13 +179,16 @@ class PropertyController extends Controller
 
                 if ($this->propertyService->delete($id)) {
 
-                    return response()->json([], Response::HTTP_NO_CONTENT);
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Property deleted successfully'
+                    ], Response::HTTP_OK);
 
                 } else {
 
                     return response()->json([
                         'success' => false,
-                        'message' => 'Property can not be deleted'
+                        'message' => 'Property can not be deleted, it info can not be deleted'
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
                 }
