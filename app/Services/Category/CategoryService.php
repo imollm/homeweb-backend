@@ -99,7 +99,10 @@ class CategoryService implements ICategoryService
      */
     public function getAllCategories(): array
     {
-        return $this->category->all()->toArray();
+        return $this->category->with('properties')
+                    ->with('propertiesCount')
+                    ->get()
+                    ->toArray();
     }
 
     /**

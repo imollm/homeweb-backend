@@ -36,4 +36,16 @@ class Category extends Pivot
     {
         return $this->hasMany(Property::class, 'category_id', 'id');
     }
+
+    /**
+     * Return for every category how many properties have related
+     *
+     * @return HasMany
+     */
+    public function propertiesCount(): HasMany
+    {
+        return $this->properties()
+            ->selectRaw('category_id, count(*) as aggregate')
+            ->groupBy('category_id');
+    }
 }
