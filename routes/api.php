@@ -100,7 +100,7 @@ Route::middleware('auth:api')->group(function () {
     });
     // Categories auth routes
     Route::prefix('categories')->name('categories.')->group(function () {
-        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::post('/create', [CategoryController::class, 'store'])->name('store');
         Route::put('/{id}/update', [CategoryController::class, 'update'])->where('id', '[0-9]+')->name('update');
         Route::delete('/{id}/delete', [CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
     });
