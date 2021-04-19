@@ -141,8 +141,14 @@ class CountryService implements ICountryService
      */
     public function getProperties(string $id): array
     {
+        $properties = [];
         $country = $this->country->find($id);
 
-        return !is_null($country) ? $country->properties->toArray() : [];
+        if (!is_null($country)) {
+            $properties['properties'] = $country->properties->toArray();
+            $properties['count'] = count($properties['properties']);
+        }
+
+        return $properties;
     }
 }
