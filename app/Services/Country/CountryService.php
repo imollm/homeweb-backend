@@ -134,4 +134,15 @@ class CountryService implements ICountryService
 
         return !is_null($country) ? $country->toArray() : [];
     }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getProperties(string $id): array
+    {
+        $country = $this->country->find($id);
+
+        return !is_null($country) ? $country->properties->toArray() : [];
+    }
 }

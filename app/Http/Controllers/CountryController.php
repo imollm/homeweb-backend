@@ -171,4 +171,13 @@ class CountryController extends Controller
             return $this->unauthorizedUser();
         }
     }
+
+    public function getProperties(string $id): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->countryService->getProperties($id),
+            'message' => 'Properties related with cities of country ' . $id
+        ], Response::HTTP_OK);
+    }
 }

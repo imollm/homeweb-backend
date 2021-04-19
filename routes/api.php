@@ -53,6 +53,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
 Route::prefix('countries')->name('countries.')->group(function () {
     Route::get('/index', [CountryController::class, 'index'])->name('index');
     Route::get('/{id}/show', [CountryController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::get('/{id}/properties', [CountryController::class, 'getProperties'])->where('id', '[0-9]+')->name('properties');
 });
 
 Route::prefix('cities')->name('cities.')->group(function () {

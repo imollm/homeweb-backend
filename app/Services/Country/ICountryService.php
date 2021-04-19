@@ -17,4 +17,5 @@ interface ICountryService
     public function hasThisCountryAnyCityRelated(Country $country): bool;
     public function getAllCountries(): array;
     public function getCountryById(string $id): array;
+    public function getProperties(string $id): array;
 }
