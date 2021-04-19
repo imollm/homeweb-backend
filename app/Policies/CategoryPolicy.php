@@ -40,4 +40,15 @@ class CategoryPolicy extends Policy
     {
         return $this->isAuthorizedToDoThisAction($user->role->name, ['admin']);
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function propertiesGroupByPrice(User $user): bool
+    {
+        $authRoles = ['admin', 'employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
 }

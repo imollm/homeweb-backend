@@ -120,7 +120,6 @@ class CategoryController extends Controller
      * Update a category
      *
      * @param Request $request
-     * @param string $id
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -224,5 +223,18 @@ class CategoryController extends Controller
             'data' => $this->categoryService->getPropertiesByCategoryId($id),
             'message' => 'All properties of category by id ' . $id
         ], Response::HTTP_OK);
+    }
+
+    public function getPropertiesGroupByPrice(string $id): JsonResponse
+    {
+        if (Auth::user()->can('propertiesGroupByPrice', Category::class)) {
+            return response()->json([
+                'success' => true,
+                'data' => $this->categoryService->getPropertiesGroupByPrice($id),
+                'message' => 'Properties of category ' . $id . ' group by price'
+            ]);
+        } else {
+            return $this->unauthorizedUser();
+        }
     }
 }

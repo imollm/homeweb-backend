@@ -103,6 +103,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [CategoryController::class, 'store'])->name('store');
         Route::post('/update', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('delete');
+        Route::get('/{id}/properties/groupByPrice', [CategoryController::class, 'getPropertiesGroupByPrice'])->where('id', '[0-9]+')->name('propertiesOrderedByPrice');
     });
     // User auth routes
     Route::prefix('/auth')->name('auth.private')->group(function () {

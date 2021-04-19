@@ -29,14 +29,21 @@ class CategoryService implements ICategoryService
     private FileService $fileService;
 
     /**
+     * @var Property
+     */
+    private Property $property;
+
+    /**
      * CategoryService constructor.
      * @param Category $category
      * @param FileService $fileService
+     * @param Property $property
      */
-    public function __construct(Category $category, FileService $fileService)
+    public function __construct(Category $category, FileService $fileService, Property $property)
     {
         $this->category = $category;
         $this->fileService = $fileService;
+        $this->property = $property;
     }
 
     /**
@@ -190,5 +197,19 @@ class CategoryService implements ICategoryService
         $result['category'] = $category;
 
         return array($result);
+    }
+
+    /**
+     * @param string $id
+     * @return array
+     */
+    public function getPropertiesGroupByPrice(string $id): array
+    {
+        return $this->property
+                    ->select('price', DB::raw('count(*) as count'))
+                    ->whereCategoryId($id)
+                    ->groupBy('price')
+                    ->get()
+                    ->toArray();
     }
 }

@@ -22,4 +22,5 @@ interface ICategoryService
     public function getCategoryById(string $id): array;
     public function getPropertiesByCategoryName(string $name): array;
     public function getPropertiesByCategoryId(string $id): array;
+    public function getPropertiesGroupByPrice(string $id): array;
 }
