@@ -124,13 +124,13 @@ class CategoryController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         if (Auth::user()->can('update', Category::class)) {
 
-            $this->categoryService->validatePostCategoryData($request);
+            $this->categoryService->validatePutCategoryData($request);
 
-            if (Category::updateOrCreate($request->all())) {
+            if ($this->categoryService->update($request)) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Category modified correctly',

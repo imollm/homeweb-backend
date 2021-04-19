@@ -16,17 +16,18 @@ class CategoryUpdateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
+        $randCategory = Category::inRandomOrder()->first();
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+        $uri = Config::get('app.url') . '/api/categories/update';
 
         $payload = [
+            'id' => $randCategory->id,
             'name' => Str::random(10),
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)->dump()
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
@@ -38,17 +39,18 @@ class CategoryUpdateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
+        $randCategory = Category::inRandomOrder()->first();
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+        $uri = Config::get('app.url') . '/api/categories/update';
 
         $payload = [
+            'id' => $randCategory->id,
             'name' => Str::random(10),
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
@@ -60,17 +62,18 @@ class CategoryUpdateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
+        $randCategory = Category::inRandomOrder()->first();
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+        $uri = Config::get('app.url') . '/api/categories/update';
 
         $payload = [
-            'name' => '',
+            'id' => $randCategory->id,
+            'name' => null,
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -78,17 +81,18 @@ class CategoryUpdateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
+        $randCategory = Category::inRandomOrder()->first();
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+        $uri = Config::get('app.url') . '/api/categories/update';
 
         $payload = [
+            'id' => $randCategory->id,
             'name' => Str::random(10),
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)->dump()
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
@@ -101,17 +105,18 @@ class CategoryUpdateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $randomCategoryId = Category::inRandomOrder()->first()->id;
+        $randCategory = Category::inRandomOrder()->first();
 
-        $uri = Config::get('app.url') . '/api/categories/'.$randomCategoryId.'/update';
+        $uri = Config::get('app.url') . '/api/categories/update';
 
         $payload = [
+            'id' => $randCategory->id,
             'name' => Str::random(10),
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,

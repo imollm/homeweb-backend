@@ -83,7 +83,7 @@ class FileService implements IFileService
     {
         $this->validatePostFile($request, 'name');
 
-        if (!$request->file('image')->isValid()) return false;
+        if ($request->file('file') && !$request->file('image')->isValid()) return false;
 
         $categoryName = $request->input('name');
 

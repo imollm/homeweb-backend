@@ -46,7 +46,19 @@ class CategoryService implements ICategoryService
     public function validatePostCategoryData(Request $request)
     {
         Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|unique:categories|max:255',
+        ])->validate();
+    }
+
+    /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    public function validatePutCategoryData(Request $request)
+    {
+        Validator::make($request->all(), [
+            'id' => 'required|numeric',
+            'name' => 'required|unique:categories|max:255',
         ])->validate();
     }
 
@@ -115,6 +127,21 @@ class CategoryService implements ICategoryService
         $newCategory = $this->category->create(['name' => $request->input('name')]);
 
         return !is_null($newCategory) && $this->fileService->storeCategoryImage($request);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function update(Request $request): bool
+    {
+        $categoryId = $request->input('id');
+        $categoryName = $request->input('name');
+
+        $updated = $this->category->updateOrCreate(['id' => $categoryId], ['name' => $categoryName]);
+
+        if ($request->hasFile('image') && !is_null($request->file('image'))) $this->fileService->storeCategoryImage($request);
+
+        return !is_null($updated);
     }
 
     /**
