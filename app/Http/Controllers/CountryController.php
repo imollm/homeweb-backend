@@ -180,4 +180,13 @@ class CountryController extends Controller
             'message' => 'Properties related with cities of country ' . $id
         ], Response::HTTP_OK);
     }
+
+    public function getCities(string $id): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->countryService->getCities($id),
+            'message' => 'Cities of country ' . $id
+        ], Response::HTTP_OK);
+    }
 }
