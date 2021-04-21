@@ -139,33 +139,19 @@ class CountryService implements ICountryService
      * @param string $id
      * @return array
      */
-    public function getProperties(string $id): array
+    public function getCitiesAndProperties(string $id): array
     {
-        $properties = [];
+        $data = [];
         $country = $this->country->find($id);
 
         if (!is_null($country)) {
-            $properties['properties'] = $country->properties->toArray();
-            $properties['count'] = count($properties['properties']);
+            $data['properties'] = $country->properties->toArray();
+            $data['properties_count'] = count($data['properties']);
+
+            $data['cities'] = $country->cities->toArray();
+            $data['cities_count'] = count($data['cities']);
         }
 
-        return $properties;
-    }
-
-    /**
-     * @param string $id
-     * @return array
-     */
-    public function getCities(string $id): array
-    {
-        $cities = [];
-        $country = $this->country->find($id);
-
-        if (!is_null($country)) {
-            $cities['cities'] = $country->cities->toArray();
-            $cities['count'] = count($cities['cities']);
-        }
-
-        return $cities;
+        return $data;
     }
 }

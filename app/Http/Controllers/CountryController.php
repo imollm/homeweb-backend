@@ -172,21 +172,12 @@ class CountryController extends Controller
         }
     }
 
-    public function getProperties(string $id): JsonResponse
+    public function getCitiesAndProperties(string $id): JsonResponse
     {
         return response()->json([
             'success' => true,
-            'data' => $this->countryService->getProperties($id),
-            'message' => 'Properties related with cities of country ' . $id
-        ], Response::HTTP_OK);
-    }
-
-    public function getCities(string $id): JsonResponse
-    {
-        return response()->json([
-            'success' => true,
-            'data' => $this->countryService->getCities($id),
-            'message' => 'Cities of country ' . $id
+            'data' => $this->countryService->getCitiesAndProperties($id),
+            'message' => 'Cities and properties of country with id ' . $id
         ], Response::HTTP_OK);
     }
 }
