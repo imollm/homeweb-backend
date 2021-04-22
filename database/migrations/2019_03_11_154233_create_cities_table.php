@@ -17,6 +17,8 @@ class CreateCitiesTable extends Migration
             $table->id();
             $table->string('name')->default('');
             $table->unsignedBigInteger('country_id');
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
             $table->timestamps();
 
             $table->foreign('country_id')->references('id')->on('countries');

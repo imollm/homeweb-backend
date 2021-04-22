@@ -19,6 +19,10 @@ class PropertySeeder extends Seeder
     public function run()
     {
         $energetic_certification_values = ['obtingut', 'en proces', 'pendent'];
+        $locations = [
+            'latitude' => ['41.636433', '40.023878', '40.326076', '37.697347', '38.81879'],
+            'longitude' => ['1.939796', '-1.586816', '-6.080224', '-4.421288', '-0.67495']
+        ];
         $ownersIdsOnSystem =
             DB::table('roles')
                 ->join('users', 'roles.id', '=', 'users.role_id')
@@ -38,8 +42,8 @@ class PropertySeeder extends Seeder
                 'rooms' => 3,
                 'baths' => 2,
                 'address' => Str::random(20),
-                'longitude' => '40.004676',
-                'latitude' => '3.835806',
+                'longitude' => $locations['longitude'][$i],
+                'latitude' => $locations['latitude'][$i],
                 'description' => Str::random(100),
                 'energetic_certification' => Arr::random($energetic_certification_values),
                 'sold' => ($i === 0),

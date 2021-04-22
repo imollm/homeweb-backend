@@ -53,7 +53,7 @@ class CountryController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         if (Auth::user()->can('store', Country::class)) {
 

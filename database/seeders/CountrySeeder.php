@@ -18,12 +18,16 @@ class CountrySeeder extends Seeder
         DB::table('countries')->insert([
             'code' => 'ESP',
             'name' => 'Espanya',
+            'longitude' => '-2.542626',
+            'latitude' => '39.939697',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
         DB::table('countries')->insert([
             'code' => 'ITA',
             'name' => 'Italia',
+            'longitude' => '13.651222',
+            'latitude' => '41.587148',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
