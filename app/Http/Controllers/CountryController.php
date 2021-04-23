@@ -114,7 +114,10 @@ class CountryController extends Controller
             $this->countryService->validatePostData($request);
 
             if ($this->countryService->update($request)) {
-                return response()->json([], Response::HTTP_NO_CONTENT);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Country updated'
+                ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'success' => false,

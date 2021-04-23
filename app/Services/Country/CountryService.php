@@ -38,8 +38,10 @@ class CountryService implements ICountryService
     public function validatePostData(Request $request)
     {
         Validator::make($request->all(), [
-            'code' => 'required|string|max:3',
-            'name' => 'required|string|max:255'
+            'code' => 'required|string|max:3|min:3',
+            'name' => 'required|string|max:255',
+            'latitude' => 'required|max:255',
+            'longitude' => 'required|max:255'
         ])->validate();
     }
 
@@ -50,18 +52,18 @@ class CountryService implements ICountryService
     public function create(Request $request): bool
     {
         $code = $request->input('code');
-        $name = $request->input('name');
 
         if (!is_null($this->country->where('code', '=', $code)->get()->first())) {
 
-            return false;
+            return $this->country->update([
+                'name' => $request->input('name'),
+                'latitude' => $request->input('latitude'),
+                'longitude' => $request->input('longitude')
+            ], ['code' => $code]);
 
         } else {
 
-            $this->country->create([
-                'code' => strtoupper($code),
-                'name' => strtolower($name)
-            ]);
+            $this->country->create($request->all());
 
             return true;
 

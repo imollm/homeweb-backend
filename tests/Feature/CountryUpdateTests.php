@@ -35,7 +35,9 @@ class CountryUpdateTests extends TestCase
 
         $payload = [
             'code' => '', // This must be characters
-            'name' => 'França'
+            'name' => 'França',
+            'latitude' => '-3.93049574586',
+            'longitude' => '55.23472897347'
         ];
 
         $this
@@ -54,15 +56,19 @@ class CountryUpdateTests extends TestCase
 
         $payload = [
             'code' => $codeAlreadyExists,
-            'name' => 'França' // Update name
+            'name' => 'Francia', // Update name
+            'latitude' => '-3.93049574586',
+            'longitude' => '55.23472897347'
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)->dump()
-            ->assertStatus(Response::HTTP_NO_CONTENT);
-
-        $this->assertDatabaseHas('countries', $payload);
+            ->putJson($uri, $payload)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Country updated'
+            ]);
     }
 
 }
