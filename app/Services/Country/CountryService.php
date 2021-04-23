@@ -78,8 +78,11 @@ class CountryService implements ICountryService
     {
         if ($country = $this->country->where('code', '=', $request->input('code'))->get()->first()) {
 
-            $country->update(['name' => $request->input('name')]);
-            return true;
+            return $country->update([
+                'name' => $request->input('name'),
+                'latitude' => $request->input('latitude'),
+                'longitude' => $request->input('longitude')
+            ], ['code' => $country->code]);
 
         } else {
             $this->create($request);
