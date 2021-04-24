@@ -183,11 +183,16 @@ class TourService implements ITourService
     }
 
     /**
+     * @param int $limit
      * @return array
      */
-    public function getLastTours(): array
+    public function getLastTours(int $limit): array
     {
-        return Tour::orderBy('created_at', 'desc')->take(10)->get()->toArray();
+        return Tour::with('property')
+                    ->with('employee')
+                    ->with('customer')
+                    ->orderBy('created_at', 'desc')
+                    ->take($limit)->get()->toArray();
     }
 
     /**
@@ -231,7 +236,12 @@ class TourService implements ITourService
      */
     public function getToursByEmployeeId(string $employeeId): array
     {
-        return Tour::whereEmployeeId($employeeId)->orderBy('created_at', 'desc')->get()->toArray();
+        return Tour::whereEmployeeId($employeeId)
+                    ->orderBy('created_at', 'desc')
+                    ->with('property')
+                    ->with('employee')
+                    ->with('customer')
+                    ->get()->toArray();
     }
 
     /**

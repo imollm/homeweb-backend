@@ -22,6 +22,8 @@ class City extends Model
     protected $fillable = [
         'name',
         'country_id',
+        'latitude',
+        'longitude'
     ];
 
     /**
@@ -42,5 +44,17 @@ class City extends Model
     public function properties(): hasMany
     {
         return $this->hasMany(Property::class);
+    }
+
+    /**
+     * Return for every category how many properties have related
+     *
+     * @return HasMany
+     */
+    public function propertiesCount(): HasMany
+    {
+        return $this->properties()
+            ->selectRaw('city_id, count(*) as aggregate')
+            ->groupBy('city_id');
     }
 }

@@ -52,9 +52,9 @@ class CityController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        if (Auth::user()->can('store', City::class)) {
+        if (Auth::user()->can('create', City::class)) {
 
             $this->cityService->validatePostData($request);
 
@@ -179,7 +179,10 @@ class CityController extends Controller
 
                     if ($this->cityService->delete($id)) {
 
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'City deleted'
+                        ], Response::HTTP_OK);
 
                     } else {
 

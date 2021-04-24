@@ -94,7 +94,11 @@ class CountryDeleteTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Country deleted'
+            ]);
 
         $this->assertDatabaseMissing('countries', $country);
     }

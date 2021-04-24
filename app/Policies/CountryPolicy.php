@@ -19,7 +19,7 @@ class CountryPolicy extends Policy
      * @param User $user
      * @return bool
      */
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         $authRoles = ['admin'];
 

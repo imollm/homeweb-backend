@@ -55,7 +55,7 @@ class CountryController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        if (Auth::user()->can('store', Country::class)) {
+        if (Auth::user()->can('create', Country::class)) {
 
             $this->countryService->validatePostData($request);
 
@@ -146,7 +146,10 @@ class CountryController extends Controller
 
                     if ($this->countryService->delete($country)) {
 
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Country deleted'
+                        ], Response::HTTP_OK);
 
                     } else {
                         return response()->json([

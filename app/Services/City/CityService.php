@@ -75,7 +75,7 @@ class CityService implements ICityService
     public function existsThisCityWithSameCountry(Request $request): bool
     {
         $countryId = $request->input('country_id');
-        $name = strtolower($request->input('name'));
+        $name = $request->input('name');
 
         $cityAlreadyExists = $this->city->where('name', $name)->where('country_id', $countryId)->get()->first();
 
@@ -90,7 +90,9 @@ class CityService implements ICityService
     {
         $country = $this->city->create([
             'country_id' => $request->input('country_id'),
-            'name' => strtolower($request->input('name'))
+            'name' => $request->input('name'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude')
         ]);
 
         return $country ? true : false;
@@ -138,7 +140,7 @@ class CityService implements ICityService
      */
     public function getAllCities(): array
     {
-        $cities = $this->city->all();
+        $cities = $this->city->with('propertiesCount')->with('country')->orderBy('country_id', 'ASC')->get();
 
         return !is_null($cities) ? $cities->toArray() : [];
     }
@@ -149,7 +151,7 @@ class CityService implements ICityService
      */
     public function getCityById(string $id): array
     {
-        $city = $this->city->find($id);
+        $city = $this->city->whereId($id)->with('propertiesCount')->with('country')->with('properties')->get();
 
         return !is_null($city) ? $city->toArray() : [];
     }

@@ -66,9 +66,9 @@ class TourController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        if (Auth::user()->can('store', Tour::class)) {
+        if (Auth::user()->can('create', Tour::class)) {
 
             $this->tourService->validatePostData($request);
 
@@ -122,7 +122,7 @@ class TourController extends Controller
      *
      * @return JsonResponse
      */
-    public function show(): JsonResponse
+    public function show(int $limit): JsonResponse
     {
         if (Auth::user()->can('show', Tour::class)) {
 
@@ -134,8 +134,8 @@ class TourController extends Controller
                     if ($this->tourService->areToursIntoSystem()) {
                         return response()->json([
                             'success' => true,
-                            'data' => $this->tourService->getLastTours(),
-                            'message' => 'Last tours'
+                            'data' => $this->tourService->getLastTours($limit),
+                            'message' => 'Last '.$limit.' tours'
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([], Response::HTTP_NO_CONTENT);

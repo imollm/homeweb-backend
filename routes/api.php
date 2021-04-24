@@ -119,7 +119,7 @@ Route::middleware('auth:api')->group(function () {
     });
     //Cities auth routes
     Route::prefix('cities')->name('cities.')->group(function () {
-        Route::post('/store', [CityController::class, 'store'])->name('store');
+        Route::post('/create', [CityController::class, 'create'])->name('create');
         Route::put('/update', [CityController::class, 'update'])->name('update');
         Route::delete('/{id}/delete', [CityController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
     });
@@ -132,10 +132,10 @@ Route::middleware('auth:api')->group(function () {
     // Tours auth routes
     Route::prefix('tours')->name('tours.')->group(function () {
         Route::get('/index', [TourController::class, 'index'])->name('index');
-        Route::get('/show', [TourController::class, 'show'])->name('show');
+        Route::get('/show/{limit}', [TourController::class, 'show'])->where('limit', '[0-9]+')->name('show');
         Route::get('/{hashId}/showByHashId', [TourController::class, 'showByHashId'])->where('hash', '[0-9a-zA-Z]+')->name('hashId.show');
         Route::get('/property/{propertyId}/show', [TourController::class, 'showByPropertyId'])->where('propertyId', '[0-9]+')->name('property.show');
-        Route::post('/store', [TourController::class, 'store'])->name('store');
+        Route::post('/create', [TourController::class, 'create'])->name('create');
         Route::put('/update', [TourController::class, 'update'])->name('update');
         Route::delete('/{hashId}/delete', [TourController::class, 'destroy'])->where('hashId', '[0-9a-zA-Z]+')->name('delete');
     });
