@@ -156,6 +156,8 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         Route::put('/update', [UserController::class, 'update'])->name('update');
         Route::get('/owners', [UserController::class, 'owners'])->name('owners');
+        Route::get('/customers', [UserController::class, 'customers'])->name('customers');
+        Route::get('/employees', [UserController::class, 'employees'])->name('employees');
     });
 });
 /*-----------------------------------------------------------------------------------*/

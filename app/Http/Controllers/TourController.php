@@ -96,7 +96,7 @@ class TourController extends Controller
 
                     return response()->json([
                         'success' => false,
-                        'message' => 'At least one actor is not available'
+                        'message' => 'At least one actor is not available, choose another combination'
                     ], Response::HTTP_CONFLICT);
 
                 }
@@ -120,6 +120,7 @@ class TourController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param int $limit
      * @return JsonResponse
      */
     public function show(int $limit): JsonResponse

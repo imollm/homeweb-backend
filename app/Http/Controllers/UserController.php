@@ -70,4 +70,22 @@ class UserController extends Controller
             'message' => 'All owners'
         ], Response::HTTP_OK);
     }
+
+    public function customers(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->userService->getCustomers(),
+            'message' => 'All customers'
+        ], Response::HTTP_OK);
+    }
+
+    public function employees(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->userService->getEmployees(),
+            'message' => 'All employees'
+        ], Response::HTTP_OK);
+    }
 }

@@ -16,4 +16,6 @@ interface IUserService
     public function update(Request $request): bool;
     public function getUserById(string $id): User;
     public function getOwners(): array;
+    public function getCustomers(): array;
+    public function getEmployees(): array;
 }

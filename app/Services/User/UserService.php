@@ -126,4 +126,20 @@ class UserService implements IUserService
     {
         return $this->role->with('users')->whereName('owner')->get()->toArray();
     }
+
+    /**
+     * @return array
+     */
+    public function getCustomers(): array
+    {
+        return $this->role->with('users')->whereName('customer')->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmployees(): array
+    {
+        return $this->role->with('users')->whereName('employee')->get()->toArray();
+    }
 }
