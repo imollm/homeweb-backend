@@ -19,10 +19,19 @@ class SaleShowTests extends TestCase
         $userDoAction = User::whereEmail('admin@homeweb.com')->get()->first();
         $userId = $userDoAction->id;
         $userRole = $userDoAction->role->name;
+        $limit = 3;
 
-        $sales = Sale::all()->toArray();
+        $from = date('Y-m-d', strtotime('-1 month'));
+        $to = date('Y-m-d', strtotime('+1 month'));
 
-        $uri = Config::get('app.url') . '/api/sales/index';
+        $sales = [
+            'last' => Sale::with('property')->with('buyer')->with('seller')->orderBy('date', 'desc')->take($limit)->get()->toArray(),
+            'sales' => Sale::count(),
+            'amount' => Sale::sum('amount'),
+            'month' => Sale::whereBetween('date', array($from, $to))->sum('amount')
+        ];
+
+        $uri = Config::get('app.url') . '/api/sales/'.$limit.'/index';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)

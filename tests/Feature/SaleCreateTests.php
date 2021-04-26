@@ -16,7 +16,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $payload = [];
 
@@ -30,7 +30,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $payload = [];
 
@@ -44,7 +44,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $payload = [
             'property_id' => '',
@@ -64,7 +64,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $propertyIdNotExists = Property::max('id') + 1;
         $buyerIdExists =
@@ -100,7 +100,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $propertyIdNotExists = Property::max('id');
         $buyerIdNotExists = User::max('id') + 1;
@@ -132,7 +132,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $propertyIdNotExists = Property::max('id');
         $buyerIdExists =
@@ -168,7 +168,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $propertySold = Property::whereSold(1)->get()->first()->id;
 
@@ -205,7 +205,7 @@ class SaleCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/sales/store';
+        $uri = Config::get('app.url') . '/api/sales/create';
 
         $propertyToSell = Property::whereSold(0)->first()->id;
 
