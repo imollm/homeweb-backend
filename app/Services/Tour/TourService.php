@@ -118,7 +118,11 @@ class TourService implements ITourService
      */
     public function getTourByHashId(string $hashId): array
     {
-        return Tour::whereHashId($hashId)->get()->first()->toArray();
+        return Tour::whereHashId($hashId)
+                    ->with('property')
+                    ->with('customer')
+                    ->with('employee')
+                    ->get()->first()->toArray();
     }
 
     /**
@@ -186,7 +190,7 @@ class TourService implements ITourService
      * @param int $limit
      * @return array
      */
-    public function getLastTours(int $limit): array
+    public function getLastTours(int $limit = 3): array
     {
         return Tour::with('property')
                     ->with('employee')
