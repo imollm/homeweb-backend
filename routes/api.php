@@ -41,6 +41,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/last', [PropertyController::class, 'last'])->name('last');
     Route::get('/active', [PropertyController::class, 'active'])->name('active');
     Route::get('/lastActive', [PropertyController::class, 'lastActive'])->name('lastActive');
+    Route::get('/forSale', [PropertyController::class, 'getForSale'])->name('forSale');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {
@@ -141,10 +142,12 @@ Route::middleware('auth:api')->group(function () {
     });
     // Sales auth routes
     Route::prefix('sales')->name('sales.')->group(function () {
-        Route::post('/store', [SaleController::class, 'store'])->name('store');
-        Route::get('/index', [SaleController::class, 'index'])->name('index');
+        Route::post('/create', [SaleController::class, 'create'])->name('create');
+        Route::get('/{limit}/index', [SaleController::class, 'index'])->where('limit', '[0-9]+')->name('index');
         Route::get('/{hashId}/showByHashId', [SaleController::class, 'showByHashId'])->where('hash', '[0-9a-zA-Z]+')->name('hashId.show');
         Route::get('/actualYear', [SaleController::class, 'getSalesOfActualYear'])->name('actualYear');
+        Route::get('/salesBy', [SaleController::class, 'salesBy'])->name('salesBy');
+        Route::put('/update', [SaleController::class, 'update'])->name('update');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {

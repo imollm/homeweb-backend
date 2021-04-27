@@ -326,4 +326,16 @@ class PropertyController extends Controller
             'message' => 'Last active properties'
         ], Response::HTTP_OK);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getForSale(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->propertyService->getForSaleProperties(),
+            'message' => 'All properties for sale'
+        ], Response::HTTP_OK);
+    }
 }

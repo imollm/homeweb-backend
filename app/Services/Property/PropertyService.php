@@ -380,4 +380,12 @@ class PropertyService implements IPropertyService
     {
         return $this->property->whereActive(true)->orderBy('created_at', 'desc')->take($count)->get()->toArray();
     }
+
+    /**
+     * @return array
+     */
+    public function getForSaleProperties(): array
+    {
+        return $this->property->whereSold(false)->get()->toArray();
+    }
 }

@@ -212,4 +212,32 @@ class SaleShowTests extends TestCase
                 'message' => 'Any sale with this params'
             ]);
     }
+
+    public function test_sale_show_by_hash_id_owner_role()
+    {
+        $token = $this->getRoleTokenAuth('owner');
+
+        $ownerId = User::whereName('Owner')->get()->first()->id;
+        $saleRelatedWithOwner =
+            Sale::join('properties', 'sales.property_id', '=', 'properties.id')
+                ->join('users', 'properties.user_id', '=', 'users.id')
+                ->where('users.id', '=', $ownerId)
+                ->get('sales.*')
+                ->first()
+                ->hash_id;
+
+        $sale = Sale::whereHashId($saleRelatedWithOwner)->with('buyer')->with('seller')->with('property')->get()->first()->toArray();
+
+        $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithOwner.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'data' => $sale,
+                'message' => 'Sale by hash id ' . $saleRelatedWithOwner
+            ]);
+    }
 }

@@ -9,7 +9,7 @@ class SalePolicy extends Policy
 {
     use HandlesAuthorization;
 
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         $authRoles = ['admin', 'employee'];
 
@@ -31,6 +31,20 @@ class SalePolicy extends Policy
     }
 
     public function getSalesOfActualYear(User $user): bool
+    {
+        $authRoles = ['admin', 'employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function salesBy(User $user): bool
+    {
+        $authRoles = ['admin', 'employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
+
+    public function update(User $user): bool
     {
         $authRoles = ['admin', 'employee'];
 

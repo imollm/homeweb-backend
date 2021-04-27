@@ -137,15 +137,16 @@ class SaleService implements ISaleService
     }
 
     /**
+     * @param int $limit
      * @return array
      */
-    public function getLastSales(): array
+    public function getLastSales(int $limit = 3): array
     {
         $from = date('Y-m-d', strtotime('-1 month'));
         $to = date('Y-m-d', strtotime('+1 month'));
 
-        return $sales = [
-            'last' => $this->sale->paginate(6)->toArray(),
+        return [
+            'last' => $this->sale->with('property')->with('buyer')->with('seller')->orderBy('date', 'desc')->take($limit)->get()->toArray(),
             'sales' => $this->sale->count(),
             'amount' => $this->sale->sum('amount'),
             'month' => $this->sale->whereBetween('date', array($from, $to))->sum('amount')
@@ -257,7 +258,7 @@ class SaleService implements ISaleService
      */
     private function getSale(string $hashId): array
     {
-        $sale = $this->sale->whereHashId($hashId)->get()->first();
+        $sale = $this->sale->whereHashId($hashId)->with('buyer')->with('seller')->with('property')->get()->first();
 
         return !is_null($sale) ? $sale->toArray() : [];
     }
@@ -297,5 +298,89 @@ class SaleService implements ISaleService
         }
 
         return $sales;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSalesByCategories(): array
+    {
+        return DB::table('sales')
+                    ->selectRaw('categories.name AS category, SUM(sales.amount) AS amount')
+                    ->join('properties', 'sales.property_id', '=', 'properties.id')
+                    ->join('categories', 'properties.category_id', '=', 'categories.id')
+                    ->groupBy('categories.name')->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSalesByCountries(): array
+    {
+        return DB::table('sales')
+                    ->selectRaw('countries.name AS country, SUM(sales.amount) AS amount')
+                    ->join('properties', 'sales.property_id', '=', 'properties.id')
+                    ->join('cities', 'properties.city_id', '=', 'cities.id')
+                    ->join('countries', 'cities.country_id', '=', 'countries.id')
+                    ->groupBy('countries.name')->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSalesByCities(): array
+    {
+        return DB::table('sales')
+                    ->selectRaw('cities.name AS city, SUM(sales.amount) AS amount')
+                    ->join('properties', 'sales.property_id', '=', 'properties.id')
+                    ->join('cities', 'properties.city_id', '=', 'cities.id')
+                    ->groupBy('cities.name')->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSalesBySellers(): array
+    {
+        return DB::table('sales')
+                    ->selectRaw('users.name AS employee, SUM(sales.amount) AS amount')
+                    ->join('users', 'sales.seller_id', '=', 'users.id')
+                    ->groupBy('users.name')->get()->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function update(Request $request): bool
+    {
+        $hashId = $request->input('hash_id');
+        $date = $request->input('date');
+        $amount = $request->input('amount');
+
+        return $this->sale->whereHashId($hashId)
+            ->update([
+                'date' => $date,
+                'amount' => $amount
+            ]);
+    }
+
+    /**
+     * @param string $hashId
+     * @return bool
+     */
+    public function exitsThisSale(string $hashId): bool
+    {
+        return !is_null($this->sale->whereHashId($hashId)->get());
+    }
+
+    /**
+     * @param string $hashId
+     * @param int $sellerId
+     * @return bool
+     */
+    public function isThisSaleOfThisSeller(string $hashId, int $sellerId): bool
+    {
+        return $this->sale->whereHashId($hashId)->get()->first()->seller_id === $sellerId;
     }
 }
