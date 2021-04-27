@@ -112,4 +112,26 @@ class Property extends Model
     {
         return $this->belongsToMany(Feature::class);
     }
+
+    /**
+     * Relation with FeatureProperty pivot table
+     *
+     * @return HasMany
+     */
+    public function featuresProperties(): HasMany
+    {
+        return $this->hasMany(FeatureProperty::class);
+    }
+
+    /**
+     * Return count of features that have a property
+     *
+     * @return HasMany
+     */
+    public function featuresCount(): HasMany
+    {
+        return $this->featuresProperties()
+            ->selectRaw('property_id, count(*) as aggregate')
+            ->groupBy('property_id');
+    }
 }
