@@ -33,17 +33,19 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param int $limit
      * @return JsonResponse
-     */
-    public function index(): JsonResponse
+     isa*/
+    public function index(int $limit): JsonResponse
     {
         if (Auth::user()->can('index', Sale::class)) {
 
             $authRole = Auth::user()->role->name;
             $authUserId = Auth::user()->id;
 
+
             $sales = match ($authRole) {
-                'admin' => $this->saleService->getLastSales(),
+                'admin' => $this->saleService->getLastSales($limit),
                 'employee' => $this->saleService->getSalesByEmployeeId($authUserId),
                 'owner' => $this->saleService->getSalesByOwnerId($authUserId),
                 'customer' => $this->saleService->getSalesByCustomerId($authUserId),
@@ -78,9 +80,9 @@ class SaleController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        if (Auth::user()->can('store', Sale::class)) {
+        if (Auth::user()->can('create', Sale::class)) {
 
             $this->saleService->validatePostData($request);
 
@@ -144,21 +146,20 @@ class SaleController extends Controller
 
             if ($sale = $this->saleService->getSaleByHashId($hashId, $authRole, $authUserId)) {
 
-                if (count($sale) > 0) {
-
                     return response()->json([
                         'success' => true,
                         'data' => $sale,
                         'message' => 'Sale by hash id ' . $hashId
                     ], Response::HTTP_OK);
 
-                }
-            }
+            } else {
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Any sale with this params'
-            ], Response::HTTP_NOT_FOUND);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Any sale with this params'
+                ], Response::HTTP_NOT_FOUND);
+
+            }
 
         } else {
 
@@ -185,6 +186,60 @@ class SaleController extends Controller
 
             return $this->unauthorizedUser();
 
+        }
+    }
+
+    public function salesBy(): JsonResponse
+    {
+        if (Auth::user()->can('salesBy', Sale::class)) {
+            $sales = [
+                'byCategories' => $this->saleService->getSalesByCategories(),
+                'byCountries' => $this->saleService->getSalesByCountries(),
+                'byCities' => $this->saleService->getSalesByCities(),
+                'bySellers' => $this->saleService->getSalesBySellers()
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $sales,
+                'message' => 'Sales by categories, countries, cities and sellers'
+            ], Response::HTTP_OK);
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
+
+    public function update(Request $request): JsonResponse
+    {
+        if (Auth::user()->can('update', Sale::class)) {
+            $hashId = $request->input('hash_id');
+
+            if ($this->saleService->exitsThisSale($hashId)) {
+                if (Auth::user()->role->name === 'employee' && !$this->saleService->isThisSaleOfThisSeller($hashId, Auth::id())){
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Your are not related '
+                    ], Response::HTTP_UNAUTHORIZED);
+                }
+                if ($this->saleService->update($request)) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Sale updated successfully'
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Error while update sale'
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Sale not exists'
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } else {
+            return $this->unauthorizedUser();
         }
     }
 }
