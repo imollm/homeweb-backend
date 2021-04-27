@@ -22,7 +22,7 @@ interface ITourService
 
     public function getToursByPropertyId(string $propertyId): array;
     public function getAllTours(): array;
-    public function getLastTours(int $limit): array;
+    public function getLastTours(int $limit = 3): array;
 
     public function haveThisCustomerTours(string $customerId): bool;
     public function getToursByCustomerId(string $customerId): array;
