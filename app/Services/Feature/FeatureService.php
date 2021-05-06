@@ -118,4 +118,23 @@ class FeatureService implements IFeatureService
     {
         return $this->feature->find($id)->properties()->count() === 0;
     }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function setFeaturesToBeSaved(Request $request): array
+    {
+        $featuresToBeSaved = [];
+        $features = $request->input('features');
+
+        foreach ($features as $index =>  $feature) {
+            if ($feature) {
+                array_push($featuresToBeSaved, $index + 1);
+            } else if (is_numeric($feature)) {
+                array_push($featuresToBeSaved, $feature);
+            }
+        }
+        return $featuresToBeSaved;
+    }
 }

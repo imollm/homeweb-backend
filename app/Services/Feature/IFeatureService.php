@@ -16,4 +16,5 @@ interface IFeatureService
     public function getFeatureById(string $id): array | false;
     public function delete(string $id): bool;
     public function canThisFeatureBeDeleted(string $id): bool;
+    public function setFeaturesToBeSaved(Request $request): array;
 }

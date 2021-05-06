@@ -6,6 +6,7 @@ namespace App\Services\Property;
 use App\Models\Property;
 use App\Models\RangePrice;
 use App\Models\User;
+use App\Services\Feature\FeatureService;
 use App\Services\File\FileService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -40,18 +41,25 @@ class PropertyService implements IPropertyService
     private FileService $fileService;
 
     /**
+     * @var FeatureService
+     */
+    private FeatureService $featureService;
+
+    /**
      * PropertyService constructor.
      * @param Property $property
      * @param User $user
      * @param RangePrice $rangePrice
      * @param FileService $fileService
+     * @param FeatureService $featureService
      */
-    public function __construct(Property $property, User $user, RangePrice $rangePrice, FileService $fileService)
+    public function __construct(Property $property, User $user, RangePrice $rangePrice, FileService $fileService, FeatureService $featureService)
     {
         $this->property = $property;
         $this->user = $user;
         $this->rangePrice = $rangePrice;
         $this->fileService = $fileService;
+        $this->featureService = $featureService;
     }
 
     /**
@@ -132,19 +140,28 @@ class PropertyService implements IPropertyService
 
         if ($action === 'update') {
 
-            $saved = Auth::user()->properties()->update($request->except(['id', 'reference'])) ? true : false;
+            $saved = Auth::user()->properties()->update($request->except(['id', 'reference', 'features'])) ? true : false;
 
+            $propertyId = $request->input('id');
+
+            if ($request->has('features') && count($request->input('features')) > 0) {
+                $this->property->find($propertyId)->features()->sync($this->featureService->setFeaturesToBeSaved($request));
+            }
 
         } elseif ($action === 'create') {
 
             $property = new Property($request->all());
-            $saved = Auth::user()->properties()->save($property) ? true : false;
+            $saved = Auth::user()->properties()->save($property);
+
+            if ($request->has('features') && count($request->input('features')) > 0) {
+                $saved->features()->attach($this->featureService->setFeaturesToBeSaved($request));
+            }
 
         }
 
         if ($request->has('image') && $request->hasFile('image')) $this->fileService->storePropertyImage($request);
 
-        return $saved;
+        return $saved || is_object($saved);
     }
 
     /**
@@ -164,16 +181,24 @@ class PropertyService implements IPropertyService
 
             $saved = $this->property->find($propertyId)->update($request->all());
 
+            if ($request->has('features') && count($request->input('features')) > 0) {
+                $this->property->find($propertyId)->features()->sync($this->featureService->setFeaturesToBeSaved($request));
+            }
+
         } elseif ($action === 'create') {
 
             $ownerId = $request->input('user_id');
 
             if ((is_numeric($ownerId) && $this->haveThisUserOwnerRole($ownerId) || empty($ownerId))) {
                 $saved = $this->property->create($request->all());
+
+                if ($request->has('features') && count($request->input('features')) > 0) {
+                    $saved->features()->attach($this->featureService->setFeaturesToBeSaved($request));
+                }
             }
         }
 
-        if ($request->has('image') && $request->hasFile('image')) $image = $this->fileService->storePropertyImage($request);
+        if ($request->has('image') && $request->hasFile('image')) $this->fileService->storePropertyImage($request);
 
         return $saved !== false;
     }
@@ -343,6 +368,7 @@ class PropertyService implements IPropertyService
                             ->with('city')
                             ->with('owner')
                             ->with('category')
+                            ->with('features')
                             ->get()
                             ->first();
 

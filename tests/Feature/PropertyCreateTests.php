@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Property;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -36,6 +34,8 @@ class PropertyCreateTests extends TestCase
             'sold' => false,
             'active' => true,
             'price' => 190.000,
+            //'features' => [1,2,3,4]
+            'features' => [true, false, false, false, true, true, false, false]
         ];
 
         foreach ($values as $keyValues => $valueToChange) {
@@ -111,7 +111,8 @@ class PropertyCreateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)->assertStatus(Response::HTTP_CREATED)
+            ->postJson($uri, $payload)
+            ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
                 'message' => 'Property added correctly'
@@ -131,7 +132,7 @@ class PropertyCreateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->postJson($uri, $payload)->dump()
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJson([
                 'success' => true,
@@ -178,7 +179,6 @@ class PropertyCreateTests extends TestCase
                 'message' => 'Property added correctly',
             ]);
 
-        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_create_new_property_employee_role_with_correct_owner_id()
@@ -200,8 +200,6 @@ class PropertyCreateTests extends TestCase
                 'success' => true,
                 'message' => 'Property added correctly',
             ]);
-
-        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_create_new_property_employee_role_with_incorrect_owner_id()

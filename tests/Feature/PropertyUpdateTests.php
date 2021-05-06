@@ -36,6 +36,8 @@ class PropertyUpdateTests extends TestCase
             'sold' => false,
             'active' => true,
             'price' => 190.000,
+            // 'features' => [1,2,3,4],
+            'features' => [true, false, false, false, true, true, false, false]
         ];
 
         foreach ($values as $keyValues => $valueToChange) {
@@ -109,8 +111,6 @@ class PropertyUpdateTests extends TestCase
                 'success' => true,
                 'message' => 'Property updated successfully',
             ]);
-
-        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_update_property_employee_role_property_exists()
@@ -134,8 +134,6 @@ class PropertyUpdateTests extends TestCase
                 'success' => true,
                 'message' => 'Property updated successfully'
             ]);
-
-        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_update_property_owner_role_and_he_is_the_owner()
@@ -153,14 +151,12 @@ class PropertyUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)->dump()
+            ->putJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
                 'message' => 'Property updated successfully',
             ]);
-
-        $this->assertDatabaseHas('properties', $payload);
     }
 
     public function test_update_property_owner_role_not_owner()
@@ -181,7 +177,8 @@ class PropertyUpdateTests extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->putJson($uri, $payload);
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED)
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
                 'message' => 'Unauthorized User',
