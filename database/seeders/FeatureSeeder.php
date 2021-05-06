@@ -20,14 +20,5 @@ class FeatureSeeder extends Seeder
         foreach ($features as $feature) {
             Feature::create(['name' => $feature]);
         }
-
-        $properties = Property::all();
-        $numFeatures = count($features) + 1;
-
-        foreach ($properties as $property) {
-            $randNum = rand(1, $numFeatures);
-            $features = Feature::take($randNum)->get()->pluck('id')->toArray();
-            $property->features()->attach($features);
-        }
     }
 }
