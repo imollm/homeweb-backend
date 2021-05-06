@@ -34,7 +34,10 @@ class FeatureService implements IFeatureService
      */
     public function getAllFeatures(): array
     {
-        return $this->feature->all()->toArray();
+        return $this->feature
+                    ->with('properties')
+                    ->with('propertiesCount')
+                    ->get()->toArray();
     }
 
     /**
