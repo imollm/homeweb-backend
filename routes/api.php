@@ -128,7 +128,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('priceHistory')->name('priceHistory.')->group(function () {
         Route::get('/index', [PriceHistoryController::class, 'index'])->name('index');
         Route::get('/{propertyId}/show', [PriceHistoryController::class, 'show'])->where('propertyId', '[0-9]+')->name('show');
-        Route::post('/store', [PriceHistoryController::class, 'store'])->name('store');
+        Route::post('/create', [PriceHistoryController::class, 'create'])->name('create');
     });
     // Tours auth routes
     Route::prefix('tours')->name('tours.')->group(function () {

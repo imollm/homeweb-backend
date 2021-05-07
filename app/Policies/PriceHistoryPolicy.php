@@ -17,7 +17,7 @@ class PriceHistoryPolicy extends Policy
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
 
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         $authRoles = ['admin', 'employee', 'owner'];
 

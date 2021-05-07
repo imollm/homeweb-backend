@@ -76,9 +76,9 @@ class PriceHistoryController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        if (Auth::user()->can('store', PriceHistory::class)) {
+        if (Auth::user()->can('create', PriceHistory::class)) {
 
             $this->priceHistoryService->validatePostData($request);
 
