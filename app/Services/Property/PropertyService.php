@@ -369,6 +369,7 @@ class PropertyService implements IPropertyService
                             ->with('owner')
                             ->with('category')
                             ->with('features')
+                            ->with('sales')
                             ->get()
                             ->first();
 
