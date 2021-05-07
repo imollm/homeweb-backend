@@ -96,7 +96,7 @@ class FeatureService implements IFeatureService
      */
     public function getFeatureById(string $id): array | false
     {
-        $feature = $this->feature->find($id);
+        $feature = $this->feature->find($id)->with('properties')->get();
 
         return !is_null($feature) ? $feature->toArray() : false;
     }
