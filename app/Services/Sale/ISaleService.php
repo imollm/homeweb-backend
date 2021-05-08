@@ -25,4 +25,5 @@ interface ISaleService
     public function getSalesBySellers(): array;
     public function exitsThisSale(string $hashId): bool;
     public function isThisSaleOfThisSeller(string $hashId, int $sellerId): bool;
+    public function getSalesOfAuthSeller(): array;
 }

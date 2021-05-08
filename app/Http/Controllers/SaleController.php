@@ -242,4 +242,17 @@ class SaleController extends Controller
             return $this->unauthorizedUser();
         }
     }
+
+    public function getSalesBySeller(): JsonResponse
+    {
+        if (Auth::user()->can('getSalesBySeller', Sale::class)) {
+            return response()->json([
+                'success' => true,
+                'data' => $this->saleService->getSalesOfAuthSeller(),
+                'message' => 'Sale of employee with id ' . Auth::id()
+            ], Response::HTTP_OK);
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
 }

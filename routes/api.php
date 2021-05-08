@@ -148,6 +148,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/actualYear', [SaleController::class, 'getSalesOfActualYear'])->name('actualYear');
         Route::get('/salesBy', [SaleController::class, 'salesBy'])->name('salesBy');
         Route::put('/update', [SaleController::class, 'update'])->name('update');
+        Route::get('/seller', [SaleController::class, 'getSalesBySeller'])->name('bySeller');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {

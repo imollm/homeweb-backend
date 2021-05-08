@@ -50,4 +50,11 @@ class SalePolicy extends Policy
 
         return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
     }
+
+    public function getSalesBySeller(User $user): bool
+    {
+        $authRoles = ['employee'];
+
+        return $this->isAuthorizedToDoThisAction($user->role->name, $authRoles);
+    }
 }

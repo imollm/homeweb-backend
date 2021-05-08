@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Property\PropertyService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -382,5 +383,13 @@ class SaleService implements ISaleService
     public function isThisSaleOfThisSeller(string $hashId, int $sellerId): bool
     {
         return $this->sale->whereHashId($hashId)->get()->first()->seller_id === $sellerId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSalesOfAuthSeller(): array
+    {
+        return Auth::user()->mySales->toArray();
     }
 }
