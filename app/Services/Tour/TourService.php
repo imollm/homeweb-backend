@@ -222,7 +222,7 @@ class TourService implements ITourService
      */
     public function getToursByCustomerId(string $customerId): array
     {
-        return Tour::whereCustomerId($customerId)->orderBy('created_at', 'desc')->get()->toArray();
+        return Tour::whereCustomerId($customerId)->with('property')->with('employee')->orderBy('created_at', 'desc')->get()->toArray();
     }
 
     /**

@@ -62,7 +62,11 @@ class SaleController extends Controller
 
             } else {
 
-                return response()->json([], Response::HTTP_NO_CONTENT);
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'No sales in system'
+                ], Response::HTTP_OK);
 
             }
 

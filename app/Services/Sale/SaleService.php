@@ -178,7 +178,7 @@ class SaleService implements ISaleService
     {
         if ($this->userService->existsThisCustomer($customerId)) {
 
-            return $this->sale->whereBuyerId($customerId)->get()->toArray();
+            return $this->sale->whereBuyerId($customerId)->with('property')->with('seller')->get()->toArray();
 
         }
         return array();
@@ -192,7 +192,7 @@ class SaleService implements ISaleService
     {
         if ($this->userService->existsThisEmployee($employeeId)) {
 
-            return $this->sale->whereSellerId($employeeId)->get()->toArray();
+            return $this->sale->whereSellerId($employeeId)->with('property')->with('buyer')->get()->toArray();
 
         }
         return array();
