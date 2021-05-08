@@ -58,7 +58,7 @@ class PriceHistoryController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => PriceHistory::all(),
+                'data' => $this->priceHistoryService->getAllChanges(),
                 'message' => 'List of all price histories'
             ]);
 

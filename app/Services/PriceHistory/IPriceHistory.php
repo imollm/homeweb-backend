@@ -11,4 +11,5 @@ interface IPriceHistory
     public function startTimestampGivenIsGreaterThanLast(Request $request): bool;
     public function create(Request $request): bool;
     public function areYouAllowedToStoreAPriceChangeOfThisProperty(Request $request): bool;
+    public function getAllChanges(): array;
 }

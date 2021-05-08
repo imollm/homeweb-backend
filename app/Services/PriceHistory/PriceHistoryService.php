@@ -137,4 +137,12 @@ class PriceHistoryService implements IPriceHistory
 
         return Auth::user()->role->name === 'owner' && $ownerId === Auth::user()->id;
     }
+
+    /**
+     * @return array
+     */
+    public function getAllChanges(): array
+    {
+        return $this->priceHistory->with('property')->get()->toArray();
+    }
 }
