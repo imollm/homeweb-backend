@@ -139,6 +139,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/create', [TourController::class, 'create'])->name('create');
         Route::put('/update', [TourController::class, 'update'])->name('update');
         Route::delete('/{hashId}/delete', [TourController::class, 'destroy'])->where('hashId', '[0-9a-zA-Z]+')->name('delete');
+        Route::get('/byEmployee', [TourController::class, 'getToursByEmployee'])->name('byEmployee');
     });
     // Sales auth routes
     Route::prefix('sales')->name('sales.')->group(function () {

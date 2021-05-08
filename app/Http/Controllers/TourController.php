@@ -441,4 +441,19 @@ class TourController extends Controller
 
         }
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getToursByEmployee(): JsonResponse
+    {
+        if (Auth::user()->role->name === 'employee') {
+            return response()->json([
+                'success' => true,
+                'data' => Auth::user()->makeTours->toArray(),
+                'message' => 'Tours of employee with id ' . Auth::id()
+            ], Response::HTTP_NOT_FOUND);
+        }
+        return $this->unauthorizedUser();
+    }
 }
