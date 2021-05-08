@@ -450,9 +450,9 @@ class TourController extends Controller
         if (Auth::user()->role->name === 'employee') {
             return response()->json([
                 'success' => true,
-                'data' => Auth::user()->makeTours->toArray(),
+                'data' => Auth::user()->makeTours()->with('customer')->with('property')->get()->toArray(),
                 'message' => 'Tours of employee with id ' . Auth::id()
-            ], Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_OK);
         }
         return $this->unauthorizedUser();
     }
