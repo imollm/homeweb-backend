@@ -25,4 +25,5 @@ interface IPropertyService
     public function getAllProperties(): array;
     public function getLastActiveProperties(int $count): array;
     public function getForSaleProperties(): array;
+    public function getPropertiesWithLimit(string $limit = '3'): array;
 }

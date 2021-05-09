@@ -338,4 +338,13 @@ class PropertyController extends Controller
             'message' => 'All properties for sale'
         ], Response::HTTP_OK);
     }
+
+    public function getPropertiesWithLimit(string $limit): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->propertyService->getPropertiesWithLimit($limit),
+            'message' => 'Last ' . $limit . ' properties on system'
+        ], Response::HTTP_OK);
+    }
 }

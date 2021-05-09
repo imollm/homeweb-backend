@@ -42,6 +42,7 @@ Route::prefix('properties')->name('properties.')->group(function () {
     Route::get('/active', [PropertyController::class, 'active'])->name('active');
     Route::get('/lastActive', [PropertyController::class, 'lastActive'])->name('lastActive');
     Route::get('/forSale', [PropertyController::class, 'getForSale'])->name('forSale');
+    Route::get('/propertiesWithLimit/{limit}', [PropertyController::class, 'getPropertiesWithLimit'])->name('byLimit');
 });
 
 Route::prefix('categories')->name('categories.')->group(function () {

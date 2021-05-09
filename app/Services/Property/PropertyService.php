@@ -415,4 +415,19 @@ class PropertyService implements IPropertyService
     {
         return $this->property->whereSold(false)->get()->toArray();
     }
+
+    /**
+     * @param string $limit
+     * @return array
+     */
+    public function getPropertiesWithLimit(string $limit = '3'): array
+    {
+        return $this->property
+                    ->orderBy('created_at', 'desc')
+                    ->take($limit)
+                    ->with('category')
+                    ->with('city')
+                    ->with('owner')
+                    ->get()->toArray();
+    }
 }
