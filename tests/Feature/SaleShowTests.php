@@ -188,6 +188,26 @@ class SaleShowTests extends TestCase
             ]);
     }
 
+    public function test_sale_show_by_hash_id_is_her_sale_customer_role()
+    {
+        $token = $this->getRoleTokenAuth('customer');
+
+        $customerId = User::whereName('Customer')->get()->first()->id;
+        $saleRelatedWithCustomer =
+            Sale::where('buyer_id', '=', $customerId)->get()->first()->hash_id;
+
+        $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithCustomer.'/showByHashId';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)->dump()
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Sale by hash id ' . $saleRelatedWithCustomer
+            ]);
+    }
+
     public function test_sale_show_by_hash_id_is_not_her_sale_owner_role()
     {
         $token = $this->getRoleTokenAuth('owner');
