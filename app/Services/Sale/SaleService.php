@@ -398,6 +398,6 @@ class SaleService implements ISaleService
      */
     public function getPurchasesOfAuthBuyer(): array
     {
-        return Auth::user()->myPurchases->toArray();
+        return Auth::user()->myPurchases()->with('seller')->with('property')->get()->toArray();
     }
 }

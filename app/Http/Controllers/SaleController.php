@@ -265,7 +265,7 @@ class SaleController extends Controller
         if (Auth::user()->role->name === 'customer') {
             return response()->json([
                 'success' => true,
-                'data' => $this->saleService->getSalesOfAuthSeller(),
+                'data' => $this->saleService->getPurchasesOfAuthBuyer(),
                 'message' => 'Purchases of customer with id ' . Auth::id()
             ]);
         } else {
