@@ -392,4 +392,12 @@ class SaleService implements ISaleService
     {
         return Auth::user()->mySales->toArray();
     }
+
+    /**
+     * @return array
+     */
+    public function getPurchasesOfAuthBuyer(): array
+    {
+        return Auth::user()->myPurchases->toArray();
+    }
 }

@@ -259,4 +259,17 @@ class SaleController extends Controller
             return $this->unauthorizedUser();
         }
     }
+
+    public function getPurchasesByCustomer(): JsonResponse
+    {
+        if (Auth::user()->role->name === 'customer') {
+            return response()->json([
+                'success' => true,
+                'data' => $this->saleService->getSalesOfAuthSeller(),
+                'message' => 'Purchases of customer with id ' . Auth::id()
+            ]);
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
 }

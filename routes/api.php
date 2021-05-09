@@ -150,7 +150,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/actualYear', [SaleController::class, 'getSalesOfActualYear'])->name('actualYear');
         Route::get('/salesBy', [SaleController::class, 'salesBy'])->name('salesBy');
         Route::put('/update', [SaleController::class, 'update'])->name('update');
-        Route::get('/seller', [SaleController::class, 'getSalesBySeller'])->name('bySeller');
+        Route::get('/mySales', [SaleController::class, 'getSalesBySeller'])->name('mySales');
+        Route::get('/myPurchases', [SaleController::class, 'getPurchasesByCustomer'])->name('myPurchases');
     });
     // Features auth routes
     Route::prefix('features')->name('features.')->group(function () {
