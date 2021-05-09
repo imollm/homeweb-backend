@@ -268,6 +268,9 @@ class TourService implements ITourService
     {
         return Tour::join('properties', 'properties.id', '=', 'tours.property_id')
             ->where('properties.user_id', '=', $ownerId)
+            ->with('property')
+            ->with('employee')
+            ->with('customer')
             ->orderBy('created_at', 'desc')
             ->get('tours.*')
             ->toArray();
