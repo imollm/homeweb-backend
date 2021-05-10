@@ -193,4 +193,20 @@ class PropertyShowTests extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
+    public function test_show_properties_owned_by_owner()
+    {
+        $uri = Config::get('app.url') . '/api/properties/getPropertiesOwnedByOwner';
+
+        $token = $this->getRoleTokenAuth('owner');
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'data' => array()
+            ]);
+    }
+
 }

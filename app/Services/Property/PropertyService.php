@@ -5,6 +5,7 @@ namespace App\Services\Property;
 
 use App\Models\Property;
 use App\Models\RangePrice;
+use App\Models\Sale;
 use App\Models\User;
 use App\Services\Feature\FeatureService;
 use App\Services\File\FileService;
@@ -46,20 +47,27 @@ class PropertyService implements IPropertyService
     private FeatureService $featureService;
 
     /**
+     * @var Sale
+     */
+    private Sale $sale;
+
+    /**
      * PropertyService constructor.
      * @param Property $property
      * @param User $user
      * @param RangePrice $rangePrice
      * @param FileService $fileService
      * @param FeatureService $featureService
+     * @param Sale $sale
      */
-    public function __construct(Property $property, User $user, RangePrice $rangePrice, FileService $fileService, FeatureService $featureService)
+    public function __construct(Property $property, User $user, RangePrice $rangePrice, FileService $fileService, FeatureService $featureService, Sale $sale)
     {
         $this->property = $property;
         $this->user = $user;
         $this->rangePrice = $rangePrice;
         $this->fileService = $fileService;
         $this->featureService = $featureService;
+        $this->sale = $sale;
     }
 
     /**
@@ -70,13 +78,13 @@ class PropertyService implements IPropertyService
      */
     public function validatePostPropertyData(Request $request)
     {
-            Validator::make($request->all(), [
-                'city_id' => 'required|numeric',
-                'category_id' => 'required|numeric',
-                'user_id' => 'numeric|nullable',
-                'title' => 'required|string|max:255',
-                'reference' => 'required|string|unique:properties|max:255',
-            ])->validate();
+        Validator::make($request->all(), [
+            'city_id' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'user_id' => 'numeric|nullable',
+            'title' => 'required|string|max:255',
+            'reference' => 'required|string|unique:properties|max:255',
+        ])->validate();
     }
 
     /**
@@ -101,7 +109,7 @@ class PropertyService implements IPropertyService
      * @return bool
      * @throws ValidationException
      */
-    public function createOrUpdateProperty(Request $request, string $action, string $propertyId  = ''): bool
+    public function createOrUpdateProperty(Request $request, string $action, string $propertyId = ''): bool
     {
         $saved = false;
 
@@ -109,11 +117,10 @@ class PropertyService implements IPropertyService
 
         if ($role === 'owner') {
             $saved = $this->roleOwnerWantsCreateOrUpdateProperty($request, $action);
-        }
-        elseif ($role === 'admin' || $role === 'employee') {
+        } elseif ($role === 'admin' || $role === 'employee') {
             $saved = $this->roleAdminOrEmployeeWantsCreateOrUpdateProperty($request, $action, $propertyId);
         }
-         return $saved;
+        return $saved;
     }
 
     /**
@@ -237,7 +244,7 @@ class PropertyService implements IPropertyService
      * @param Request $request
      * @return Property|null
      */
-    public function getPropertiesByFilters(Request $request): Collection | null
+    public function getPropertiesByFilters(Request $request): Collection|null
     {
         $conditions = [
             'reference' => $request->reference,
@@ -362,18 +369,18 @@ class PropertyService implements IPropertyService
      * @param string $id
      * @return Property|false
      */
-    public function getPropertyById(string $id): Property | false
+    public function getPropertyById(string $id): Property|false
     {
         $property = $this->property->whereId($id)
-                            ->with('city')
-                            ->with('owner')
-                            ->with('category')
-                            ->with('features')
-                            ->with('sales')
-                            ->get()
-                            ->first();
+            ->with('city')
+            ->with('owner')
+            ->with('category')
+            ->with('features')
+            ->with('sales')
+            ->get()
+            ->first();
 
-        return !is_null($property) ? $property : false ;
+        return !is_null($property) ? $property : false;
     }
 
     /**
@@ -383,12 +390,12 @@ class PropertyService implements IPropertyService
     public function getLastProperties(int $count): array
     {
         return $this->property
-                ->with('city')
-                ->with('category')
-                ->orderBy('created_at', 'desc')
-                ->take($count)
-                ->get()
-                ->toArray();
+            ->with('city')
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->take($count)
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -423,11 +430,57 @@ class PropertyService implements IPropertyService
     public function getPropertiesWithLimit(string $limit = '3'): array
     {
         return $this->property
-                    ->orderBy('created_at', 'desc')
-                    ->take($limit)
-                    ->with('category')
-                    ->with('city')
-                    ->with('owner')
-                    ->get()->toArray();
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->with('category')
+            ->with('city')
+            ->with('owner')
+            ->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getPropertiesOwnedByAuthOwner(): array
+    {
+        $data = [];
+        $data['total_sealed_amount'] = 0;
+        $data['sales_by_year'] = [];
+
+        $data['properties'] = Auth::user()->properties()->get()->toArray();
+        $data['visible_properties'] = Auth::user()->properties()->whereActive(true)->get()->toArray();
+        $data['sealed_properties'] = Auth::user()->properties()->whereSold(true)->with('sales')->get()->toArray();
+
+        $ownerPropertiesIDs = Auth::user()->properties()->whereSold(true)->get()->pluck('id')->toArray();
+        $sales = $this->sale->whereIn('property_id', $ownerPropertiesIDs)->get()->toArray();
+
+        if (count($sales) > 0) {
+            foreach ($sales as $sale) {
+                $data['total_sealed_amount'] += $sale['amount'];
+            }
+            $data['sales_by_year'] = $this->salesByYear($sales);
+        }
+
+        return $data;
+    }
+
+    private function salesByYear(array $sales): array
+    {
+        $data = [];
+        foreach ($sales as $sale) {
+            $saleYear = explode('-', $sale['date'])[0];
+            if (count($data) === 0) {
+                array_push($data, array('year' => $saleYear, 'amount' => floatval($sale['amount'])));
+            } else {
+                foreach ($data as $year) {
+                    if ($year['year'] === $saleYear) {
+                        $year['amount'] += floatval($sale['amount']);
+                    } else {
+                        array_push($data, array('year' => $saleYear, 'amount' => floatval($sale['amount'])));
+                    }
+                }
+            }
+        }
+        return $data;
     }
 }

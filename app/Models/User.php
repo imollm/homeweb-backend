@@ -55,7 +55,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Return properties of this user
+     * Return properties owned by this user
      *
      * @return HasMany
      */

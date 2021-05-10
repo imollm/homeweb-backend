@@ -347,4 +347,17 @@ class PropertyController extends Controller
             'message' => 'Last ' . $limit . ' properties on system'
         ], Response::HTTP_OK);
     }
+
+    public function getPropertiesOfAuthOwner(): JsonResponse
+    {
+        if (Auth::user()->role->name === 'owner') {
+            return response()->json([
+                'success' => true,
+                'data' => $this->propertyService->getPropertiesOwnedByAuthOwner(),
+                'message' => 'Properties owned by owner with id ' . Auth::id()
+            ]);
+        } else {
+            return $this->unauthorizedUser();
+        }
+    }
 }
