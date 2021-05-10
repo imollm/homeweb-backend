@@ -236,7 +236,7 @@ class SaleService implements ISaleService
     {
         $sellerId = $this->sale->whereHashId($hashId)->get()->first()->seller_id;
 
-        return $sellerId === $userId ? $this->getSale($hashId) : [];
+        return $sellerId == $userId ? $this->getSale($hashId) : [];
     }
 
     /**
