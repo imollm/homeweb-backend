@@ -2,9 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
+use App\Models\Feature;
 use App\Models\Property;
 use App\Models\RangePrice;
+use App\Models\Sale;
 use App\Models\User;
+use App\Services\Feature\FeatureService;
+use App\Services\File\FileService;
 use App\Services\Property\PropertyService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,7 +25,7 @@ class PriceHistoryShowTests extends TestCase
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->propertyService = new PropertyService(new Property(), new User(), new RangePrice());
+        $this->propertyService = new PropertyService(new Property(), new User(), new RangePrice(), new FileService(new Property(), new Category()), new FeatureService(new Feature()), new Sale());
     }
 
     public function test_price_history_index_customer_role_unauthorized()

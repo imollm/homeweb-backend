@@ -12,4 +12,5 @@ interface IPriceHistory
     public function create(Request $request): bool;
     public function areYouAllowedToStoreAPriceChangeOfThisProperty(Request $request): bool;
     public function getAllChanges(): array;
+    public function getPriceChangesOfPropertiesOwnedByAuthOwner(): array;
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Psy\Util\Json;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -164,7 +165,7 @@ class PriceHistoryController extends Controller
 
                 } elseif (
                     $roleAuthUser === 'owner' &&
-                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) == Auth::user()->id
+                    $this->propertyService->whichIsTheOwnerIdOfThisProperty($propertyId) == Auth::id()
                 ) {
 
                     return response()->json([
@@ -195,6 +196,19 @@ class PriceHistoryController extends Controller
 
             return $this->unauthorizedUser();
 
+        }
+    }
+
+    public function getPriceChangeOfAuthOwner(): JsonResponse
+    {
+        if (Auth::user()->role->name === 'owner') {
+            return response()->json([
+                'success' => true,
+                'data' => $this->priceHistoryService->getPriceChangesOfPropertiesOwnedByAuthOwner(),
+                'message' => 'Price changes of properties owned by owner with id ' . Auth::id()
+            ], Response::HTTP_OK);
+        } else {
+            return $this->unauthorizedUser();
         }
     }
 

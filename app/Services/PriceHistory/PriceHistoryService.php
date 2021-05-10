@@ -17,6 +17,9 @@ use Illuminate\Validation\ValidationException;
  */
 class PriceHistoryService implements IPriceHistory
 {
+    /**
+     * @var PriceHistory
+     */
     private PriceHistory $priceHistory;
 
     /**
@@ -144,5 +147,14 @@ class PriceHistoryService implements IPriceHistory
     public function getAllChanges(): array
     {
         return $this->priceHistory->with('property')->get()->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getPriceChangesOfPropertiesOwnedByAuthOwner(): array
+    {
+        $propertiesIDsOfAuthOwner = Auth::user()->properties()->get()->pluck('id')->toArray();
+        return PriceHistory::whereIn('property_id', $propertiesIDsOfAuthOwner)->with('property')->get()->toArray();
     }
 }
