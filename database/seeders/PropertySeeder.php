@@ -46,9 +46,9 @@ class PropertySeeder extends Seeder
                 'latitude' => $locations['latitude'][$i],
                 'description' => Str::random(100),
                 'energetic_certification' => Arr::random($energetic_certification_values),
-                'sold' => ($i === 0),
+                'sold' => false,
                 'active' => $i % 2 == 0,
-                'price' => 100000 * ($i+1),
+                'price' => strval(100000 * ($i+1)),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);

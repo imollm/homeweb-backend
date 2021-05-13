@@ -30,9 +30,9 @@ class CreatePropertiesTable extends Migration
             $table->string('latitude')->nullable();
             $table->longText('description')->nullable();
             $table->enum('energetic_certification', ['obtingut', 'en proces', 'pendent'])->nullable();
-            $table->boolean('sold')->default(false);
+            $table->boolean('sold')->default(0);
             $table->boolean('active')->default(true);
-            $table->float('price')->default(0);
+            $table->string('price')->default('0');
 
             $table->timestamps();
 
