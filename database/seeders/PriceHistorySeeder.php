@@ -41,6 +41,9 @@ class PriceHistorySeeder extends Seeder
                     'updated_at' => Carbon::now(),
                 ]);
                 $amountAugment += 0.1;
+                Property::find($propertyId)->update([
+                    'price' => $amount
+                ]);
             }
         }
     }
