@@ -193,4 +193,20 @@ class PriceHistoryShowTests extends TestCase
                 'message' => 'Price history of your property ' . $propertyIdOwnedByOwnerDoAction
             ]);
     }
+
+    public function test_price_history_show_properties_owned_by_owner()
+    {
+        $token = $this->getRoleTokenAuth('owner');
+
+        $uri = Config::get('app.url') . '/api/priceHistory/propertiesOfOwner';
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $token)
+            ->getJson($uri)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'success' => true,
+                'data' => []
+            ]);
+    }
 }

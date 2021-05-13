@@ -111,6 +111,7 @@ class PriceHistoryService implements IPriceHistory
         // Second create new price change
 
         $newPriceChange = $this->priceHistory->create([
+            'hash_id' => hash("sha256", $propertyId.$startTimestamp.$amount),
             'property_id' => $propertyId,
             'start' => $startTimestamp,
             'amount' => $amount,
@@ -154,7 +155,32 @@ class PriceHistoryService implements IPriceHistory
      */
     public function getPriceChangesOfPropertiesOwnedByAuthOwner(): array
     {
+        $data = [];
         $propertiesIDsOfAuthOwner = Auth::user()->properties()->get()->pluck('id')->toArray();
-        return PriceHistory::whereIn('property_id', $propertiesIDsOfAuthOwner)->with('property')->get()->toArray();
+        $data['changes'] = PriceHistory::whereIn('property_id', $propertiesIDsOfAuthOwner)->with('property')->get()->toArray();
+        $data['chart'] = $this->setDataToPriceChangesChart($data['changes']);
+
+        return $data;
+    }
+
+    private function setDataToPriceChangesChart(array $changes): array
+    {
+        $data = [];
+        $flag = false;
+        if (count($changes) > 0) {
+            foreach ($changes as $change) {
+                foreach ($data as $index => $property) {
+                    if ($property['property'] === $change['property_id']) {
+                        array_push($data[$index]['changes'], ['price' => $change['amount'], 'day' => $change['start']]);
+                        $flag = true;
+                    }
+                }
+                if ($flag === false) {
+                    array_push($data, ['property' => $change['property_id'], 'reference' => $change['property']['reference'],'changes' => [array('price' => $change['amount'], 'day' => $change['start'])]]);
+                }
+                $flag = false;
+            }
+        }
+        return $data;
     }
 }

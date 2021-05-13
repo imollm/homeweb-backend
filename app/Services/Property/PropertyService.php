@@ -310,7 +310,7 @@ class PropertyService implements IPropertyService
      */
     public function getPriceHistoryOfThisProperty(string $id): array
     {
-        return $this->property->find($id)->priceHistory->toArray();
+        return $this->property->find($id)->priceHistory()->with('property')->orderBy('start', 'asc')->get()->toArray();
     }
 
     /**

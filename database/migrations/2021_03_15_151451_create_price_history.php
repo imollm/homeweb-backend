@@ -14,6 +14,7 @@ class CreatePriceHistory extends Migration
     public function up()
     {
         Schema::create('price_history', function (Blueprint $table) {
+            $table->string('hash_id');
             $table->unsignedBigInteger('property_id');
             $table->date('start');
             $table->float('amount');
