@@ -276,7 +276,7 @@ class SaleService implements ISaleService
             ['month' => 'May', 'amount' => 0],
             ['month' => 'April', 'amount' => 0],
             ['month' => 'March', 'amount' => 0],
-            ['month' => 'Jun', 'amount' => 0],
+            ['month' => 'June', 'amount' => 0],
             ['month' => 'July', 'amount' => 0],
             ['month' => 'August', 'amount' => 0],
             ['month' => 'September', 'amount' => 0],
