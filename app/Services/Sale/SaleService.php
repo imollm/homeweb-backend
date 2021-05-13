@@ -271,18 +271,18 @@ class SaleService implements ISaleService
     public function getSalesOfActualYear(string $year): array
     {
         $sales = [
-            ['month' => 'January', 'amount' => 0],
-            ['month' => 'February', 'amount' => 0],
-            ['month' => 'May', 'amount' => 0],
-            ['month' => 'April', 'amount' => 0],
-            ['month' => 'March', 'amount' => 0],
-            ['month' => 'June', 'amount' => 0],
-            ['month' => 'July', 'amount' => 0],
-            ['month' => 'August', 'amount' => 0],
-            ['month' => 'September', 'amount' => 0],
-            ['month' => 'October', 'amount' => 0],
-            ['month' => 'November', 'amount' => 0],
-            ['month' => 'December', 'amount' => 0]
+            ['mes' => 'Gener', 'month' => 'January', 'amount' => 0],
+            ['mes' => 'Febrer', 'month' => 'February', 'amount' => 0],
+            ['mes' => 'Març', 'month' => 'May', 'amount' => 0],
+            ['mes' => 'Abril', 'month' => 'April', 'amount' => 0],
+            ['mes' => 'Maig', 'month' => 'March', 'amount' => 0],
+            ['mes' => 'Juny', 'month' => 'June', 'amount' => 0],
+            ['mes' => 'Juliol', 'month' => 'July', 'amount' => 0],
+            ['mes' => 'Agost', 'month' => 'August', 'amount' => 0],
+            ['mes' => 'Setembre', 'month' => 'September', 'amount' => 0],
+            ['mes' => 'Octubre', 'month' => 'October', 'amount' => 0],
+            ['mes' => 'Novembre', 'month' => 'November', 'amount' => 0],
+            ['mes' => 'Desembre', 'month' => 'December', 'amount' => 0]
         ];
 
         $results = DB::select("SELECT MONTHNAME(date) AS 'month_name', SUM(amount) AS 'amount' FROM sales WHERE YEAR(date) = ? GROUP BY MONTHNAME(date)", [$year]);
