@@ -12,14 +12,4 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .idea/
-
-### Docker ###
-/docker/mysql/data/*
-!/docker/mysql/data/.gitkeep
-/docker/mysql/logs/*
-!/docker/mysql/logs/.gitkeep
-
-/docker/webserver/logs/*
-!/docker/webserver/logs/.gitkeep
-/docker/webserver/html/*
-!/docker/webserver/html/index.php
+/docker
