@@ -1,43 +1,41 @@
-# TFG - DESENVOLUPAMENT WEB
+# TFG - WEB DEVELOPMENT
 ## HOMEWEB
+
+## LOCAL ENVIRONMENT
 
 ### Pre requisits
 
-1. Tenir instal·lat un entorn web al nostre ordinador
+1. Install web environment
     - [XAMPP](https://www.apachefriends.org/es/download.html)
     - [MAMP](https://www.mamp.info/en/downloads/)
-    - Si ho vols fer manualment 
+    - Manually mode
        - [MAC OS X](https://getgrav.org/blog/macos-bigsur-apache-multiple-php-versions)
        - [Linux](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-20-04-es)
        - [Windows 10](https://codebriefly.com/how-to-setup-apache-php-mysql-on-windows-10/)
 
+    
+2. When installation is finished, go to `http://localhost`, if **It Works!** displayed, all is correct.
 
-2. Un cop instal·lat, comprovar que ens funciona l'Apache. Ens dirigim al navegador web i ingressem `http://localhost`, si ens dóna com a resultat un missatge **It Works!** significa que funciona.
 
-
-3. Revisar que PHP està enllaçat a Apache. Ens dirigim a la carpeta root de l'Apache, cream un fitxer p.e. `index.php` i escrivim `<?php echo phpinfo();`, guardem i ens dirigim al navegador, 
-   escrivim `http://localhost`, el resultat ha de donar similar a la imatge següent.
-   
+3. Check if PHP is linked with Apache. Go to apache root folder and create a new index.php file, with this code `<?php echo phpinfo();`, save and go to `http://localhost`, we will to see something similar to the image. 
     <p>
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PHP_7.1_-_Example_phpinfo%28%29_Screen.png" alt="phpinfo image"/>
    </p>
 
-    Si obtenim el mateix resultat, significarà que tenim Apache i PHP funcionant.
 
-
-4. El següent pas es instal·lar el gestor de dependencies de PHP, [Composer](https://getcomposer.org/doc/00-intro.md). Es interessant fer la instal·lació globalment, per comporvar que esta operatiu obrim una consola de comandes i escrivim `composer --version`, si ho hem fet bé, ens dirà la versió.
+4. Next step, install php dependencies manager Composer, [Composer](https://getcomposer.org/doc/00-intro.md). Install better globally, then type `composer --version` and you make sure.
 
 ### Inicialitzar projecte
 
-1. El següent pas és descarregar el repositori.
-    - Si tenim Git instal·lat, ens situem a la carpeta root d'Apache i a la consola de comandes escrivim `git clone https://github.com/imollm/homeweb-backend`
-    - Si no tenim [Git](https://git-scm.com/downloads) podem instal·lar-lo, sinó `https://github.com/imollm/homeweb-backend` i descarreguem amb zip.
+1. Download the repository.
+    - If Git is installed, go to apache root folder and type `git clone https://github.com/imollm/homeweb-backend`
+    - If Git isn't installed [Git](https://git-scm.com/downloads), else `https://github.com/imollm/homeweb-backend`, then unzip.
     
 
-2. Ara toca instal·lar les dependencies del projecte, per tant mitjançant per consola de comandes ens situem a la carpeta on tenim el projecte descomprimit i escrivim `composer install`, això farà que composer instal·li els paquets indicats en el fitxer composer.lock o sino al composer.json
+2. Type `composer install` and composer will install laravel dependencies, from composer.json.
 
 
-3. Copiem el fitxer `.env.exemple` i canviem el nom, per tant a la consola `cp .env.exemple .env`. Ara cal configurar les credencials de la base de dades, per tant cal modificar els següents paràmetres.
+3. Type `cp .env.exemple .env`, and then configure database params.
 
     <ul>
         <li style="list-style: none"><span style="color: orange">DB_CONNECTION</span><span style="color: white">=</span><span style="color: green">mysql</span></li>
@@ -50,42 +48,53 @@
 
 
 
-4. Ara per testejar, primer de tot creem una base de dades.
+4. Create new database with the same name of DB_DATABASE of .env file
       ```sh
       mysql> create database homeweb
       Query OK, 1 row affected (0.00 sec)
       ```
    
-5. Ara executem les *migrations* i els *seeders* per crear un joc de dades de prova.
+5. Then run migrations and seeders.
     ```sh
       php artisan migrate --seed
     ```
-6. Generar claus d'encriptació de l'aplicació
+6. Generate app keys.
    ```sh
       php artisan key:generate
    ```
 
-7. Generar tokens client keys.
+7. Generate token client keys.
     ```sh
       php artisan passport:install
     ```
-   Tenir en compte que cada vegada que executem les migracions amb els seeders, les claus d'encriptació de Passport s'esborren, per tant tenim que tornar executar el pas 6. Podem fer-ho mitjançant una comanda que he creat que fa la migration més els seeders i genera les claus de passport.
+   If rerun migrations, auth tokens will be deleted, you may rerun to generate it.
+   I create a command that do migration and generate auth tokens.
     ```sh
       php artisan db:restore
     ```
-8. Dins l'arxiu ```.env``` haurem de configurar el nostre gestor de correu electrònic perquè el formulari de contacte de la web funcionai. De nou executar 
+8. We need to configure into ```.env``` file the email client. Then publish credentials with next command.
    ```sh
       php artisan config:cache
    ```
-   Per poder publicar la configuració del gestor de correo electrònic.
 
-### Test amb Postman
-1. Instal·lem l'API REST Client [Postman](https://www.postman.com/downloads/)
-2. Importem *l'API schema* que tenim al projecte `HomeWeb.postman_collection.json`
-3. 
+### Testing with Postman
+1. Install API REST Client [Postman](https://www.postman.com/downloads/)
+   
+
+2. Download project json file.
+    ```sh
+      wget -O ~/tfg-docker-backend/postman.json https://www.getpostman.com/collections/c02928439a50147cc744
+    ```
+
+3. In environment configuration if you work with:
+   * Local environment ```http://localhost/homeweb-backend/public/api```
+   * Docker environment ```http://localhost:8080/homeweb-backend/public/api```
+    
+
+4. Open with postman and test it.
 
 ### Test amb PHPUnit
-Abans de realitzar tests per carregar les credencials dels usuaris dins .env i api.php
+In ```env``` file there are some registered users, and some fake data to test backend.
 <ul>
 <li style="list-style: none"><span style="color: orange">API_ADMIN_EMAIL</span><span style="color: white">=</span><span style="color: green">admin@homeweb.com</span></li>
 <li style="list-style: none"><span style="color: orange">API_ADMIN_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
@@ -99,8 +108,8 @@ Abans de realitzar tests per carregar les credencials dels usuaris dins .env i a
 <li style="list-style: none"><span style="color: orange">API_OWNER1_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
 </ul>
 
-Executar la comanda, per publicar la configuració que tenim dins .env i que puguem accedir-hi mitjançant array declarat dins config/api.php, això després quedarà guardat dins la cache per ser utilitzat.
 
+Type this command to publish this users into cache, and then run tests.
    ```sh
       php artisan config:cache
    ```
@@ -109,5 +118,8 @@ Executar la comanda, per publicar la configuració que tenim dins .env i que pug
 
 Aquest programari té llicència [MIT license](https://opensource.org/licenses/MIT).
 
-#### README de exemple
-https://github.com/othneildrew/Best-README-Template/blob/master/README.md
+## Contact
+
+Ivan Moll Moll - imollm@uoc.edu
+
+Project Link: [https://github.com/imollm/homeweb-backend](https://github.com/imollm/homeweb-backend)
