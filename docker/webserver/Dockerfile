@@ -8,7 +8,7 @@ RUN apt-get -y update --fix-missing && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget \
+    apt-get -y --no-install-recommends install nano wget unzip \
 dialog \
 libsqlite3-dev \
 libsqlite3-0 && \
@@ -43,16 +43,6 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install gettext && \
     docker-php-ext-install exif
 
-
-# Install Freetype
-RUN apt-get -y update && \
-    apt-get --no-install-recommends install -y libfreetype6-dev \
-libjpeg62-turbo-dev \
-libpng-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd
-
 # Enable apache modules
 RUN a2enmod rewrite headers
 
@@ -61,23 +51,5 @@ RUN rm -rf /usr/src/*
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Clone repository homeweb-backend
-RUN cd /var/www/html && \
-    git clone https://github.com/imollm/homeweb-backend
-
-# Install dependencies
-RUN cd /var/www/html/homeweb-backend && \
-    /usr/local/bin/composer install
-
-# Publish .env variables
-#RUN cd /var/www/html/homeweb-backend && \
-    #/usr/local/bin/php artisan config:cache
-
-# Migrate database, init passport OAuth2 server and generate app keys
-#RUN cd /var/www/html/homeweb-backend  && \
-    #/usr/local/bin/php artisan migrate --seed
-    #/usr/local/bin/php artisan key:generate && \
-    #/usr/local/bin/php artisan passport:install
 
 
