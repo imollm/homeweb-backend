@@ -63,10 +63,10 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Git pull
+1. Git clone
    ```sh
    cd ~/
-   git clone https://github.com/imollm/homeweb-backend
+   git clone --branch docker https://github.com/imollm/homeweb-backend
    ```
 2. Build and deploy
    ```sh
