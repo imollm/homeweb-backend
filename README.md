@@ -116,7 +116,7 @@ Type this command to publish this users into cache, and then run tests.
 
 ### Llicència
 
-Aquest programari té llicència [MIT license](https://opensource.org/licenses/MIT).
+This software have  [MIT license](https://opensource.org/licenses/MIT).
 
 ## Contact
 
