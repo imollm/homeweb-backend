@@ -139,7 +139,10 @@ class TourController extends Controller
                             'message' => 'Last '.$limit.' tours'
                         ], Response::HTTP_OK);
                     } else {
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'No tours into system'
+                        ], Response::HTTP_OK);
                     }
                 case 'customer':
                     if ($this->tourService->haveThisCustomerTours($authUserId)) {
@@ -149,7 +152,10 @@ class TourController extends Controller
                             'message' => 'All tours by customer ' . $authUserId
                         ], Response::HTTP_OK);
                     } else {
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Customer not have tours'
+                        ], Response::HTTP_OK);
                     }
                 case 'owner':
                     if ($this->tourService->haveThisOwnerPropertiesWithTours($authUserId)) {
@@ -159,7 +165,10 @@ class TourController extends Controller
                             'message' => 'All tours of properties owner ' . $authUserId
                         ], Response::HTTP_OK);
                     } else {
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Owner not have tours'
+                        ], Response::HTTP_OK);
                     }
                 case 'employee':
                     if ($this->tourService->haveThisEmployeeTours($authUserId)) {
@@ -169,7 +178,10 @@ class TourController extends Controller
                             'message' => 'All tours by employee ' . $authUserId
                         ], Response::HTTP_OK);
                     } else {
-                        return response()->json([], Response::HTTP_NO_CONTENT);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Employee not have tours'
+                        ], Response::HTTP_OK);
                     }
             }
 
