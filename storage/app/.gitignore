@@ -1,0 +1,13 @@
+/properties/*
+!/properties/property1.jpg
+!/properties/property2.jpg
+!/properties/property3.jpg
+!/properties/property4.jpg
+!/properties/property5.jpg
+
+/categories/*
+!/categories/apartament.jpg
+!/categories/casa.jpg
+!/categories/finca.jpg
+!/categories/masia.jpg
+!/categories/xalet.jpg

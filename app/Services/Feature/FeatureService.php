@@ -128,8 +128,12 @@ class FeatureService implements IFeatureService
         $featuresToBeSaved = [];
         $features = $request->input('features');
 
+        if (is_string($features)) {
+            $features = explode(',', $features);
+        }
+
         foreach ($features as $index =>  $feature) {
-            if ($feature) {
+            if ($feature === true || $feature === 'true') {
                 array_push($featuresToBeSaved, $index + 1);
             } else if (is_numeric($feature)) {
                 array_push($featuresToBeSaved, $feature);
