@@ -90,7 +90,7 @@ Route::middleware('auth:api')->group(function () {
     // Properties auth routes
     Route::prefix('properties')->name('properties.')->group(function () {
         Route::post('/create', [PropertyController::class, 'create'])->name('create');
-        Route::put('/update', [PropertyController::class, 'update'])->name('update');
+        Route::post('/update', [PropertyController::class, 'update'])->name('update');
         Route::get('/{id}/setActive/{status}', [PropertyController::class, 'setActive'])->where(['id' => '[0-9]+', 'status' => '[0-1]{1}'])->name('setActive');
         Route::get('/{id}/owner', [PropertyController::class, 'owner'])->where('id', '[0-9]+')->name('owner');
         Route::delete('/{id}/delete', [PropertyController::class, 'delete'])->where('id', '[0-9]+')->name('delete');

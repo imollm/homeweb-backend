@@ -160,7 +160,7 @@ class PropertyService implements IPropertyService
             $property = new Property($request->all());
             $saved = Auth::user()->properties()->save($property);
 
-            if ($request->has('features') && count($request->input('features')) > 0) {
+            if ($request->has('features')) {
                 $saved->features()->attach($this->featureService->setFeaturesToBeSaved($request));
             }
 
@@ -188,7 +188,7 @@ class PropertyService implements IPropertyService
 
             $saved = $this->property->find($propertyId)->update($request->all());
 
-            if ($request->has('features') && count($request->input('features')) > 0) {
+            if ($request->has('features')) {
                 $this->property->find($propertyId)->features()->sync($this->featureService->setFeaturesToBeSaved($request));
             }
 
@@ -199,7 +199,7 @@ class PropertyService implements IPropertyService
             if ((is_numeric($ownerId) && $this->haveThisUserOwnerRole($ownerId) || empty($ownerId))) {
                 $saved = $this->property->create($request->all());
 
-                if ($request->has('features') && count($request->input('features')) > 0) {
+                if ($request->has('features') && (is_array($request->input('features')) || is_string($request->input('features')))) {
                     $saved->features()->attach($this->featureService->setFeaturesToBeSaved($request));
                 }
             }
