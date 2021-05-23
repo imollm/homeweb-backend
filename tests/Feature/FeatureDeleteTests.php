@@ -72,25 +72,6 @@ class FeatureDeleteTests extends TestCase
             ]);
     }
 
-    public function test_feature_delete_admin_role_feature_have_relations_with_properties()
-    {
-        $token = $this->getRoleTokenAuth('admin');
-
-        $featureIdWithRelations =
-            Feature::has('properties')->get()->pluck('id')->first();
-
-        $uri = Config::get('app.url') . '/api/features/'.$featureIdWithRelations.'/delete';
-
-        $this
-            ->withHeader('Authorization', 'Bearer ' . $token)
-            ->deleteJson($uri)
-            ->assertStatus(Response::HTTP_CONFLICT)
-            ->assertJson([
-                'success' => false,
-                'message' => 'This feature can not be deleted'
-            ]);
-    }
-
     public function test_feature_delete_ok_admin_role()
     {
         $token = $this->getRoleTokenAuth('admin');

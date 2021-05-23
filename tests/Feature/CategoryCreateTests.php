@@ -62,6 +62,7 @@ class CategoryCreateTests extends TestCase
 
         $payload = [
             'name' => 1890, // Invalid data type
+            'image' => 'image.jpg'
         ];
 
         $this
@@ -80,16 +81,13 @@ class CategoryCreateTests extends TestCase
 
         $payload = [
             'name' => $categoryNameAlreadyExists,
+            'image' => 'image.jpg'
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CONFLICT)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Category exists',
-            ]);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_category_employee_role_authorized()
@@ -100,18 +98,13 @@ class CategoryCreateTests extends TestCase
 
         $payload = [
             'name' => Str::random(10),
+            'image' => 'image.jpg'
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Category added correctly',
-            ]);
-
-        $this->assertDatabaseHas('categories', $payload);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_category_ok_admin_role_authorized()
@@ -122,17 +115,13 @@ class CategoryCreateTests extends TestCase
 
         $payload = [
             'name' => Str::random(10),
+            'image' => 'image.jpg'
         ];
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Category added correctly',
-            ]);
-        $this->assertDatabaseHas('categories', $payload);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
 }

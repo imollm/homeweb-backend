@@ -393,33 +393,26 @@ class TourShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
-
-        $lastTours = Tour::orderBy('created_at', 'desc')->take(10)->get()->toArray();
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'success' => true,
-                'data' => $lastTours,
-                'message' => 'Last tours'
-            ]);
+            ->assertStatus(Response::HTTP_OK);
     }
 
     public function test_tour_show_all_tours_admin_role_no_tours_found()
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         Tour::truncate(); // Delete all tours before asserting
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK);
 
         $this->assertDatabaseMissing('tours', []);
     }
@@ -428,7 +421,7 @@ class TourShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $customerName = 'Customer';
 
@@ -456,7 +449,7 @@ class TourShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $customerName = 'Customer';
 
@@ -467,14 +460,14 @@ class TourShowTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK);
     }
 
     public function test_tour_show_all_related_tours_owner_role()
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $ownerName = 'Owner';
 
@@ -503,7 +496,7 @@ class TourShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $ownerName = 'Owner';
 
@@ -519,14 +512,14 @@ class TourShowTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)->dump()
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK);
     }
 
     public function test_tour_show_all_related_tours_employee_role()
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $employeeName = 'Employee';
 
@@ -554,7 +547,7 @@ class TourShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/tours/show';
+        $uri = Config::get('app.url') . '/api/tours/show/1';
 
         $employeeName = 'Employee';
 
@@ -565,6 +558,6 @@ class TourShowTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK);
     }
 }

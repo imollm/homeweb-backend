@@ -201,7 +201,7 @@ class AuthTests extends TestCase
             ->getJson($urlLogout);
 
         $responseLogout
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK);
     }
 
     /**

@@ -63,7 +63,7 @@ class PropertyUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJson([
                 'success' => false,
@@ -83,7 +83,7 @@ class PropertyUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson([
                 'success' => false,
@@ -105,7 +105,7 @@ class PropertyUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
@@ -126,7 +126,7 @@ class PropertyUpdateTests extends TestCase
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload);
+            ->postJson($uri, $payload);
 
         $response
             ->assertStatus(Response::HTTP_OK)
@@ -151,7 +151,7 @@ class PropertyUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)
+            ->postJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
@@ -175,7 +175,7 @@ class PropertyUpdateTests extends TestCase
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload);
+            ->postJson($uri, $payload);
 
         $response
             ->assertStatus(Response::HTTP_UNAUTHORIZED)

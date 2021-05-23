@@ -14,7 +14,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $payload = [];
 
@@ -32,7 +32,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $payload = [
             'property_id' => '',
@@ -51,7 +51,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         // First search a persisted price change on DB
         $priceChange = PriceHistory::inRandomOrder()->first();
@@ -78,7 +78,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         // First search a persisted price change on DB
         $priceChange = PriceHistory::inRandomOrder()->first();
@@ -105,7 +105,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         // In default dummy data on database we have the last price change of property id = 1
         // property_id = 1; start_timestamp = 2021-01-01 23:00:00; end_timestamp = null
@@ -126,7 +126,7 @@ class PriceHistoryCreateTests extends TestCase
             ->assertStatus(Response::HTTP_CONFLICT)
             ->assertJson([
                 'success' => false,
-                'message' => 'Start timestamp given is lower than last price change start timestamp'
+                'message' => 'Start timestamp given is lower or equal than last price change start timestamp'
             ]);
     }
 
@@ -134,7 +134,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         // In default dummy data on database we have the last price change of property id = 1
         // property_id = 1; start_timestamp = 2021-01-01 23:00:00; end_timestamp = null
@@ -155,7 +155,7 @@ class PriceHistoryCreateTests extends TestCase
             ->assertStatus(Response::HTTP_CONFLICT)
             ->assertJson([
                 'success' => false,
-                'message' => 'Start timestamp given is lower than last price change start timestamp'
+                'message' => 'Start timestamp given is lower or equal than last price change start timestamp'
             ]);
     }
 
@@ -166,7 +166,7 @@ class PriceHistoryCreateTests extends TestCase
 
         $token = $this->getRoleTokenAuth($ownerDoAction);
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $propertyIsNotYours =
             DB::table('properties')
@@ -199,7 +199,7 @@ class PriceHistoryCreateTests extends TestCase
 
         $token = $this->getRoleTokenAuth($ownerDoAction);
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $propertyIsYours =
             DB::table('properties')
@@ -232,7 +232,7 @@ class PriceHistoryCreateTests extends TestCase
 
         $token = $this->getRoleTokenAuth($ownerDoAction);
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $propertyIsYours =
             DB::table('properties')
@@ -254,7 +254,7 @@ class PriceHistoryCreateTests extends TestCase
             ->assertStatus(Response::HTTP_CONFLICT)
             ->assertJson([
                 'success' => false,
-                'message' => 'Start timestamp given is lower than last price change start timestamp'
+                'message' => 'Start timestamp given is lower or equal than last price change start timestamp'
             ]);
     }
 
@@ -262,7 +262,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $startTimestamp = '2021-03-04'; // This timestamp is greater than last of property id 1
 
@@ -303,7 +303,7 @@ class PriceHistoryCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $lastPriceChange = PriceHistory::wherePropertyId(1)->whereEnd(null)->get()->first();
 
@@ -344,7 +344,7 @@ class PriceHistoryCreateTests extends TestCase
 
         $token = $this->getRoleTokenAuth($ownerDoAction);
 
-        $uri = Config::get('app.url') . '/api/priceHistory/store';
+        $uri = Config::get('app.url') . '/api/priceHistory/create';
 
         $propertyIsYours =
             DB::table('properties')

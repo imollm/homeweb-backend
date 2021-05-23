@@ -111,7 +111,7 @@ class PriceHistoryController extends Controller
 
                         return response()->json([
                             'success' => false,
-                            'message' => 'Start timestamp given is lower than last price change start timestamp'
+                            'message' => 'Start timestamp given is lower or equal than last price change start timestamp'
                         ], Response::HTTP_CONFLICT);
 
                     }

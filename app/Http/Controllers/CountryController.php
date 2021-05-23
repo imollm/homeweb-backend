@@ -71,7 +71,7 @@ class CountryController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Country already exists'
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                ], Response::HTTP_CONFLICT);
             }
         } else {
             return $this->unauthorizedUser();

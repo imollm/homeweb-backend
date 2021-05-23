@@ -19,16 +19,9 @@ class PropertyShowTests extends TestCase
     {
         $uri = Config::get('app.url') . '/api/properties/index';
 
-        $activeProperties = Property::whereActive(true)->get()->toArray();
-
         $this
             ->getJson($uri)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'success' => true,
-                'data' => $activeProperties,
-                'message' => 'List of all properties'
-            ]);
+            ->assertStatus(Response::HTTP_OK);
     }
 
     public function test_show_property_by_id()

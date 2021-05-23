@@ -47,7 +47,7 @@ class FeatureService implements IFeatureService
     public function validatePostData(Request $request)
     {
         Validator::make($request->all(), [
-            'id' => 'nullable|numeric',
+            'id' => 'nullable',
             'name' => 'required|unique:features|string|max:255',
         ])->validate();
     }
@@ -96,9 +96,9 @@ class FeatureService implements IFeatureService
      */
     public function getFeatureById(string $id): array | false
     {
-        $feature = $this->feature->find($id)->with('properties')->get();
+        $feature = $this->feature->find($id);
 
-        return !is_null($feature) ? $feature->toArray() : false;
+        return !is_null($feature) ? $feature->with('properties')->get()->toArray() : false;
     }
 
     /**
