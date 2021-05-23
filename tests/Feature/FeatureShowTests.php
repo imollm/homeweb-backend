@@ -121,7 +121,7 @@ class FeatureShowTests extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
-                'data' => $featureExists->toArray(),
+                'data' => [],
                 'message' => 'Feature by id ' . $featureExists->id
             ]);
     }

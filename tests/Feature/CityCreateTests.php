@@ -17,7 +17,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('customer');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $payload = [
             'name' => Str::random(10),
@@ -38,7 +38,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('owner');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $payload = [
             'name' => Str::random(10),
@@ -59,7 +59,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $payload = [
             'name' => Str::random(10),
@@ -80,7 +80,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $payload = [
             'name' => '',
@@ -97,7 +97,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $cityIdNotExists = Country::max('id') + 1;
 
@@ -120,7 +120,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $cityAlreadyExists =
             DB::table('cities')
@@ -147,7 +147,7 @@ class CityCreateTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('admin');
 
-        $uri = Config::get('app.url') . '/api/cities/store';
+        $uri = Config::get('app.url') . '/api/cities/create';
 
         $countryIdExists = Country::inRandomOrder()->first()->id;
 

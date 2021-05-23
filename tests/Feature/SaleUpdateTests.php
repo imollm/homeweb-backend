@@ -59,7 +59,7 @@ class SaleUpdateTests extends TestCase
 
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
-            ->putJson($uri, $payload)->dump()
+            ->putJson($uri, $payload)
             ->assertStatus(Response::HTTP_OK);
 
     }
@@ -92,9 +92,8 @@ class SaleUpdateTests extends TestCase
     public function test_update_sale_is_not_related_with_employee()
     {
         $randSale = Sale::inRandomOrder()->first();
-        $seller = $randSale->seller_id + 1;
 
-        $token = $this->getRoleTokenAuth($seller);
+        $token = $this->getRoleTokenAuth('employee1');
 
         $uri = Config::get('app.url') . '/api/sales/update';
 
@@ -110,7 +109,7 @@ class SaleUpdateTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->putJson($uri, $payload)
-            ->assertStatus(Response::HTTP_OK);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
     }
 }

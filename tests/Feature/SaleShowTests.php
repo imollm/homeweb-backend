@@ -153,7 +153,7 @@ class SaleShowTests extends TestCase
     {
         $token = $this->getRoleTokenAuth('employee');
 
-        $ownerId = User::whereName('Owner')->get()->first()->id;
+        $ownerId = User::whereName('Employee')->get()->first()->id;
         $saleRelatedWithAnotherOwner = Sale::where('seller_id', '<>', $ownerId)->get()->first()->hash_id;
 
         $uri = Config::get('app.url') . '/api/sales/'.$saleRelatedWithAnotherOwner.'/showByHashId';

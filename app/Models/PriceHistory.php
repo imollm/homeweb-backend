@@ -21,6 +21,7 @@ class PriceHistory extends Model
      * @var string[]
      */
     protected $fillable = [
+        'hash_id',
         'property_id',
         'start',
         'amount',

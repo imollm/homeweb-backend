@@ -52,7 +52,7 @@ class PropertyDeleteTests extends TestCase
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
             ->assertJson([
                 'success' => false,
-                'message' => 'Property can not be deleted'
+                'message' => 'Property can not be deleted, it info can not be deleted'
             ]);
     }
 

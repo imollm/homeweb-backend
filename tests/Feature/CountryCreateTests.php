@@ -70,7 +70,7 @@ class CountryCreateTests extends TestCase
         $this
             ->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson($uri, $payload)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+            ->assertStatus(Response::HTTP_CONFLICT);
     }
 
     public function test_country_create_name_already_exists_but_have_new_code_admin_role_authorized()

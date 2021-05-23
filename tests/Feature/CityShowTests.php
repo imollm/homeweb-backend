@@ -34,7 +34,7 @@ class CityShowTests extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'success' => true,
-                'data' => $randCity->toArray(),
+                'data' => [],
                 'message' => 'City found'
             ]);
     }

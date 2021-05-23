@@ -55,8 +55,8 @@ class CategoryDeleteTests extends TestCase
         $randCategoryIdRelatedWithProperty =
             DB::table('categories')
                 ->join('properties', 'categories.id', '=', 'properties.category_id')
-                ->first()
-                ->id;
+                ->pluck('categories.id')
+                ->first();
 
         $uri = Config::get('app.url') . '/api/categories/'.$randCategoryIdRelatedWithProperty.'/delete';
 
