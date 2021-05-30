@@ -31,10 +31,28 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param UserUpdateRequest $request
-     * @return JsonResponse
+     * @OA\Put (
+     *     path="/users/update",
+     *     summary="Update user info",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User updated.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="User updated"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Error while updating user info.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while updating user"),
+     *         ),
+     *     )
+     * )
      */
     public function update(UserUpdateRequest $request): JsonResponse
     {
@@ -58,9 +76,21 @@ class UserController extends Controller
     }
 
     /**
-     * Get all users with role Owner
-     *
-     * @return JsonResponse
+     * @OA\Get (
+     *     path="/users/owners",
+     *     summary="Get owners of system",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All owners.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All owners"),
+     *         ),
+     *     )
+     * )
      */
     public function owners(): JsonResponse
     {
@@ -71,6 +101,23 @@ class UserController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * @OA\Get (
+     *     path="/users/customers",
+     *     summary="Get customers of system",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All customers.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All customers"),
+     *         ),
+     *     )
+     * )
+     */
     public function customers(): JsonResponse
     {
         return response()->json([
@@ -80,6 +127,23 @@ class UserController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * @OA\Get (
+     *     path="/users/employees",
+     *     summary="Get employees of system",
+     *     tags={"Users"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All employees.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All employees"),
+     *         ),
+     *     )
+     * )
+     */
     public function employees(): JsonResponse
     {
         return response()->json([

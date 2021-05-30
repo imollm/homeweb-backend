@@ -27,31 +27,44 @@ class PriceHistoryController extends Controller
      * @var PropertyService
      */
     private PropertyService $propertyService;
-    /**
-     * @var PassportAuthService
-     */
-    private PassportAuthService $passportAuthService;
 
     /**
      * PriceHistoryController constructor.
      * @param PriceHistoryService $priceHistoryService
      * @param PropertyService $propertyService
-     * @param PassportAuthService $passportAuthService
      */
     public function __construct(
         PriceHistoryService $priceHistoryService,
-        PropertyService $propertyService,
-        PassportAuthService $passportAuthService)
+        PropertyService $propertyService)
     {
         $this->priceHistoryService = $priceHistoryService;
         $this->propertyService = $propertyService;
-        $this->passportAuthService = $passportAuthService;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/priceHistory/index",
+     *     summary="Get all price changes",
+     *     tags={"Price History"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of all price histories.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="List of all price histories"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -61,7 +74,7 @@ class PriceHistoryController extends Controller
                 'success' => true,
                 'data' => $this->priceHistoryService->getAllChanges(),
                 'message' => 'List of all price histories'
-            ]);
+            ], Response::HTTP_OK);
 
         } else {
 
@@ -71,10 +84,58 @@ class PriceHistoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/priceHistory/create",
+     *     summary="Store new price change",
+     *     tags={"Price History"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Country data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="property_id", description="ID of property", type="integer", example=1),
+     *             @OA\Property(property="start_date", description="Start date", type="string", example="2021-02-01 12:00:45"),
+     *             @OA\Property(property="amount", description="New price", type="integer", example=1000000),
+     *             @OA\Property(property="end_date", description="Start date", type="string", example=""),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Price change created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Price change created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error when store price change.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error when store price change"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Incorrect start date, or Property have same price.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Start timestamp given is lower or equal than last price change start timestamp / This property has identical price change"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Check if is yours, or Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="The property is not yours / Unauthorized User"),
+     *         ),
+     *     ),
+     * )
      * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
@@ -142,10 +203,43 @@ class PriceHistoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $propertyId
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/priceHistory/{propertyId}/show",
+     *     summary="Get price history by property id",
+     *     tags={"Price History"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="propertyId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of property"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Price history of this property.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Price history of property"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Property not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Property not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="This property is not yours or Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="This property is not yours / Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function show(string $propertyId): JsonResponse
     {
@@ -199,6 +293,31 @@ class PriceHistoryController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/priceHistory/propertiesOfOwner",
+     *     summary="Get price changes of properties owned by owner",
+     *     tags={"Price History"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Price changes of property owned by owner.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Price changes of properties owned by owner with id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="TUnauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function getPriceChangeOfAuthOwner(): JsonResponse
     {
         if (Auth::user()->role->name === 'owner') {
