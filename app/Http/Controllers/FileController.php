@@ -30,8 +30,30 @@ class FileController extends Controller
     }
 
     /**
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Get (
+     *     path="/image/categories/{id}",
+     *     summary="Get image of category",
+     *     tags={"Image"},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of category"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category image.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="string"),
+     *             @OA\Property (property="message", type="string", example="Image of category with id {id}"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Image of category not found."
+     *     ),
+     * )
      * @throws FileNotFoundException
      */
     public function categories(string $id): JsonResponse
@@ -41,13 +63,35 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'data' => base64_encode($file['image']),
-            'message' => 'Image'
+            'message' => 'Image of category with id ' . $id
         ], ResponseStatus::HTTP_OK);
     }
 
     /**
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Get (
+     *     path="/image/properties/{id}",
+     *     summary="Get image of property",
+     *     tags={"Image"},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of property"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Property image.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="string"),
+     *             @OA\Property (property="message", type="string", example="Image of property with id {id}"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Image of property not found."
+     *     ),
+     * )
      * @throws FileNotFoundException
      */
     public function properties(string $id): JsonResponse
@@ -57,7 +101,7 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'data' => base64_encode($file['image']),
-            'message' => 'Image'
+            'message' => 'Image of property with id ' . $id
         ], ResponseStatus::HTTP_OK);
     }
 }

@@ -16,9 +16,43 @@ use Symfony\Component\HttpFoundation\Response;
 class ContactController extends Controller
 {
     /**
-     * @param Request $request
-     * @param Contact $sender
-     * @return JsonResponse
+     * @OA\Get (
+     * path="/contact/send",
+     * summary="Send email",
+     * description="Send email",
+     * tags={"Contact"},
+     *  @OA\RequestBody(
+     *     required=true,
+     *     description="Pass user credentials",
+     *     @OA\JsonContent(
+     *        required={"name","email","subject","message"},
+     *        @OA\Property(property="name", type="string", example="Your name"),
+     *        @OA\Property(property="email", type="string", format="email", example="user1@homeweb.com"),
+     *        @OA\Property(property="subject", type="string", example="Subject of email"),
+     *        @OA\Property(property="message", type="string", example="Message of email"),
+     *     ),
+     *  ),
+     *  @OA\Response(
+     *     response=200,
+     *     description="Send it successfully",
+     *     @OA\JsonContent(
+     *       @OA\Property (property="success", type="boolean", example=true),
+     *       @OA\Property (property="message", type="string", example="Mail was send"),
+     *     ),
+     *  ),
+     *  @OA\Response(
+     *     response=500,
+     *     description="Error while send it",
+     *     @OA\JsonContent(
+     *       @OA\Property (property="success", type="boolean", example=false),
+     *       @OA\Property (property="message", type="string", example="Email was not send"),
+     *     ),
+     *  ),
+     *  @OA\Response(
+     *     response=422,
+     *     description="Unprocessable entity",
+     *  ),
+     * )
      */
     public function send(Request $request, Contact $sender): JsonResponse
     {
@@ -31,7 +65,7 @@ class ContactController extends Controller
 
         if ($validate->fails()) {
 
-            return response()->json(['succes' => false, 'message' => 'Email was not send'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['succes' => false, 'message' => 'Email was not send'], Response::HTTP_UNPROCESSABLE_ENTITY);
 
         }
 

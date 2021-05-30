@@ -33,9 +33,20 @@ class CountryController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/countries/index",
+     *     summary="Get all countries",
+     *     tags={"Countries"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All categories.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="List of all countries"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -47,10 +58,48 @@ class CountryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/countries/create",
+     *     summary="Store new country",
+     *     tags={"Countries"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Country data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="name", description="Name of category", type="string", example="Foo"),
+     *             @OA\Property(property="code", description="Code of country", type="string", example="FOO"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Country created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Country created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Country already exists.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Country already exists"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
@@ -79,10 +128,34 @@ class CountryController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/countries/{id}/show",
+     *     summary="Get country by id",
+     *     tags={"Countries"},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of category"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Country found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Country found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Country not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Country not found"),
+     *         ),
+     *     )
+     * )
      */
     public function show(string $id): JsonResponse
     {
@@ -101,10 +174,48 @@ class CountryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/countries/update",
+     *     summary="Update category",
+     *     tags={"Countries"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Country data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="name", description="Name of category", type="string", example="Foo"),
+     *             @OA\Property(property="code", description="Code of country", type="string", example="FOO"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Country updated.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Country updated"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while update country.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while update country"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function update(Request $request): JsonResponse
@@ -121,7 +232,7 @@ class CountryController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error PUT data'
+                    'message' => 'Error while update country'
                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -130,11 +241,58 @@ class CountryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param string $id
-     * @return JsonResponse
-     * @throws Exception
+     * @OA\Delete(
+     *     path="/countries/{id}/delete",
+     *     summary="Delete country by id",
+     *     tags={"Countries"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of country"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Country deleted.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Country deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="The country can not be deleted.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="The country can not be deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="The country have cities related.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="The country have cities related"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="The country can not be found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="The country can not be found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function destroy(string $id): JsonResponse
     {
@@ -178,6 +336,27 @@ class CountryController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/countries/{id}/citiesAndProperties",
+     *     summary="Get all properties by category name",
+     *     tags={"Countries"},
+     *     @OA\Parameter (
+     *         name="name",
+     *         in="path",
+     *         required=true,
+     *         description="ID of country"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cities and properties of country with id {id}.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Cities and properties of country with id {id}"),
+     *         ),
+     *     )
+     * )
+     */
     public function getCitiesAndProperties(string $id): JsonResponse
     {
         return response()->json([

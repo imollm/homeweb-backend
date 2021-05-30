@@ -38,9 +38,29 @@ class TourController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/tours/index",
+     *     summary="Get all tours",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All tours.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All tours"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -60,10 +80,67 @@ class TourController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/tours/create",
+     *     summary="Store new tour",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Tour data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="property_id", description="Property ID", type="string", example=1),
+     *             @OA\Property(property="customer_id", description="Customer ID", type="string", example=2),
+     *             @OA\Property(property="employee_id", description="Employee ID", type="string", example=3),
+     *             @OA\Property(property="date", description="Date", type="string", example="2021-03-01"),
+     *             @OA\Property(property="time", description="Hour", type="string", example="10:00:00"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Tour created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Tour created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="At least one actor is not available, choose another combination.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="At least one actor is not available, choose another combination"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Customer or employee or property not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Some resource not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while create tour.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while create tour"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
@@ -118,10 +195,35 @@ class TourController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $limit
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/tours/show/{limit}",
+     *     summary="Get tour by  hash id",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="limit",
+     *         in="path",
+     *         required=true,
+     *         description="Number of tours was needed"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Request tours.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="The tours was request"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function show(int $limit): JsonResponse
     {
@@ -193,8 +295,43 @@ class TourController extends Controller
     }
 
     /**
-     * @param string $hashId
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/tours/{hashId}/show",
+     *     summary="Get tour by  hash id",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="hashId",
+     *         in="path",
+     *         required=true,
+     *         description="Hash ID of tour"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Request tours.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Tour by hash id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tour not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Tour not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function showByHashId(string $hashId): JsonResponse
     {
@@ -225,10 +362,59 @@ class TourController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $propertyId
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/tours/{propertyId}/show",
+     *     summary="Get tours by property id",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="propertyId",
+     *         in="path",
+     *         required=true,
+     *         description="Property ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Request tours.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Tour by hash id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Property not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Property not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Tour is not related with user was request it.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="The property is not yours / You have no tours with this property"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Some error when retrieve tours.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Some error when retrieve tours"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function showByPropertyId(string $propertyId): JsonResponse
     {
@@ -323,10 +509,67 @@ class TourController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/tours/update",
+     *     summary="Update tour",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Tour data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="property_id", description="Property ID", type="string", example=1),
+     *             @OA\Property(property="customer_id", description="Customer ID", type="string", example=2),
+     *             @OA\Property(property="employee_id", description="Employee ID", type="string", example=3),
+     *             @OA\Property(property="date", description="Date", type="string", example="2021-03-01"),
+     *             @OA\Property(property="time", description="Hour", type="string", example="10:00:00"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tour updated successfully.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Tour updated successfully"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="There are not availability.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="There are not availability"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tour not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Tour not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while updating tour.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while updating tour"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="This tour it is not related to you / Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="This tour it is not related to you / Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function update(Request $request): JsonResponse
@@ -397,10 +640,50 @@ class TourController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param string $hashId
-     * @return JsonResponse
+     * @OA\Delete(
+     *     path="/tours/{hashId}/delete",
+     *     summary="Delete tour by hash id",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="hashId",
+     *         in="path",
+     *         required=true,
+     *         description="Hash ID of tour"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tour deleted successfully.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Tour deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while deleting tour.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while deleting tour"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tour not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Tour not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Tour is not yours / Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Tour is not yours / Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function destroy(string $hashId): JsonResponse
     {
@@ -455,7 +738,29 @@ class TourController extends Controller
     }
 
     /**
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/tours/byEmployee",
+     *     summary="Get employee tours",
+     *     tags={"Tours"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Request tours of employee.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Tour of employee with id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function getToursByEmployee(): JsonResponse
     {

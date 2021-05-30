@@ -43,5 +43,40 @@ class RangePriceSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
+        DB::table('range_prices')->insert([
+            'value' => '500.000 a 600.000',
+            'big_price' => 600000,
+            'small_price' => 500000,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('range_prices')->insert([
+            'value' => '600.000 a 700.000',
+            'big_price' => 700000,
+            'small_price' => 600000,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('range_prices')->insert([
+            'value' => '700.000 a 800.000',
+            'big_price' => 800000,
+            'small_price' => 900000,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('range_prices')->insert([
+            'value' => '800.000 a 900.000',
+            'big_price' => 900000,
+            'small_price' => 800000,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+        DB::table('range_prices')->insert([
+            'value' => '900.000 a 1.000.000',
+            'big_price' => 900000,
+            'small_price' => 1000000,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }

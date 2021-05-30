@@ -13,8 +13,22 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RangePriceController extends Controller
 {
+
     /**
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/rangePrice/index",
+     *     summary="Get all range of prices",
+     *     tags={"Prices Range"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Get all range prices.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All range of prices"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {

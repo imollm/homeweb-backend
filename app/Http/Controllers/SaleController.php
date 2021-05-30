@@ -31,11 +31,38 @@ class SaleController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @param int $limit
-     * @return JsonResponse
-     isa*/
+     * @OA\Get(
+     *     path="/sales/{limit}/index",
+     *     summary="Get limited sales",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All categories.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All sales of user X with role Y"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No sales in system.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="No sales in system"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function index(int $limit): JsonResponse
     {
         if (Auth::user()->can('index', Sale::class)) {
@@ -66,7 +93,7 @@ class SaleController extends Controller
                     'success' => true,
                     'data' => [],
                     'message' => 'No sales in system'
-                ], Response::HTTP_OK);
+                ], Response::HTTP_NOT_FOUND);
 
             }
 
@@ -78,10 +105,67 @@ class SaleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post (
+     *     path="/sales/create",
+     *     summary="Store new sale",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Sale data",
+     *          @OA\JsonContent(
+     *               @OA\Property(property="property_id", description="Property ID", type="integer", example=1),
+     *               @OA\Property(property="buyer_id", description="Customer ID", type="integer", example=1),
+     *               @OA\Property(property="seller_id", description="Employee ID", type="integer", example=1),
+     *               @OA\Property(property="date", description="Date of sale", type="string", example="2021-05-03"),
+     *               @OA\Property(property="amount", description="Property final price of sale", type="integer", example=1000000),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Sale created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Sale created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="This property was sold.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="This property was sold"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while save sale.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while save sale"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="At least one actor not found",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="At least one actor is not available"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data.",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function create(Request $request): JsonResponse
@@ -136,10 +220,43 @@ class SaleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $hashId
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/sales/{hashId}/showByHashId",
+     *     summary="Get sale by hash id",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="hashId",
+     *         in="path",
+     *         required=true,
+     *         description="Hash ID of sale"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sale by hash id X.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Sale by hash id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Sale not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Any sale with this params"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function showByHashId(string $hashId): JsonResponse
     {
@@ -172,6 +289,31 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/sales/actualYear",
+     *     summary="Get sales of actual year",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sales of 2021",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Sales of 2021"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function getSalesOfActualYear(): JsonResponse
     {
         if (Auth::user()->can('getSalesOfActualYear', Sale::class)) {
@@ -193,6 +335,31 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/sales/salesBy",
+     *     summary="Get sales by categories, countries, cities and sellers",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sales by categories, countries, cities and sellers",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Sales by categories, countries, cities and sellers"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function salesBy(): JsonResponse
     {
         if (Auth::user()->can('salesBy', Sale::class)) {
@@ -213,6 +380,57 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/sales/update",
+     *     summary="Update sale",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Sale data",
+     *          @OA\JsonContent(
+     *               @OA\Property(property="property_id", description="Property ID", type="integer", example=1),
+     *               @OA\Property(property="buyer_id", description="Customer ID", type="integer", example=1),
+     *               @OA\Property(property="seller_id", description="Employee ID", type="integer", example=1),
+     *               @OA\Property(property="date", description="Date of sale", type="string", example="2021-05-03"),
+     *               @OA\Property(property="amount", description="Property final price of sale", type="integer", example=1000000),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sale updated successfully.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Sale updated successfully"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while update sale.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while update sale"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Sale not exists",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Sale not exists"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Your are not related or Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Your are not related / Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function update(Request $request): JsonResponse
     {
         if (Auth::user()->can('update', Sale::class)) {
@@ -222,7 +440,7 @@ class SaleController extends Controller
                 if (Auth::user()->role->name === 'employee' && !$this->saleService->isThisSaleOfThisSeller($hashId, Auth::id())){
                     return response()->json([
                         'success' => false,
-                        'message' => 'Your are not related '
+                        'message' => 'Your are not related'
                     ], Response::HTTP_UNAUTHORIZED);
                 }
                 if ($this->saleService->update($request)) {
@@ -247,6 +465,31 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/sales/mySales",
+     *     summary="Get sales of seller (user with employee role)",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sales of employee with id X",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Sales of employee with id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function getSalesBySeller(): JsonResponse
     {
         if (Auth::user()->can('getSalesBySeller', Sale::class)) {
@@ -260,6 +503,31 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/sales/myPurchases",
+     *     summary="Get sales of buyer (user with customer role)",
+     *     tags={"Sales"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Purchases of customer with id X",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Purchases of customer with id X"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
+     */
     public function getPurchasesByCustomer(): JsonResponse
     {
         if (Auth::user()->role->name === 'customer') {

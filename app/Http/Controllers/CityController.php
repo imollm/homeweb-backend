@@ -32,9 +32,19 @@ class CityController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/cities/index",
+     *     summary="Get all cities",
+     *     tags={"Cities"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of all cities.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="List of all cities"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -46,11 +56,69 @@ class CityController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
+     * @OA\Post(
+     *     path="/cities/create",
+     *     summary="Store new city",
+     *     tags={"Cities"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema (
+     *                  @OA\Property (
+     *                      property="name",
+     *                      type="string",
+     *                      example="Foo"
+     *                  ),
+     *                  @OA\Property (
+     *                      property="country_id",
+     *                      type="integer",
+     *                      example=1
+     *                  ),
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="City created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="City created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="City already exists with same country.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="City already exists with same country"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error when create city.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error when create city"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Related country not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Related country not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized user"),
+     *         ),
+     *     )
+     * )
      */
     public function create(Request $request): JsonResponse
     {
@@ -104,10 +172,34 @@ class CityController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/cities/{id}/show",
+     *     summary="Get city by id",
+     *     tags={"Cities"},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of city"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="City found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object", example="{}"),
+     *             @OA\Property (property="message", type="string", example="City found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="City not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="City not found"),
+     *         ),
+     *     )
+     * )
      */
     public function show(string $id): JsonResponse
     {
@@ -130,10 +222,53 @@ class CityController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/cities/update",
+     *     summary="Update city",
+     *     tags={"Cities"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *              @OA\Schema (
+     *                  @OA\Property (
+     *                      property="name",
+     *                      type="string",
+     *                      example="Foo"
+     *                  ),
+     *                  @OA\Property (
+     *                      property="country_id",
+     *                      type="integer",
+     *                      example=1
+     *                  ),
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="City updated successfully.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="City updated successfully"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *          response=500,
+     *          description="Error while update city.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while update city"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function update(Request $request): JsonResponse
@@ -144,7 +279,10 @@ class CityController extends Controller
 
             if ($this->cityService->update($request)) {
 
-                return response()->json([], Response::HTTP_NO_CONTENT);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'City updated successfully'
+                ], Response::HTTP_OK);
 
             } else {
 
@@ -163,11 +301,58 @@ class CityController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param string $id
-     * @return JsonResponse
-     * @throws Exception
+     * @OA\Delete(
+     *     path="/cities/{id}/delete",
+     *     summary="Delete city by id",
+     *     tags={"Cities"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of city"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="City deleted.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="City deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while delete city.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while delete city"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Error, this city has properties related.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error, this city has properties related"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="City not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="City not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized user"),
+     *         ),
+     *     )
+     * )
      */
     public function destroy(string $id): JsonResponse
     {

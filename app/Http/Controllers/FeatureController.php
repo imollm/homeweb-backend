@@ -31,9 +31,28 @@ class FeatureController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/features/index",
+     *     summary="Get all features",
+     *     tags={"Features"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="All features.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="All features"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No features in system.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="No features in system"),
+     *         ),
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -44,7 +63,7 @@ class FeatureController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'No features in system'
-            ], Response::HTTP_OK);
+            ], Response::HTTP_NOT_FOUND);
 
         } else {
 
@@ -58,10 +77,43 @@ class FeatureController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/features/create",
+     *     summary="Store new feature",
+     *     tags={"Features"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Feature data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="name", description="Name of feature", type="string", example="Foo")
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Feature created.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Feature created"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while creating feature.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while creating feature"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
@@ -94,10 +146,34 @@ class FeatureController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/features/{id}/show",
+     *     summary="Get feature by id",
+     *     tags={"Features"},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of feature"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Feature by id.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="data", type="object"),
+     *             @OA\Property (property="message", type="string", example="Feature by id {id}"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Feature not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Feature not found"),
+     *         ),
+     *     )
+     * )
      */
     public function show(string $id): JsonResponse
     {
@@ -120,10 +196,55 @@ class FeatureController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/features/update",
+     *     summary="Update feature",
+     *     tags={"Features"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          description="Feature data",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="name", description="Name of feature", type="string", example="Foo")
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Feature updated.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Feature updated"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while updating feature.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while updating feature"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Feature not found.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Feature not found"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid put data."
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      * @throws ValidationException
      */
     public function update(Request $request): JsonResponse
@@ -167,10 +288,50 @@ class FeatureController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param string $id
-     * @return JsonResponse
+     * @OA\Delete(
+     *     path="/features/{id}/delete",
+     *     summary="Delete feature by id",
+     *     tags={"Features"},
+     *     security={{ "apiAuth": {} }},
+     *     @OA\Parameter (
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of feature"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Feature deleted.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=true),
+     *             @OA\Property (property="message", type="string", example="Feature deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while deleting feature.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Error while deleting feature"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="This feature can not be deleted.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="This feature can not be deleted"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized user.",
+     *         @OA\JsonContent (
+     *             @OA\Property (property="success", type="boolean", example=false),
+     *             @OA\Property (property="message", type="string", example="Unauthorized User"),
+     *         ),
+     *     )
+     * )
      */
     public function destroy(string $id): JsonResponse
     {
