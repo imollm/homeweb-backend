@@ -159,7 +159,8 @@ class PropertyShowTests extends TestCase
 
         $uri = Config::get('app.url') . '/api/properties/showByFilter';
 
-        $uri = $uri.'?reference='.$randPropertyReference.'&price='.$randRangePriceId.'&location='.$randCityId.'&category='.$randCategoryId;
+        // $uri = $uri.'?reference='.$randPropertyReference.'&price='.$randRangePriceId.'&location='.$randCityId.'&category='.$randCategoryId;
+        $uri = $uri.'?reference=&price=9&location=&category=';
 
         $response = $this->getJson($uri);
 

@@ -148,12 +148,8 @@ class PropertyController extends Controller
      *         description="Invalid put data."
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Properties not found with this filters.",
-     *         @OA\JsonContent (
-     *             @OA\Property (property="success", type="boolean", example=true),
-     *             @OA\Property (property="message", type="string", example="Properties not found with this filters"),
-     *         ),
+     *         response=204,
+     *         description="No content"
      *     ),
      * )
      * @throws ValidationException
@@ -173,10 +169,7 @@ class PropertyController extends Controller
                 ], Response::HTTP_OK);
             }
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'Properties not found with this filters'
-        ], Response::HTTP_NOT_FOUND);
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
     /**

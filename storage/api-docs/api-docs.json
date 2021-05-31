@@ -2962,25 +2962,8 @@
                     "422": {
                         "description": "Invalid put data."
                     },
-                    "404": {
-                        "description": "Properties not found with this filters.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Properties not found with this filters"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "No content"
                     }
                 }
             }
