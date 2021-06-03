@@ -1034,42 +1034,32 @@
                 "summary": "Send email",
                 "description": "Send email",
                 "operationId": "App\\Http\\Controllers\\ContactController::send",
-                "requestBody": {
-                    "description": "Pass user credentials",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "subject",
-                                    "message"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Your name"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "user1@homeweb.com"
-                                    },
-                                    "subject": {
-                                        "type": "string",
-                                        "example": "Subject of email"
-                                    },
-                                    "message": {
-                                        "type": "string",
-                                        "example": "Message of email"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of user",
+                        "required": true
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email of user",
+                        "required": true
+                    },
+                    {
+                        "name": "subject",
+                        "in": "query",
+                        "description": "Subject of message",
+                        "required": true
+                    },
+                    {
+                        "name": "message",
+                        "in": "query",
+                        "description": "Message",
+                        "required": true
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Send it successfully",
