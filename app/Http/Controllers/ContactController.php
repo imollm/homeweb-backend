@@ -21,17 +21,30 @@ class ContactController extends Controller
      * summary="Send email",
      * description="Send email",
      * tags={"Contact"},
-     *  @OA\RequestBody(
-     *     required=true,
-     *     description="Pass user credentials",
-     *     @OA\JsonContent(
-     *        required={"name","email","subject","message"},
-     *        @OA\Property(property="name", type="string", example="Your name"),
-     *        @OA\Property(property="email", type="string", format="email", example="user1@homeweb.com"),
-     *        @OA\Property(property="subject", type="string", example="Subject of email"),
-     *        @OA\Property(property="message", type="string", example="Message of email"),
+     *     @OA\Parameter (
+     *         name="name",
+     *         in="query",
+     *         required=true,
+     *         description="Name of user"
      *     ),
-     *  ),
+     *     @OA\Parameter (
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         description="Email of user"
+     *     ),
+     *     @OA\Parameter (
+     *         name="subject",
+     *         in="query",
+     *         required=true,
+     *         description="Subject of message"
+     *     ),
+     *     @OA\Parameter (
+     *         name="message",
+     *         in="query",
+     *         required=true,
+     *         description="Message"
+     *     ),
      *  @OA\Response(
      *     response=200,
      *     description="Send it successfully",
