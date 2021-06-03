@@ -505,9 +505,9 @@ class PropertyController extends Controller
      */
     public function setActive(string $id, string $status): JsonResponse
     {
-        if (Auth::user()->can('setActive', Property::class)) {
+        $property = Property::find($id);
 
-            $property = Property::find($id);
+        if (Auth::user()->can('setActive', $property)) {
 
             if (!$property) {
                 return response()->json([
