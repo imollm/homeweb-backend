@@ -1,4 +1,4 @@
-## DOCKERIZING BACKEND
+## FINAL PROJECT INFORMATICS ENGINEER BACHELOR'S DEGREE
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -66,7 +66,7 @@ This is an example of how to list things you need to use the software and how to
 1. Git clone
    ```sh
    cd ~/
-   git clone --branch docker https://github.com/imollm/homeweb-backend
+   git clone https://github.com/imollm/homeweb-backend
    ```
 2. Build and deploy
    ```sh
