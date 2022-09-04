@@ -1,123 +1,135 @@
-# TFG - WEB DEVELOPMENT
-## HOMEWEB
-
-## LOCAL ENVIRONMENT
-
-### Pre requisits
-
-1. Install web environment
-    - [XAMPP](https://www.apachefriends.org/es/download.html)
-    - [MAMP](https://www.mamp.info/en/downloads/)
-    - Manually mode
-       - [MAC OS X](https://getgrav.org/blog/macos-bigsur-apache-multiple-php-versions)
-       - [Linux](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-20-04-es)
-       - [Windows 10](https://codebriefly.com/how-to-setup-apache-php-mysql-on-windows-10/)
-
-    
-2. When installation is finished, go to `http://localhost`, if **It Works!** displayed, all is correct.
-
-
-3. Check if PHP is linked with Apache. Go to apache root folder and create a new index.php file, with this code `<?php echo phpinfo();`, save and go to `http://localhost`, we will to see something similar to the image. 
-    <p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PHP_7.1_-_Example_phpinfo%28%29_Screen.png" alt="phpinfo image"/>
-   </p>
-
-
-4. Next step, install php dependencies manager Composer, [Composer](https://getcomposer.org/doc/00-intro.md). Install better globally, then type `composer --version` and you make sure.
-
-### Inicialitzar projecte
-
-1. Download the repository.
-    - If Git is installed, go to apache root folder and type `git clone https://github.com/imollm/homeweb-backend`
-    - If Git isn't installed [Git](https://git-scm.com/downloads), else `https://github.com/imollm/homeweb-backend`, then unzip.
-    
-
-2. Type `composer install` and composer will install laravel dependencies, from composer.json.
-
-
-3. Type `cp .env.exemple .env`, and then configure database params.
-
-    <ul>
-        <li style="list-style: none"><span style="color: orange">DB_CONNECTION</span><span style="color: white">=</span><span style="color: green">mysql</span></li>
-        <li style="list-style: none"><span style="color: orange">DB_HOST</span><span style="color: white">=</span><span style="color: green">127.0.0.1</span></li>
-       <li style="list-style: none"><span style="color: orange">DB_PORT</span><span style="color: white">=</span><span style="color: green">3306</span></li>
-       <li style="list-style: none"><span style="color: orange">DB_DATABASE</span><span style="color: white">=</span><span style="color: green">homeweb</span></li>
-       <li style="list-style: none"><span style="color: orange">DB_USERNAME</span><span style="color: white">=</span><span style="color: green">root</span></li>
-       <li style="list-style: none"><span style="color: orange">DB_PASSWORD</span><span style="color: white">=</span><span style="color: green">password_here</span></li>
-    </ul>
+## DOCKERIZING BACKEND
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
 
 
-4. Create new database with the same name of DB_DATABASE of .env file
+<!-- ABOUT THE PROJECT -->
+### About The Project
+
+Is a final project of UOC informatics engineering degree. About web development, this repository is for build docker environment to execute backend of project.
+
+### Built With
+
+* [PHP](https://www.php.net/)
+* [Laravel](https://laravel.com/)
+* [MySQL](https://www.mysql.com/)
+* [Docker](https://www.docker.com/)
+* [PHPStorm](https://www.jetbrains.com/es-es/phpstorm/)
+* [Postman](https://www.postman.com/)
+
+
+<!-- GETTING STARTED -->
+### Getting Started
+
+To get a local copy up and running follow these simple steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+* docker
+    * Mac OS X
+        ```sh
+        brew cask install docker
+        ```
+    * Linux
       ```sh
-      mysql> create database homeweb
-      Query OK, 1 row affected (0.00 sec)
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
       ```
-   
-5. Then run migrations and seeders.
-    ```sh
-      php artisan migrate --seed
-    ```
-6. Generate app keys.
+    * Windows
+        - Download and execute [docker installer](https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe)
+
+### Installation
+
+1. Git clone
    ```sh
-      php artisan key:generate
+   cd ~/
+   git clone --branch docker https://github.com/imollm/homeweb-backend
    ```
-
-7. Generate token client keys.
-    ```sh
-      php artisan passport:install
-    ```
-   If rerun migrations, auth tokens will be deleted, you may rerun to generate it.
-   I create a command that do migration and generate auth tokens.
-    ```sh
-      php artisan db:restore
-    ```
-8. We need to configure into ```.env``` file the email client. Then publish credentials with next command.
+2. Build and deploy
    ```sh
-      php artisan config:cache
+   cd ~/homeweb-backend
+   docker-compose up -d
    ```
+3. Execute init script
+   ```sh
+   docker ps
+   ```
+   Copy CONTAINER ID of homeweb-backend_webserver
 
-### Testing with Postman
-1. Install API REST Client [Postman](https://www.postman.com/downloads/)
+    <p><img src="./docs/images/docker_ps.png" alt=""/></p>
+
+    ```sh
+   docker exec -it <CONTAINER_ID> sh /var/www/html/deploy/init.sh
+   ```
    
+    This install dependencies and init database, with test data.
 
-2. Download project json file.
+## Usage
+
+1. Test with curl
+    ```sh
+    curl -I http://localhost:8080/homeweb-backend/public/api/properties/index
+    HTTP/1.1 200 OK
+    Date: Mon, 17 May 2021 15:11:59 GMT
+    Server: Apache/2.4.38 (Debian)
+    X-Powered-By: PHP/8.0.3
+    Cache-Control: no-cache, private
+    X-RateLimit-Limit: 60
+    X-RateLimit-Remaining: 59
+    Access-Control-Allow-Origin: *
+    Content-Type: application/json
+    ```
+2. Test with Postman project
+
+   * [Install Postman](https://www.postman.com/downloads/)
+
+   * Download postman collection
     ```sh
       wget -O ~/tfg-docker-backend/postman.json https://www.getpostman.com/collections/c02928439a50147cc744
     ```
 
-3. In environment configuration if you work with:
-   * Local environment ```http://localhost/homeweb-backend/public/api```
-   * Docker environment ```http://localhost:8080/homeweb-backend/public/api```
-    
+   4.3 Open with postman and test it.
 
-4. Open with postman and test it.
+<!-- CONTRIBUTING -->
+## Contributing
 
-### Test amb PHPUnit
-In ```env``` file there are some registered users, and some fake data to test backend.
-<ul>
-<li style="list-style: none"><span style="color: orange">API_ADMIN_EMAIL</span><span style="color: white">=</span><span style="color: green">admin@homeweb.com</span></li>
-<li style="list-style: none"><span style="color: orange">API_ADMIN_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
-<li style="list-style: none"><span style="color: orange">API_CUSTOMER_EMAIL</span><span style="color: white">=</span><span style="color: green">customer@homeweb.com</span></li>
-<li style="list-style: none"><span style="color: orange">API_CUSTOMER_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
-<li style="list-style: none"><span style="color: orange">API_EMPLOYEE_EMAIL</span><span style="color: white">=</span><span style="color: green">employee@homeweb.com</span></li>
-<li style="list-style: none"><span style="color: orange">API_EMPLOYEE_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
-<li style="list-style: none"><span style="color: orange">API_OWNER_EMAIL</span><span style="color: white">=</span><span style="color: green">owner@homeweb.com</span></li>
-<li style="list-style: none"><span style="color: orange">API_OWNER_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
-<li style="list-style: none"><span style="color: orange">API_OWNER1_EMAIL</span><span style="color: white">=</span><span style="color: green">owner1@homeweb.com</span></li>
-<li style="list-style: none"><span style="color: orange">API_OWNER1_PASSWORD</span><span style="color: white">=</span><span style="color: green">12345678</span></li>
-</ul>
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Type this command to publish this users into cache, and then run tests.
-   ```sh
-      php artisan config:cache
-   ```
+<!-- LICENSE -->
+## License
 
-### Llicència
+Distributed under the MIT License.
 
-This software have  [MIT license](https://opensource.org/licenses/MIT).
-
+<!-- CONTACT -->
 ## Contact
 
 Ivan Moll Moll - imollm@uoc.edu
