@@ -71,21 +71,11 @@ This is an example of how to list things you need to use the software and how to
 2. Build and deploy
    ```sh
    cd ~/homeweb-backend
+   cp .env.example .env
    docker-compose up -d
    ```
 3. Execute init script
-   ```sh
-   docker ps
-   ```
-   Copy CONTAINER ID of homeweb-backend_webserver
-
-    <p><img src="./docs/images/docker_ps.png" alt=""/></p>
-
-    ```sh
-   docker exec -it <CONTAINER_ID> sh /var/www/html/deploy/init.sh
-   ```
-   
-    This install dependencies and init database, with test data.
+   There is a entrypoint on docker-compose webserver service, that targets a bash file, it will install dependencies and init database, with test data, automatically (Please check the logs of webserver container to see the progress).
 
 ## Usage
 

@@ -3,38 +3,37 @@ version: "3"
 services:
   webserver:
     build:
-      context: './docker/webserver/Dockerfile'
-      dockerfile: './docker/webserver/Dockerfile'
-    container_name: 'homeweb-backend-webserver'
-    restart: 'always'
+      context: ./docker/webserver/Dockerfile
+      dockerfile: ./docker/webserver/Dockerfile
+    container_name: homeweb-backend-webserver
     ports:
-      - '8080:80'
+      - 8080:80
     links:
-      - 'mysql'
+      - mysql
     volumes:
-      -  '.:/var/www/html/homeweb-backend'
-      - './docker/webserver/config/php/php.ini:/usr/local/etc/php/php.ini'
-      - './docker/webserver/vhosts:/etc/apache2/sites-enabled'
-      - './docker/webserver/logs:/var/log/apache2'
-      - './docker/webserver/deploy:/var/www/html/deploy'
+      -  .:/var/www/html/homeweb-backend
+      - ./docker/webserver/config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/webserver/vhosts:/etc/apache2/sites-enabled
+      - ./docker/webserver/logs:/var/log/apache2
+      - ./docker/webserver/deploy:/var/www/html/deploy
     environment:
-      APACHE_DOCUMENT_ROOT: '/var/www/html'
-      MYSQL_ROOT_PASSWORD: 'root.secret'
+      APACHE_DOCUMENT_ROOT: /var/www/html
+      MYSQL_ROOT_PASSWORD: root.secret
+    entrypoint:
+      - /var/www/html/deploy/init.sh
+
   mysql:
-    build:
-      context: './docker/mysql/Dockerfile'
-      dockerfile: './docker/mysql/Dockerfile'
-    container_name: 'homeweb-backend-database'
-    restart: 'always'
+    image: mysql:5.7.40
+    container_name: homeweb-backend-database
     ports:
-      - "127.0.0.1:6033:3306"
+      - 6033:3306
     volumes:
-      - './docker/mysql/data:/var/lib/mysql'
-      - './docker/mysql/logs:/var/log/mysql'
-      - './docker/mysql/init:/tmp/database'
-    command: 'mysqld --init-file="/tmp/database/init_db.sql"'
+      - homeweb-volume
     environment:
-      MYSQL_ROOT_PASSWORD: 'root.secret'
-      MYSQL_DATABASE: 'homeweb'
-      MYSQL_USER: 'homeweb'
-      MYSQL_PASSWORD: 'homeweb.secret'
+      MYSQL_ROOT_PASSWORD: root.secret
+      MYSQL_DATABASE: homeweb
+      MYSQL_USER: homeweb
+      MYSQL_PASSWORD: homeweb.secret
+
+volumes:
+  homeweb-volume:
